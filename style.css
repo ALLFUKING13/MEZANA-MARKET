@@ -687,3 +687,58 @@ select {
     font-size: 1rem;
     background: white;
 }
+
+.locations {
+    margin: 30px 15px 50px 15px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.locations h3 {
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.location-card {
+    margin-bottom: 25px;
+}
+
+.location-card:last-child {
+    margin-bottom: 0;
+}
+
+.location-card h4 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.location-card p {
+    font-size: 0.95rem;
+    color: var(--text);
+    opacity: 0.8;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.location-link {
+    display: inline-block;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 1.5px solid transparent;
+    transition: 0.2s;
+}
+
+.location-link:hover {
+    border-bottom-color: var(--primary);
+}
