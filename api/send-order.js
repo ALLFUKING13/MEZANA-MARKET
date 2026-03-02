@@ -6,6 +6,7 @@ export default async function handler(req, res) {
     const orderData = req.body.orderData;
     const BOT_TOKEN = process.env.BOT_TOKEN;
     const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID;
+    const THREAD_ID = process.env.TELEGRAM_THREAD_ID;
 
     if (!BOT_TOKEN || !ADMIN_CHAT_ID) {
         return res.status(500).json({ error: 'Bot token or Chat ID not configured' });
@@ -34,6 +35,7 @@ export default async function handler(req, res) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chat_id: ADMIN_CHAT_ID,
+                message_thread_id: THREAD_ID ? parseInt(THREAD_ID) : undefined,
                 text: message,
                 parse_mode: 'Markdown'
             })
