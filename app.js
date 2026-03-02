@@ -336,8 +336,15 @@ window.updateQty = (id, delta) => {
 };
 
 // 6. UI Events
-cartToggle.addEventListener('click', () => cartDrawer.classList.add('open'));
-closeCart.addEventListener('click', () => { cartDrawer.classList.remove('open'); resetDrawer(); });
+cartToggle.addEventListener('click', () => {
+    cartDrawer.classList.add('open');
+    document.body.classList.add('no-scroll');
+});
+closeCart.addEventListener('click', () => {
+    cartDrawer.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+    resetDrawer();
+});
 
 function resetDrawer() {
     checkoutForm.style.display = 'none';
@@ -368,11 +375,13 @@ window.toggleAdmin = () => {
     if (isOpen) {
         // If already open, just close it (no password)
         panel.classList.remove('open');
+        document.body.classList.remove('no-scroll');
     } else {
         // If closed, ask for password before opening
         const code = prompt(currentLang === 'uz' ? "Admin kodini kiriting:" : "Enter admin code:");
         if (code === '7777') {
             panel.classList.add('open');
+            document.body.classList.add('no-scroll');
             renderAdminProducts();
         } else if (code !== null) {
             showToast(currentLang === 'uz' ? "Kod noto'g'ri!" : "Wrong code!");
@@ -401,6 +410,7 @@ window.showProductForm = (id = null) => {
     const modal = document.getElementById('product-form-modal');
     const title = document.getElementById('form-title');
     modal.style.display = 'flex';
+    document.body.classList.add('no-scroll');
 
     const preview = document.getElementById('admin-image-preview');
     const base64Input = document.getElementById('admin-image-base64');
@@ -480,6 +490,10 @@ window.clearImage = () => {
 
 window.hideProductForm = () => {
     document.getElementById('product-form-modal').style.display = 'none';
+    // Only remove no-scroll if admin panel isn't also open
+    if (!document.getElementById('admin-panel').classList.contains('open')) {
+        document.body.classList.remove('no-scroll');
+    }
 };
 
 window.saveProduct = () => {
