@@ -128,9 +128,24 @@ const i18n = {
             "Shirinliklar": "Sweets"
         },
         locationsTitle: "Our Stores",
-        btnHome: "Home"
+        btnHome: "Home",
+        sidebarTitle: "Menu",
+        labelAccount: "Account",
+        labelSettings: "Settings"
     }
 };
+
+i18n.uz.sidebarTitle = "Menyu";
+i18n.uz.labelAccount = "Profil";
+i18n.uz.labelSettings = "Sozlamalar";
+
+i18n.ru.sidebarTitle = "Меню";
+i18n.ru.labelAccount = "Профиль";
+i18n.ru.labelSettings = "Настройки";
+
+i18n.kr.sidebarTitle = "메뉴";
+i18n.kr.labelAccount = "프로필";
+i18n.kr.labelSettings = "설정";
 
 i18n.uz.btnHome = "Bosh menyu";
 i18n.ru.btnHome = "Главное меню";
@@ -175,6 +190,9 @@ const checkoutForm = document.getElementById('checkout-form');
 const confirmOrderBtn = document.getElementById('confirm-order-btn');
 const checkoutBtn = document.getElementById('checkout-btn');
 const backToCartBtn = document.getElementById('back-to-cart');
+const menuToggle = document.getElementById('menu-toggle');
+const sidebarDrawer = document.getElementById('sidebar-drawer');
+const closeSidebar = document.getElementById('close-sidebar');
 
 const langFlags = { uz: '🇺🇿', ru: '🇷🇺', kr: '🇰🇷', en: '🇺🇸' };
 
@@ -223,6 +241,9 @@ function updateStaticTranslations() {
     document.getElementById('confirm-order-btn').textContent = t.btnConfirm;
     document.getElementById('locations-title').textContent = t.locationsTitle;
     document.getElementById('label-home').textContent = t.btnHome;
+    document.getElementById('sidebar-title').textContent = t.sidebarTitle;
+    document.getElementById('label-account').textContent = t.labelAccount;
+    document.getElementById('label-settings').textContent = t.labelSettings;
 }
 
 // 5. Render Functions
@@ -356,6 +377,27 @@ closeCart.addEventListener('click', () => {
     document.body.classList.remove('no-scroll');
     resetDrawer();
 });
+
+menuToggle.addEventListener('click', () => {
+    sidebarDrawer.classList.add('open');
+    document.body.classList.add('no-scroll');
+});
+closeSidebar.addEventListener('click', () => {
+    sidebarDrawer.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+});
+
+window.showAccount = () => {
+    showToast(i18n[currentLang].labelAccount);
+    sidebarDrawer.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+};
+
+window.showSettings = () => {
+    showToast(i18n[currentLang].labelSettings);
+    sidebarDrawer.classList.remove('open');
+    document.body.classList.remove('no-scroll');
+};
 
 function resetDrawer() {
     checkoutForm.style.display = 'none';

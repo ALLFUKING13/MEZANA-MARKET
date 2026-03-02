@@ -13,6 +13,13 @@
     <div id="app">
         <header class="glass">
             <div class="user-info">
+                <div class="menu-toggle" id="menu-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </div>
                 <div class="avatar" id="user-avatar">?</div>
                 <div class="welcome">
                     <span class="greeting">Salom,</span>
@@ -61,20 +68,24 @@
             <section class="products" id="products-grid">
                 <!-- Products will be injected here -->
             </section>
-            <section class="locations glass" id="locations-section">
-                <h3 id="locations-title">Bizning do'konlar</h3>
-                <div class="location-card">
-                    <h4>📍 Mezana Market</h4>
-                    <p>경기도 시흥시 봉우재로23번길 3-14</p>
-                    <a href="https://t.me/mezana_market" target="_blank" class="location-link">👉 Telegram Grup</a>
-                </div>
-                <div class="location-card">
-                    <h4>📍 Oido Samarkand Market</h4>
-                    <p>시흥시 정왕동 1977-10</p>
-                    <a href="https://t.me/Oido_Samarkand" target="_blank" class="location-link">👉 Telegram Grup</a>
-                </div>
-            </section>
         </main>
+
+        <div id="sidebar-drawer" class="drawer sidebar-drawer glass">
+            <div class="drawer-header">
+                <h2 id="sidebar-title">Menyu</h2>
+                <button id="close-sidebar" class="close-btn">&times;</button>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-item" onclick="showAccount()">
+                    <span class="icon">👤</span>
+                    <span id="label-account">Profil</span>
+                </div>
+                <div class="sidebar-item" onclick="showSettings()">
+                    <span class="icon">⚙️</span>
+                    <span id="label-settings">Sozlamalar</span>
+                </div>
+            </div>
+        </div>
 
         <div id="cart-drawer" class="drawer glass">
             <div class="drawer-header">
@@ -175,6 +186,20 @@
                 </div>
             </div>
         </div>
+
+        <footer class="locations glass" id="locations-section">
+            <h3 id="locations-title">Bizning do'konlar</h3>
+            <div class="location-card">
+                <h4>📍 Mezana Market</h4>
+                <p>경기도 시흥시 봉우재로23번길 3-14</p>
+                <a href="https://t.me/mezana_market" target="_blank" class="location-link">👉 Telegram Grup</a>
+            </div>
+            <div class="location-card">
+                <h4>📍 Oido Samarkand Market</h4>
+                <p>시흥시 정왕동 1977-10</p>
+                <a href="https://t.me/Oido_Samarkand" target="_blank" class="location-link">👉 Telegram Grup</a>
+            </div>
+        </footer>
 
         <div class="toast" id="toast"></div>
     </div>
