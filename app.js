@@ -426,8 +426,10 @@ window.showProductForm = (id = null) => {
         base64Input.value = p.image || '';
         if (p.image) {
             preview.innerHTML = `<img src="${p.image}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            document.getElementById('remove-image-btn').style.display = 'block';
         } else {
             preview.innerHTML = `<span style="color: #888;">Rasm tanlanmagan</span>`;
+            document.getElementById('remove-image-btn').style.display = 'none';
         }
         document.getElementById('admin-name-uz').value = p.name.uz;
         document.getElementById('admin-name-ru').value = p.name.ru;
@@ -439,6 +441,7 @@ window.showProductForm = (id = null) => {
         title.textContent = "Yangi mahsulot";
         base64Input.value = '';
         preview.innerHTML = `<span style="color: #888;">Rasm tanlanmagan</span>`;
+        document.getElementById('remove-image-btn').style.display = 'none';
         document.getElementById('admin-name-uz').value = '';
         document.getElementById('admin-name-ru').value = '';
         document.getElementById('admin-name-kr').value = '';
@@ -463,8 +466,16 @@ window.previewImage = (event) => {
         const base64Str = e.target.result;
         document.getElementById('admin-image-base64').value = base64Str;
         document.getElementById('admin-image-preview').innerHTML = `<img src="${base64Str}" style="width: 100%; height: 100%; object-fit: cover;">`;
+        document.getElementById('remove-image-btn').style.display = 'block';
     };
     reader.readAsDataURL(file);
+};
+
+window.clearImage = () => {
+    document.getElementById('admin-image-file').value = '';
+    document.getElementById('admin-image-base64').value = '';
+    document.getElementById('admin-image-preview').innerHTML = `<span style="color: #888;">Rasm tanlanmagan</span>`;
+    document.getElementById('remove-image-btn').style.display = 'none';
 };
 
 window.hideProductForm = () => {
