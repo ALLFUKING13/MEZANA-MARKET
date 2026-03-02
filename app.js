@@ -321,7 +321,7 @@ checkoutBtn.addEventListener('click', () => {
 
 backToCartBtn.addEventListener('click', () => resetDrawer());
 
-confirmOrderBtn.addEventListener('click', () => {
+confirmOrderBtn.addEventListener('click', async () => {
     const name = document.getElementById('order-name').value;
     const phone = document.getElementById('order-phone').value;
     const address = document.getElementById('order-address').value;
@@ -336,11 +336,37 @@ confirmOrderBtn.addEventListener('click', () => {
         user: { name, phone, address },
         items: cart.map(i => ({ name: i.name[currentLang], price: i.price, qty: i.quantity })),
         total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        currency: i18n[currentLang].currency,
         lang: currentLang
     };
 
-    tg.sendData(JSON.stringify(orderData));
-    tg.close();
+    // Show loading state
+    confirmOrderBtn.disabled = true;
+    confirmOrderBtn.textContent = '...';
+
+    try {
+        const response = await fetch('/api/send-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderData })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showToast(currentLang === 'uz' ? "Buyurtma qabul qilindi!" : "Заказ принят!");
+            setTimeout(() => {
+                tg.close();
+            }, 1500);
+        } else {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        console.error('Order error:', error);
+        showToast("Xatolik yuz berdi. Qayta urinib ko'ring.");
+        confirmOrderBtn.disabled = false;
+        confirmOrderBtn.textContent = i18n[currentLang].btnConfirm;
+    }
 });
 
 function showToast(msg) {
