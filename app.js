@@ -342,6 +342,11 @@ window.handleAdminTriggerEnd = () => {
 };
 
 window.toggleAdmin = () => {
+    const code = prompt(currentLang === 'uz' ? "Admin kodini kiriting:" : "Enter admin code:");
+    if (code !== '7777') { // Default code: 7777
+        showToast(currentLang === 'uz' ? "Kod noto'g'ri!" : "Wrong code!");
+        return;
+    }
     const panel = document.getElementById('admin-panel');
     panel.classList.toggle('open');
     if (panel.classList.contains('open')) {
