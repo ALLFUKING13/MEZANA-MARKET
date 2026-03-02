@@ -47,31 +47,43 @@ header {
     z-index: 100;
     padding: 0.5rem 1rem;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    min-height: 85px;
+    flex-direction: column;
+    /* Vertical stack for better control */
+    gap: 8px;
+    min-height: 110px;
     border-radius: 0 0 var(--radius) var(--radius);
     animation: slideDown 0.5s ease-out;
 }
 
+.header-top {
+    width: 100%;
+    overflow: hidden;
+}
+
+.header-main {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
 .header-center {
     flex: 2;
-    overflow: hidden;
-    margin: 0 5px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 8px;
-    height: 100%;
-    padding-top: 5px;
+    gap: 6px;
 }
 
 .marquee-container {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
-    cursor: pointer;
+    position: relative;
+    height: 24px;
+    display: flex;
+    align-items: center;
 }
 
 .marquee-text {

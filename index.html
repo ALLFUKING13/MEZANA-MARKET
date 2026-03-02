@@ -12,45 +12,48 @@
 <body>
     <div id="app">
         <header class="glass">
-            <div class="user-info">
-                <div class="menu-toggle" id="menu-toggle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </div>
-                <div class="avatar" id="user-avatar">?</div>
-                <div class="welcome">
-                    <span class="greeting">Salom,</span>
-                    <span class="user-name" id="user-name">Mehmon</span>
-                </div>
-            </div>
-            <div class="header-center">
+            <div class="header-top">
                 <div class="marquee-container" oncontextmenu="return false;" onmousedown="handleAdminTriggerStart()"
                     onmouseup="handleAdminTriggerEnd()" ontouchstart="handleAdminTriggerStart()"
                     ontouchend="handleAdminTriggerEnd()">
                     <div class="marquee-text">Mezana Market</div>
                 </div>
-                <button class="home-btn glass" onclick="filterProducts('Hammasi')">🏠 <span id="label-home">Bosh
-                        menyu</span></button>
             </div>
-
-            <div class="header-right">
-                <div class="lang-picker" id="lang-picker" onclick="toggleLanguage(event)">
-                    <span id="current-lang-flag">🇺🇿</span>
-                    <div class="lang-dropdown glass">
-                        <div onclick="setLanguage('uz')">🇺🇿 O'zbek</div>
-                        <div onclick="setLanguage('ru')">🇷🇺 Русский</div>
-                        <div onclick="setLanguage('kr')">🇰🇷 한국어</div>
-                        <div onclick="setLanguage('en')">🇺🇸 English</div>
+            <div class="header-main">
+                <div class="user-info">
+                    <div class="menu-toggle" id="menu-toggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </div>
+                    <div class="avatar" id="user-avatar">?</div>
+                    <div class="welcome">
+                        <span class="greeting">Salom,</span>
+                        <span class="user-name" id="user-name">Mehmon</span>
                     </div>
                 </div>
-                <div class="cart-anchor" id="cart-toggle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zM3 6h18M16 10a4 4 0 01-8 0" />
-                    </svg>
-                    <span class="cart-badge" id="cart-count">0</span>
+                <div class="header-center">
+                    <button class="home-btn glass" onclick="filterProducts('Hammasi')">🏠 <span id="label-home">Bosh
+                            menyu</span></button>
+                </div>
+                <div class="header-right">
+                    <div class="lang-picker" id="lang-picker" onclick="toggleLanguage(event)">
+                        <span id="current-lang-flag">🇺🇿</span>
+                        <div class="lang-dropdown glass">
+                            <div onclick="setLanguage('uz')">🇺🇿 O'zbek</div>
+                            <div onclick="setLanguage('ru')">🇷🇺 Русский</div>
+                            <div onclick="setLanguage('kr')">🇰🇷 한국어</div>
+                            <div onclick="setLanguage('en')">🇺🇸 English</div>
+                        </div>
+                    </div>
+                    <div class="cart-anchor" id="cart-toggle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zM3 6h18M16 10a4 4 0 01-8 0" />
+                        </svg>
+                        <span class="cart-badge" id="cart-count">0</span>
+                    </div>
                 </div>
             </div>
         </header>
