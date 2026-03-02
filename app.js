@@ -127,10 +127,10 @@ const i18n = {
     }
 };
 
-let currentLang = 'uz';
+let currentLang = localStorage.getItem('mezana_lang') || 'uz';
 
 // 2. State
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('mezana_cart')) || [];
 let activeCategory = 'Hammasi';
 
 const products = [
@@ -275,6 +275,10 @@ function updateCartUI() {
 
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     cartTotalPrice.textContent = `${totalPrice.toLocaleString()} ${i18n[currentLang].currency}`;
+
+    // Persist cart
+    localStorage.setItem('mezana_cart', JSON.stringify(cart));
+
     renderCartItems();
 }
 
@@ -364,7 +368,12 @@ confirmOrderBtn.addEventListener('click', async () => {
         const result = await response.json();
 
         if (result.success) {
-            showToast(currentLang === 'uz' ? "Buyurtma qabul qilindi!" : "Заказ принят!");
+            showToast(currentLang === 'uz' ? "Buyurtma qabul qilindi!" : "Заказ приня트!");
+            // Clear cart after successful order
+            cart = [];
+            localStorage.removeItem('mezana_cart');
+            updateCartUI();
+
             setTimeout(() => {
                 tg.close();
             }, 1500);
@@ -401,4 +410,7 @@ if (tg.initDataUnsafe?.user) {
     userNameEl.textContent = i18n[currentLang].guest;
 }
 
-setLanguage('uz');
+// Set initial state
+updateStaticTranslations();
+updateCartUI();
+setLanguage(currentLang);
