@@ -134,14 +134,14 @@ let cart = JSON.parse(localStorage.getItem('mezana_cart')) || [];
 let activeCategory = 'Hammasi';
 
 let products = JSON.parse(localStorage.getItem('mezana_products_local')) || [
-    { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', emoji: '🍎' },
-    { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', emoji: '🍌' },
-    { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', emoji: '🍅' },
-    { id: 4, name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' }, price: 1500, category: 'Sabzavotlar', emoji: '🥒' },
-    { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 2800, category: 'Sutli', emoji: '🥛' },
-    { id: 6, name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' }, price: 2000, category: 'Sutli', emoji: '🥣' },
-    { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 5000, category: 'Mevalar', emoji: '🍎' },
-    { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', emoji: '💧' },
+    { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 4, name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' }, price: 1500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1449333256619-bc90bac43ed8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 2800, category: 'Sutli', image: 'https://images.unsplash.com/photo-1563636619-e910029339cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 6, name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' }, price: 2000, category: 'Sutli', image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43454?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 5000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1541344999736-83eca872977a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+    { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
 ];
 
 const categories = ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar'];
@@ -358,7 +358,10 @@ function renderAdminProducts() {
     const list = document.getElementById('product-list-admin');
     list.innerHTML = products.map(p => `
         <div class="admin-product-item">
-            <span>${p.emoji} ${p.name[currentLang]}</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="${p.image || ''}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/30?text=📦'">
+                <span>${p.name[currentLang]}</span>
+            </div>
             <div class="admin-item-controls">
                 <button class="edit-btn" onclick="editProduct(${p.id})">✎</button>
                 <button class="delete-btn" onclick="deleteProduct(${p.id})">×</button>
@@ -376,7 +379,7 @@ window.showProductForm = (id = null) => {
     if (id) {
         const p = products.find(prod => prod.id === id);
         title.textContent = "Tahrirlash";
-        document.getElementById('admin-emoji').value = p.emoji;
+        document.getElementById('admin-image').value = p.image || '';
         document.getElementById('admin-name-uz').value = p.name.uz;
         document.getElementById('admin-name-ru').value = p.name.ru;
         document.getElementById('admin-name-kr').value = p.name.kr;
@@ -385,7 +388,7 @@ window.showProductForm = (id = null) => {
         document.getElementById('admin-category').value = p.category;
     } else {
         title.textContent = "Yangi mahsulot";
-        document.getElementById('admin-emoji').value = '🍎';
+        document.getElementById('admin-image').value = '';
         document.getElementById('admin-name-uz').value = '';
         document.getElementById('admin-name-ru').value = '';
         document.getElementById('admin-name-kr').value = '';
@@ -402,7 +405,7 @@ window.hideProductForm = () => {
 window.saveProduct = () => {
     const newProduct = {
         id: editingId || Date.now(),
-        emoji: document.getElementById('admin-emoji').value || '📦',
+        image: document.getElementById('admin-image').value || '',
         name: {
             uz: document.getElementById('admin-name-uz').value,
             ru: document.getElementById('admin-name-ru').value,
