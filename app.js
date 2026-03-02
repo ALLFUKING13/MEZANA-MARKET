@@ -229,7 +229,7 @@ function renderProducts(filter = 'Hammasi') {
         return `
             <div class="product-card">
                 <div class="product-image">
-                    <span style="font-size: 3rem;">${product.emoji}</span>
+                    <img src="${product.image || ''}" alt="${product.name[currentLang]}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
                 </div>
                 <div class="product-title">${product.name[currentLang]}</div>
                 <div class="product-footer">
@@ -376,10 +376,21 @@ window.showProductForm = (id = null) => {
     const title = document.getElementById('form-title');
     modal.style.display = 'flex';
 
+    const preview = document.getElementById('admin-image-preview');
+    const base64Input = document.getElementById('admin-image-base64');
+    const fileInput = document.getElementById('admin-image-file');
+
+    fileInput.value = ''; // Reset file input
+
     if (id) {
         const p = products.find(prod => prod.id === id);
         title.textContent = "Tahrirlash";
-        document.getElementById('admin-image').value = p.image || '';
+        base64Input.value = p.image || '';
+        if (p.image) {
+            preview.innerHTML = `<img src="${p.image}" style="width: 100%; height: 100%; object-fit: cover;">`;
+        } else {
+            preview.innerHTML = `<span style="color: #888;">Rasm tanlanmagan</span>`;
+        }
         document.getElementById('admin-name-uz').value = p.name.uz;
         document.getElementById('admin-name-ru').value = p.name.ru;
         document.getElementById('admin-name-kr').value = p.name.kr;
@@ -388,7 +399,8 @@ window.showProductForm = (id = null) => {
         document.getElementById('admin-category').value = p.category;
     } else {
         title.textContent = "Yangi mahsulot";
-        document.getElementById('admin-image').value = '';
+        base64Input.value = '';
+        preview.innerHTML = `<span style="color: #888;">Rasm tanlanmagan</span>`;
         document.getElementById('admin-name-uz').value = '';
         document.getElementById('admin-name-ru').value = '';
         document.getElementById('admin-name-kr').value = '';
@@ -398,21 +410,42 @@ window.showProductForm = (id = null) => {
     }
 };
 
+window.previewImage = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const base64Str = e.target.result;
+        document.getElementById('admin-image-base64').value = base64Str;
+        document.getElementById('admin-image-preview').innerHTML = `<img src="${base64Str}" style="width: 100%; height: 100%; object-fit: cover;">`;
+    };
+    reader.readAsDataURL(file);
+};
+
 window.hideProductForm = () => {
     document.getElementById('product-form-modal').style.display = 'none';
 };
 
 window.saveProduct = () => {
+    const nameUz = document.getElementById('admin-name-uz').value;
+    const price = document.getElementById('admin-price').value;
+
+    if (!nameUz || !price) {
+        showToast(i18n[currentLang].valError);
+        return;
+    }
+
     const newProduct = {
         id: editingId || Date.now(),
-        image: document.getElementById('admin-image').value || '',
+        image: document.getElementById('admin-image-base64').value || '',
         name: {
-            uz: document.getElementById('admin-name-uz').value,
-            ru: document.getElementById('admin-name-ru').value,
-            kr: document.getElementById('admin-name-kr').value,
-            en: document.getElementById('admin-name-en').value
+            uz: nameUz,
+            ru: document.getElementById('admin-name-ru').value || nameUz,
+            kr: document.getElementById('admin-name-kr').value || nameUz,
+            en: document.getElementById('admin-name-en').value || nameUz
         },
-        price: parseInt(document.getElementById('admin-price').value),
+        price: parseInt(price),
         category: document.getElementById('admin-category').value
     };
 
