@@ -76,7 +76,7 @@ header {
     z-index: 1000;
 }
 
-.lang-picker:hover .lang-dropdown {
+.lang-picker.active .lang-dropdown {
     display: flex;
 }
 
@@ -85,7 +85,8 @@ header {
     font-size: 0.9rem;
     font-weight: 600;
     transition: background 0.2s;
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .lang-dropdown div:hover {

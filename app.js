@@ -165,6 +165,12 @@ const backToCartBtn = document.getElementById('back-to-cart');
 const langFlags = { uz: '🇺🇿', ru: '🇷🇺', kr: '🇰🇷', en: '🇺🇸' };
 
 // 4. Translation Logic
+window.toggleLanguage = (e) => {
+    e.stopPropagation();
+    const picker = document.getElementById('lang-picker');
+    picker.classList.toggle('active');
+};
+
 window.setLanguage = (lang) => {
     currentLang = lang;
     document.getElementById('current-lang-flag').textContent = langFlags[lang];
@@ -173,11 +179,15 @@ window.setLanguage = (lang) => {
     renderProducts(activeCategory);
     renderCartItems();
     updateCartUI();
-    // Close language dropdown if open
-    const dropdown = document.querySelector('.lang-dropdown');
-    if (dropdown) dropdown.style.display = 'none';
-    setTimeout(() => { if (dropdown) dropdown.style.display = ''; }, 100);
+
+    // Close dropdown
+    document.getElementById('lang-picker').classList.remove('active');
 };
+
+// Close dropdown when clicking outside
+document.addEventListener('click', () => {
+    document.getElementById('lang-picker').classList.remove('active');
+});
 
 function updateStaticTranslations() {
     const t = i18n[currentLang];
