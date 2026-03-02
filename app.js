@@ -173,6 +173,7 @@ window.toggleLanguage = (e) => {
 
 window.setLanguage = (lang) => {
     currentLang = lang;
+    localStorage.setItem('mezana_lang', lang);
     document.getElementById('current-lang-flag').textContent = langFlags[lang];
     updateStaticTranslations();
     renderCategories();
