@@ -33,7 +33,8 @@ const i18n = {
             "Sutli": "Sutli",
             "Ichimliklar": "Ichimliklar",
             "Shirinliklar": "Shirinliklar"
-        }
+        },
+        locationsTitle: "Bizning do'konlar"
     },
     ru: {
         greeting: "Привет,",
@@ -63,7 +64,8 @@ const i18n = {
             "Sutli": "Молочные",
             "Ichimliklar": "Напитки",
             "Shirinliklar": "Сладости"
-        }
+        },
+        locationsTitle: "Наши магазины"
     },
     kr: {
         greeting: "안녕하세요,",
@@ -93,7 +95,8 @@ const i18n = {
             "Sutli": "유제품",
             "Ichimliklar": "음료",
             "Shirinliklar": "디저트"
-        }
+        },
+        locationsTitle: "우리 매장"
     },
     en: {
         greeting: "Hello,",
@@ -123,7 +126,8 @@ const i18n = {
             "Sutli": "Dairy",
             "Ichimliklar": "Drinks",
             "Shirinliklar": "Sweets"
-        }
+        },
+        locationsTitle: "Our Stores"
     }
 };
 
@@ -207,6 +211,7 @@ function updateStaticTranslations() {
     document.getElementById('label-total').textContent = t.labelTotal;
     document.getElementById('checkout-btn').textContent = t.btnCheckout;
     document.getElementById('confirm-order-btn').textContent = t.btnConfirm;
+    document.getElementById('locations-title').textContent = t.locationsTitle;
 }
 
 // 5. Render Functions
