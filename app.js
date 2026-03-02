@@ -31,7 +31,8 @@ const i18n = {
             "Mevalar": "Mevalar",
             "Sabzavotlar": "Sabzavotlar",
             "Sutli": "Sutli",
-            "Ichimliklar": "Ichimliklar"
+            "Ichimliklar": "Ichimliklar",
+            "Shirinliklar": "Shirinliklar"
         }
     },
     ru: {
@@ -60,7 +61,8 @@ const i18n = {
             "Mevalar": "Фрукты",
             "Sabzavotlar": "Овощи",
             "Sutli": "Молочные",
-            "Ichimliklar": "Напитки"
+            "Ichimliklar": "Напитки",
+            "Shirinliklar": "Сладости"
         }
     },
     kr: {
@@ -89,7 +91,8 @@ const i18n = {
             "Mevalar": "과일",
             "Sabzavotlar": "야채",
             "Sutli": "유제품",
-            "Ichimliklar": "음료"
+            "Ichimliklar": "음료",
+            "Shirinliklar": "디저트"
         }
     },
     en: {
@@ -118,7 +121,8 @@ const i18n = {
             "Mevalar": "Fruits",
             "Sabzavotlar": "Vegetables",
             "Sutli": "Dairy",
-            "Ichimliklar": "Drinks"
+            "Ichimliklar": "Drinks",
+            "Shirinliklar": "Sweets"
         }
     }
 };
@@ -169,6 +173,10 @@ window.setLanguage = (lang) => {
     renderProducts(activeCategory);
     renderCartItems();
     updateCartUI();
+    // Close language dropdown if open
+    const dropdown = document.querySelector('.lang-dropdown');
+    if (dropdown) dropdown.style.display = 'none';
+    setTimeout(() => { if (dropdown) dropdown.style.display = ''; }, 100);
 };
 
 function updateStaticTranslations() {
