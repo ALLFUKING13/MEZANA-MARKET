@@ -133,7 +133,7 @@ let currentLang = localStorage.getItem('mezana_lang') || 'uz';
 let cart = JSON.parse(localStorage.getItem('mezana_cart')) || [];
 let activeCategory = 'Hammasi';
 
-const products = [
+let products = JSON.parse(localStorage.getItem('mezana_products_local')) || [
     { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', emoji: '🍎' },
     { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', emoji: '🍌' },
     { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', emoji: '🍅' },
