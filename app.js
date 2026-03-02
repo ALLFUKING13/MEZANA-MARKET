@@ -127,9 +127,14 @@ const i18n = {
             "Ichimliklar": "Drinks",
             "Shirinliklar": "Sweets"
         },
-        locationsTitle: "Our Stores"
+        locationsTitle: "Our Stores",
+        btnHome: "Home"
     }
 };
+
+i18n.uz.btnHome = "Bosh menyu";
+i18n.ru.btnHome = "Главное меню";
+i18n.kr.btnHome = "홈 메뉴";
 
 let currentLang = localStorage.getItem('mezana_lang') || 'uz';
 
@@ -212,6 +217,7 @@ function updateStaticTranslations() {
     document.getElementById('checkout-btn').textContent = t.btnCheckout;
     document.getElementById('confirm-order-btn').textContent = t.btnConfirm;
     document.getElementById('locations-title').textContent = t.locationsTitle;
+    document.getElementById('label-home').textContent = t.btnHome;
 }
 
 // 5. Render Functions
@@ -659,3 +665,5 @@ if (tg.initDataUnsafe?.user) {
 updateStaticTranslations();
 updateCartUI();
 setLanguage(currentLang);
+renderProducts('Hammasi');
+renderCategories();

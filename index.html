@@ -18,11 +18,16 @@
                     <span class="greeting">Salom,</span>
                     <span class="user-name" id="user-name">Mehmon</span>
                 </div>
+                <button class="home-btn glass" onclick="filterProducts('Hammasi')">🏠 <span id="label-home">Bosh
+                        menyu</span></button>
             </div>
-            <div style="font-weight: 800; color: var(--primary); font-size: 1.2rem; cursor: pointer;"
-                oncontextmenu="return false;" onmousedown="handleAdminTriggerStart()"
-                onmouseup="handleAdminTriggerEnd()" ontouchstart="handleAdminTriggerStart()"
-                ontouchend="handleAdminTriggerEnd()">Mezana Market</div>
+            <div class="header-center">
+                <div class="marquee-container" oncontextmenu="return false;" onmousedown="handleAdminTriggerStart()"
+                    onmouseup="handleAdminTriggerEnd()" ontouchstart="handleAdminTriggerStart()"
+                    ontouchend="handleAdminTriggerEnd()">
+                    <div class="marquee-text">Mezana Market</div>
+                </div>
+            </div>
 
             <div class="header-right">
                 <div class="lang-picker" id="lang-picker" onclick="toggleLanguage(event)">
