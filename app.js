@@ -601,7 +601,15 @@ function populateProfileData() {
     safeSetVal('user-lang-val', user.language_code ? user.language_code.toUpperCase() : '-');
 
     const profImg = document.getElementById('profile-img');
-    if (profImg) profImg.textContent = user.first_name.charAt(0);
+    if (profImg) {
+        if (user.photo_url) {
+            profImg.innerHTML = `<img src="${user.photo_url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            profImg.style.background = 'transparent';
+        } else {
+            profImg.textContent = user.first_name.charAt(0);
+            profImg.style.background = 'var(--primary)';
+        }
+    }
 }
 
 // 9. Initial Load
@@ -671,7 +679,14 @@ window.addEventListener('DOMContentLoaded', () => {
     if (tg.initDataUnsafe?.user) {
         const user = tg.initDataUnsafe.user;
         if (elements.userNameEl) elements.userNameEl.textContent = user.first_name;
-        if (elements.userAvatarEl) elements.userAvatarEl.textContent = user.first_name.charAt(0);
+        if (elements.userAvatarEl) {
+            if (user.photo_url) {
+                elements.userAvatarEl.innerHTML = `<img src="${user.photo_url}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                elements.userAvatarEl.style.background = 'transparent';
+            } else {
+                elements.userAvatarEl.textContent = user.first_name.charAt(0);
+            }
+        }
     } else {
         if (elements.userNameEl) elements.userNameEl.textContent = i18n[currentLang].guest;
     }
