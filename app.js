@@ -227,19 +227,30 @@ function renderCategories() {
 }
 
 function renderProducts(filter = 'Hammasi') {
-    activeCategory = filter;
-    const filtered = filter === 'Hammasi' ? products : products.filter(p => p.category === filter);
+    if (!productsGrid) return;
+
+    // Ensure we are using the technical key "Hammasi" for the logic
+    const currentFilter = filter || 'Hammasi';
+    activeCategory = currentFilter;
+
+    const filtered = currentFilter === 'Hammasi' ? products : products.filter(p => p.category === currentFilter);
+
+    if (filtered.length === 0) {
+        productsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color: #7f8c8d;">Bu bo'limda mahsulotlar yo'q</div>`;
+        return;
+    }
 
     productsGrid.innerHTML = filtered.map(product => {
         const cartItem = cart.find(item => item.id === product.id);
         const qty = cartItem ? cartItem.quantity : 0;
+        const name = product.name[currentLang] || product.name['uz'] || 'Product';
 
         return `
             <div class="product-card">
                 <div class="product-image">
-                    <img src="${product.image || ''}" alt="${product.name[currentLang]}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
+                    <img src="${product.image || ''}" alt="${name}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
                 </div>
-                <div class="product-title">${product.name[currentLang]}</div>
+                <div class="product-title">${name}</div>
                 <div class="product-footer">
                     <div class="product-price">${product.price.toLocaleString()} ${i18n[currentLang].currency}</div>
                     <div class="qty-control ${qty > 0 ? 'active' : ''}">
@@ -258,9 +269,10 @@ function renderProducts(filter = 'Hammasi') {
 }
 
 window.filterProducts = (category) => {
-    activeCategory = category;
+    // If the category matches the localized "Hammasi", or is literally "Hammasi"
+    const technicalCategory = (category === i18n[currentLang].categories['Hammasi'] || category === 'Hammasi') ? 'Hammasi' : category;
+    renderProducts(technicalCategory);
     renderCategories();
-    renderProducts(category);
 };
 
 window.addToCart = (id) => {
