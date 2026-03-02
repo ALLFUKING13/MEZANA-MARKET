@@ -142,7 +142,7 @@ let currentLang = localStorage.getItem('mezana_lang') || 'uz';
 let cart = JSON.parse(localStorage.getItem('mezana_cart')) || [];
 let activeCategory = 'Hammasi';
 
-let products = JSON.parse(localStorage.getItem('mezana_products_local')) || [
+const defaultProducts = [
     { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
     { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
     { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
@@ -152,6 +152,11 @@ let products = JSON.parse(localStorage.getItem('mezana_products_local')) || [
     { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 5000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1541344999736-83eca872977a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
     { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
 ];
+
+let products = JSON.parse(localStorage.getItem('mezana_products_local')) || defaultProducts;
+
+// Ensure products is not an empty array if it comes from localStorage
+if (products.length === 0) products = defaultProducts;
 
 let categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar'];
 
@@ -661,9 +666,11 @@ if (tg.initDataUnsafe?.user) {
     userNameEl.textContent = i18n[currentLang].guest;
 }
 
-// Set initial state
-updateStaticTranslations();
-updateCartUI();
-setLanguage(currentLang);
-renderProducts('Hammasi');
-renderCategories();
+// Initialize state and render
+window.addEventListener('DOMContentLoaded', () => {
+    updateStaticTranslations();
+    updateCartUI();
+    setLanguage(currentLang);
+    renderCategories();
+    renderProducts('Hammasi');
+});
