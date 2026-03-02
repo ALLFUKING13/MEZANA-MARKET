@@ -204,6 +204,34 @@
             </div>
         </footer>
 
+        <div id="profile-modal" class="modal glass" style="display: none;">
+            <div class="modal-content glass profile-content">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-img">?</div>
+                    <h3 id="profile-name-title">Mijoz Profili</h3>
+                </div>
+                <div class="profile-info">
+                    <div class="info-item">
+                        <span class="info-label">ID:</span>
+                        <span class="info-value" id="user-id-val">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value" id="user-firstname-val">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Username:</span>
+                        <span class="info-value" id="user-username-val">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Language:</span>
+                        <span class="info-value" id="user-lang-val">-</span>
+                    </div>
+                </div>
+                <button class="primary-btn" onclick="toggleProfileModal(false)">Yopish</button>
+            </div>
+        </div>
+
         <div class="toast" id="toast"></div>
     </div>
     <script src="app.js"></script>

@@ -143,9 +143,15 @@ const i18n = {
         btnHome: "Home",
         sidebarTitle: "Menu",
         labelAccount: "Account",
-        labelSettings: "Settings"
+        labelSettings: "Settings",
+        profileTitle: "Client Profile",
+        btnClose: "Close"
     }
 };
+
+i18n.uz.profileTitle = "Mijoz Profili"; i18n.uz.btnClose = "Yopish";
+i18n.ru.profileTitle = "Профиль клиента"; i18n.ru.btnClose = "Закрыть";
+i18n.kr.profileTitle = "고객 프로필"; i18n.kr.btnClose = "닫기";
 
 const langFlags = { uz: '🇺🇿', ru: '🇷🇺', kr: '🇰🇷', en: '🇺🇸' };
 let currentLang = localStorage.getItem('mezana_lang') || 'uz';
@@ -183,6 +189,7 @@ function initElements() {
     elements.toast = document.getElementById('toast');
     elements.adminPanel = document.getElementById('admin-panel');
     elements.productFormModal = document.getElementById('product-form-modal');
+    elements.profileModal = document.getElementById('profile-modal');
 }
 
 // 4. Translation Logic
@@ -236,6 +243,9 @@ function updateStaticTranslations() {
     safeSet('sidebar-title', t.sidebarTitle);
     safeSet('label-account', t.labelAccount);
     safeSet('label-settings', t.labelSettings);
+    safeSet('profile-name-title', t.profileTitle);
+    const closeBtn = elements.profileModal ? elements.profileModal.querySelector('.primary-btn') : null;
+    if (closeBtn) closeBtn.textContent = t.btnClose;
 }
 
 // 5. Render Functions
@@ -513,8 +523,40 @@ window.deleteProduct = (id) => {
     }
 };
 
-window.showAccount = () => { showToast(i18n[currentLang].labelAccount); elements.sidebarDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); };
+window.showAccount = () => {
+    if (elements.sidebarDrawer) elements.sidebarDrawer.classList.remove('open');
+    toggleProfileModal(true);
+};
 window.showSettings = () => { showToast(i18n[currentLang].labelSettings); elements.sidebarDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); };
+
+window.toggleProfileModal = (show) => {
+    if (!elements.profileModal) return;
+    elements.profileModal.style.display = show ? 'flex' : 'none';
+    if (show) {
+        document.body.classList.add('no-scroll');
+        populateProfileData();
+    } else {
+        document.body.classList.remove('no-scroll');
+    }
+};
+
+function populateProfileData() {
+    const user = tg.initDataUnsafe?.user;
+    if (!user) return;
+
+    const safeSetVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val || '-';
+    };
+
+    safeSetVal('user-id-val', user.id);
+    safeSetVal('user-firstname-val', user.first_name + (user.last_name ? ' ' + user.last_name : ''));
+    safeSetVal('user-username-val', user.username ? '@' + user.username : '-');
+    safeSetVal('user-lang-val', user.language_code ? user.language_code.toUpperCase() : '-');
+
+    const profImg = document.getElementById('profile-img');
+    if (profImg) profImg.textContent = user.first_name.charAt(0);
+}
 
 // 9. Initial Load
 window.addEventListener('DOMContentLoaded', () => {
