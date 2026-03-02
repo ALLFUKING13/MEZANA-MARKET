@@ -1,0 +1,10 @@
+# Ignore zip files
+*.zip
+
+# Ignore Tiiny.host files
+tiiny.host - Webpage Editor.html
+tiiny.host - Webpage Editor_files/
+
+# Ignore thumbnails and other OS-specific files
+Thumbs.db
+.DS_Store

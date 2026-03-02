@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mezana Market - Fresh Products</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <header class="glass">
+            <div class="user-info">
+                <div class="avatar" id="user-avatar">?</div>
+                <div class="welcome">
+                    <span class="greeting">Salom,</span>
+                    <span class="user-name" id="user-name">Mehmon</span>
+                </div>
+            </div>
+            <div style="font-weight: 800; color: var(--primary); font-size: 1.2rem;">Mezana Market</div>
+
+            <div class="header-right">
+                <div class="lang-picker" id="lang-picker">
+                    <span id="current-lang-flag">🇺🇿</span>
+                    <div class="lang-dropdown glass">
+                        <div onclick="setLanguage('uz')">🇺🇿 O'zbek</div>
+                        <div onclick="setLanguage('ru')">🇷🇺 Русский</div>
+                        <div onclick="setLanguage('kr')">🇰🇷 한국어</div>
+                        <div onclick="setLanguage('en')">🇺🇸 English</div>
+                    </div>
+                </div>
+                <div class="cart-anchor" id="cart-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zM3 6h18M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1 id="hero-title">Tinchlik va <span class="highlight">Tabiat</span></h1>
+                <p id="hero-desc">Eng salla va yangi mahsulotlar eshigingizda</p>
+            </section>
+
+            <section class="categories" id="categories-list">
+                <!-- Categories will be injected here -->
+            </section>
+
+            <section class="products" id="products-grid">
+                <!-- Products will be injected here -->
+            </section>
+        </main>
+
+        <div id="cart-drawer" class="drawer glass">
+            <div class="drawer-header">
+                <h2 id="cart-title">Sizning Savatingiz</h2>
+                <button id="close-cart" class="close-btn">&times;</button>
+            </div>
+            <div class="cart-items" id="cart-items-list">
+                <!-- Cart items will be injected here -->
+            </div>
+
+            <div class="checkout-form" id="checkout-form" style="display: none;">
+                <h3 id="checkout-form-title">Yetkazib berish ma'lumotlari</h3>
+                <div class="input-group">
+                    <label id="label-name">Ismingiz</label>
+                    <input type="text" id="order-name">
+                </div>
+                <div class="input-group">
+                    <label id="label-phone">Telefon raqamingiz</label>
+                    <input type="tel" id="order-phone" placeholder="+998 90 123 45 67">
+                </div>
+                <div class="input-group">
+                    <label id="label-address">Manzil</label>
+                    <textarea id="order-address"></textarea>
+                </div>
+                <button id="back-to-cart" class="secondary-btn">Savatga qaytish</button>
+            </div>
+
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span id="label-total">Jami:</span>
+                    <span id="cart-total-price">0 so'm</span>
+                </div>
+                <button id="checkout-btn" class="primary-btn">Buyurtma berish</button>
+                <button id="confirm-order-btn" class="primary-btn" style="display: none;">Tasdiqlash</button>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
