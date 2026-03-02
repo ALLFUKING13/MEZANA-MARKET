@@ -17,7 +17,7 @@ const i18n = {
         labelPhone: "Telefon raqamingiz",
         labelAddress: "Manzil",
         placeholderName: "Ismingizni kiriting",
-        placeholderPhone: "+998 90 123 45 67",
+        placeholderPhone: "010-1234-5678",
         placeholderAddress: "Uy manzili va mo'ljal",
         btnCheckout: "Buyurtma berish",
         btnConfirm: "Tasdiqlash",
@@ -25,7 +25,7 @@ const i18n = {
         labelTotal: "Jami:",
         addedToast: "savatga qo'shildi",
         valError: "Iltimos, hamma maydonlarni to'ldiring",
-        currency: "so'm",
+        currency: "won",
         categories: {
             "Hammasi": "Hammasi",
             "Mevalar": "Mevalar",
@@ -47,7 +47,7 @@ const i18n = {
         labelPhone: "Номер телефона",
         labelAddress: "Адрес",
         placeholderName: "Введите ваше имя",
-        placeholderPhone: "+998 90 123 45 67",
+        placeholderPhone: "010-1234-5678",
         placeholderAddress: "Домашний адрес и ориентир",
         btnCheckout: "Оформить заказ",
         btnConfirm: "Подтвердить",
@@ -77,7 +77,7 @@ const i18n = {
         labelPhone: "전화번호",
         labelAddress: "주소",
         placeholderName: "이름을 입력하세요",
-        placeholderPhone: "+998 90 123 45 67",
+        placeholderPhone: "010-1234-5678",
         placeholderAddress: "상세 주소 및 랜드마크",
         btnCheckout: "주문하기",
         btnConfirm: "확인",
@@ -107,7 +107,7 @@ const i18n = {
         labelPhone: "Phone Number",
         labelAddress: "Address",
         placeholderName: "Enter your name",
-        placeholderPhone: "+998 90 123 45 67",
+        placeholderPhone: "010-1234-5678",
         placeholderAddress: "Home address and landmark",
         btnCheckout: "Place Order",
         btnConfirm: "Confirm",
@@ -115,7 +115,7 @@ const i18n = {
         labelTotal: "Total:",
         addedToast: "added to cart",
         valError: "Please fill in all fields",
-        currency: "so'm",
+        currency: "KRW",
         categories: {
             "Hammasi": "All",
             "Mevalar": "Fruits",
@@ -134,14 +134,14 @@ let cart = [];
 let activeCategory = 'Hammasi';
 
 const products = [
-    { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 12000, category: 'Mevalar', emoji: '🍎' },
-    { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3000, category: 'Mevalar', emoji: '🍌' },
-    { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2000, category: 'Sabzavotlar', emoji: '🍅' },
+    { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', emoji: '🍎' },
+    { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', emoji: '🍌' },
+    { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', emoji: '🍅' },
     { id: 4, name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' }, price: 1500, category: 'Sabzavotlar', emoji: '🥒' },
-    { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 9000, category: 'Sutli', emoji: '🥛' },
-    { id: 6, name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' }, price: 7000, category: 'Sutli', emoji: '🥣' },
-    { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 15000, category: 'Mevalar', emoji: '🍎' },
-    { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 3000, category: 'Ichimliklar', emoji: '💧' },
+    { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 2800, category: 'Sutli', emoji: '🥛' },
+    { id: 6, name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' }, price: 2000, category: 'Sutli', emoji: '🥣' },
+    { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 5000, category: 'Mevalar', emoji: '🍎' },
+    { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', emoji: '💧' },
 ];
 
 const categories = ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar'];
