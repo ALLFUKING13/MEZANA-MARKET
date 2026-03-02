@@ -16,38 +16,47 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Missing orderData' });
     }
 
-    // Format the message
-    let message = `🛒 **Yangi Buyurtma!**\n\n`;
-    message += `👤 **Mijoz:** ${orderData.user.name}\n`;
-    message += `📞 **Tel:** ${orderData.user.phone}\n`;
-    message += `📍 **Manzil:** ${orderData.user.address}\n\n`;
-    message += `📦 **Mahsulotlar:**\n`;
+    let message = `🛒 <b>Yangi Buyurtma!</b>\n\n`;
+    message += `👤 <b>Mijoz:</b> ${orderData.user.name}\n`;
+    message += `📞 <b>Tel:</b> ${orderData.user.phone}\n`;
+    message += `📍 <b>Manzil:</b> ${orderData.user.address}\n\n`;
+    message += `📦 <b>Mahsulotlar:</b>\n`;
 
     orderData.items.forEach(item => {
         message += `- ${item.name} x ${item.qty} (${(item.price * item.qty).toLocaleString()} ${orderData.currency || 'so\'m'})\n`;
     });
 
-    message += `\n💰 **Jami:** ${orderData.total.toLocaleString()} ${orderData.currency || 'so\'m'}`;
+    message += `\n💰 <b>Jami:</b> ${orderData.total.toLocaleString()} ${orderData.currency || 'so\'m'}`;
 
     try {
+        const payload = {
+            chat_id: ADMIN_CHAT_ID,
+            text: message,
+            parse_mode: 'HTML'
+        };
+
+        if (THREAD_ID) {
+            payload.message_thread_id = parseInt(THREAD_ID);
+        }
+
         const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: ADMIN_CHAT_ID,
-                message_thread_id: THREAD_ID ? parseInt(THREAD_ID) : undefined,
-                text: message,
-                parse_mode: 'Markdown'
-            })
+            body: JSON.stringify(payload)
         });
 
         const result = await response.json();
         if (result.ok) {
             res.status(200).json({ success: true });
         } else {
-            res.status(500).json({ error: 'Failed to send message to Telegram', details: result });
+            console.error('Telegram Error:', result);
+            res.status(500).json({
+                error: result.description || 'Failed to send message to Telegram',
+                details: result
+            });
         }
     } catch (error) {
+        console.error('API Error:', error);
         res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 }

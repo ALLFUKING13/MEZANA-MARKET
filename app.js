@@ -588,7 +588,7 @@ confirmOrderBtn.addEventListener('click', async () => {
         const result = await response.json();
 
         if (result.success) {
-            showToast(currentLang === 'uz' ? "Buyurtma qabul qilindi!" : "Заказ приня트!");
+            showToast(currentLang === 'uz' ? "Buyurtma qabul qilindi!" : "Заказ принят!");
             // Clear cart after successful order
             cart = [];
             localStorage.removeItem('mezana_cart');
