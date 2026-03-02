@@ -938,8 +938,10 @@ main {
 }
 
 .cart-footer {
-    padding: 1.5rem 1.5rem 5rem 1.5rem;
+    padding: 1.5rem 1.5rem calc(6rem + env(safe-area-inset-bottom, 20px)) 1.5rem;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
 }
 
 .total-row {
