@@ -345,15 +345,21 @@ window.handleAdminTriggerEnd = () => {
 };
 
 window.toggleAdmin = () => {
-    const code = prompt(currentLang === 'uz' ? "Admin kodini kiriting:" : "Enter admin code:");
-    if (code !== '7777') { // Default code: 7777
-        showToast(currentLang === 'uz' ? "Kod noto'g'ri!" : "Wrong code!");
-        return;
-    }
     const panel = document.getElementById('admin-panel');
-    panel.classList.toggle('open');
-    if (panel.classList.contains('open')) {
-        renderAdminProducts();
+    const isOpen = panel.classList.contains('open');
+
+    if (isOpen) {
+        // If already open, just close it (no password)
+        panel.classList.remove('open');
+    } else {
+        // If closed, ask for password before opening
+        const code = prompt(currentLang === 'uz' ? "Admin kodini kiriting:" : "Enter admin code:");
+        if (code === '7777') {
+            panel.classList.add('open');
+            renderAdminProducts();
+        } else if (code !== null) {
+            showToast(currentLang === 'uz' ? "Kod noto'g'ri!" : "Wrong code!");
+        }
     }
 };
 
