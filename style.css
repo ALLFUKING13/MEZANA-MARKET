@@ -54,9 +54,14 @@ header {
 }
 
 .header-center {
-    flex: 1;
+    flex: 2;
     overflow: hidden;
-    margin: 0 10px;
+    margin: 0 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
 }
 
 .marquee-container {
@@ -70,7 +75,7 @@ header {
     display: inline-block;
     font-weight: 800;
     color: var(--primary);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     padding-left: 100%;
     animation: marquee 10s linear infinite;
 }
@@ -88,14 +93,13 @@ header {
 .home-btn {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    border-radius: 10px;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 8px;
     border: none;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--primary-dark);
-    margin-left: 10px;
     cursor: pointer;
     transition: transform 0.2s;
 }
