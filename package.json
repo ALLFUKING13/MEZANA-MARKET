@@ -1,0 +1,7 @@
+{
+  "name": "mezana-market",
+  "version": "1.0.0",
+  "description": "Telegram Mini App for Mezana Market",
+  "main": "app.js",
+  "dependencies": {}
+}
