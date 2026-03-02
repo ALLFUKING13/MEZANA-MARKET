@@ -147,10 +147,16 @@ const i18n = {
         labelDarkMode: "Dark Mode",
         searchPlaceholder: "Search products...",
         deliveryBadge: "1-day delivery",
+        quickOrder: "⚡ 1-Click Order",
+        addCart: "Add to Cart",
         profileTitle: "Client Profile",
         btnClose: "Close"
     }
 };
+
+i18n.uz.quickOrder = "⚡ 1-Klik Buyurtma"; i18n.uz.addCart = "Savatga qo'shish";
+i18n.ru.quickOrder = "⚡ 1-Клик Заказ"; i18n.ru.addCart = "В корзину";
+i18n.kr.quickOrder = "⚡ 1-클릭 주문"; i18n.kr.addCart = "장바구니 담기";
 
 i18n.uz.labelDarkMode = "Tungi rejim"; i18n.uz.searchPlaceholder = "Mahsulot qidirish..."; i18n.uz.deliveryBadge = "1 kunda yetkazib berish";
 i18n.ru.labelDarkMode = "Тёмный режим"; i18n.ru.searchPlaceholder = "Поиск товаров..."; i18n.ru.deliveryBadge = "Доставка за 1 день";
@@ -200,6 +206,7 @@ function initElements() {
     elements.searchInput = document.getElementById('search-input');
     elements.categoriesGrid = document.getElementById('categories-grid');
     elements.bannerSlider = document.getElementById('banner-slider');
+    elements.productDetailModal = document.getElementById('product-detail-modal');
 }
 
 // 4. Translation Logic
@@ -255,6 +262,8 @@ function updateStaticTranslations() {
     safeSet('label-settings', t.labelSettings);
     safeSet('profile-name-title', t.profileTitle);
     safeSet('label-dark-mode', t.labelDarkMode);
+    safeSet('btn-quick-buy', t.quickOrder);
+    safeSet('btn-add-modal', t.addCart);
     if (elements.searchInput) elements.searchInput.placeholder = t.searchPlaceholder;
     const closeBtn = elements.profileModal ? elements.profileModal.querySelector('.primary-btn') : null;
     if (closeBtn) closeBtn.textContent = t.btnClose;
@@ -311,7 +320,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
         const name = product.name[currentLang] || product.name['uz'] || 'Product';
 
         return `
-            <div class="product-card">
+            <div class="product-card" onclick="openProductDetail(${product.id})">
                 ${product.oneDayDelivery ? `<div class="delivery-badge">⚡ ${i18n[currentLang].deliveryBadge}</div>` : ''}
                 <div class="product-image">
                     <img src="${product.image || ''}" alt="${name}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
@@ -319,7 +328,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
                 <div class="product-title">${name}</div>
                 <div class="product-footer">
                     <div class="product-price">${product.price.toLocaleString()} ${i18n[currentLang].currency}</div>
-                    <div class="qty-control ${qty > 0 ? 'active' : ''}">
+                    <div class="qty-control ${qty > 0 ? 'active' : ''}" onclick="event.stopPropagation()">
                         ${qty === 0 ? `
                             <button class="add-btn-large" onclick="addToCart(${product.id})">+</button>
                         ` : `
@@ -563,6 +572,63 @@ window.showAccount = () => {
 };
 window.showSettings = () => { showToast(i18n[currentLang].labelSettings); elements.sidebarDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); };
 
+window.openProductDetail = (id) => {
+    const p = products.find(prod => prod.id === id);
+    if (!p || !elements.productDetailModal) return;
+
+    const img = document.getElementById('detail-img');
+    const title = document.getElementById('detail-title');
+    const price = document.getElementById('detail-price');
+    const oldPrice = document.getElementById('detail-old-price');
+    const desc = document.getElementById('detail-desc');
+    const badge = document.getElementById('detail-delivery-badge');
+    const btnQuick = document.getElementById('btn-quick-buy');
+    const btnAdd = document.getElementById('btn-add-modal');
+
+    if (img) img.src = p.image || '';
+    if (title) title.textContent = p.name[currentLang] || p.name['uz'];
+    if (price) price.textContent = `${p.price.toLocaleString()} ${i18n[currentLang].currency}`;
+    if (oldPrice) {
+        if (p.oldPrice) {
+            oldPrice.textContent = `${p.oldPrice.toLocaleString()} ${i18n[currentLang].currency}`;
+            oldPrice.style.display = 'block';
+        } else {
+            oldPrice.style.display = 'none';
+        }
+    }
+    if (desc) desc.textContent = p.description?.[currentLang] || p.description?.['uz'] || "Batafsil ma'lumot tez orada qo'shiladi.";
+    if (badge) badge.style.display = p.oneDayDelivery ? 'flex' : 'none';
+
+    if (btnQuick) btnQuick.onclick = () => quickOrder(p.id);
+    if (btnAdd) btnAdd.onclick = () => { addToCart(p.id); closeProductDetail(); };
+
+    elements.productDetailModal.style.display = 'flex';
+    document.body.classList.add('no-scroll');
+};
+
+window.closeProductDetail = () => {
+    if (elements.productDetailModal) elements.productDetailModal.style.display = 'none';
+    document.body.classList.remove('no-scroll');
+};
+
+window.quickOrder = (id) => {
+    const p = products.find(prod => prod.id === id);
+    if (!p) return;
+
+    // Add to cart if not already there, or increase qty
+    const existing = cart.find(item => item.id === id);
+    if (!existing) {
+        cart.push({ ...p, quantity: 1 });
+    }
+    updateCartUI();
+    closeProductDetail();
+
+    // Open cart and go to checkout
+    if (elements.cartToggle) elements.cartToggle.click();
+    if (elements.checkoutBtn) elements.checkoutBtn.click();
+    vibrate('heavy');
+};
+
 window.toggleDarkMode = () => {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     if (isDark) {
@@ -641,14 +707,88 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 4000);
 
     const defaultProductsData = [
-        { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
-        { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
-        { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 4, name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' }, price: 1500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1449333256619-bc90bac43ed8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 2800, category: 'Sutli', image: 'https://images.unsplash.com/photo-1563636619-e910029339cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
-        { id: 6, name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' }, price: 2000, category: 'Sutli', image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43454?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 5000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1541344999736-83eca872977a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
+        {
+            id: 1,
+            name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' },
+            price: 4000,
+            oldPrice: 5500,
+            category: 'Mevalar',
+            image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            oneDayDelivery: true,
+            description: {
+                uz: "Shirin va sershira olma 'Golden' navi. Janubiy Koreyaning toza bog'laridan keltirilgan.",
+                ru: "Сладкое и сочное яблоко сорта 'Голден'. Привезено из экологически чистых садов Южной Кореи.",
+                kr: "달콤하고 즙이 많은 '골든' 품종의 사과. 한국의 깨끗한 과수원에서 재배되었습니다.",
+                en: "Sweet and juicy 'Golden' variety apple. From the clean orchards of South Korea."
+            }
+        },
+        {
+            id: 2,
+            name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' },
+            price: 3500,
+            oldPrice: 4000,
+            category: 'Mevalar',
+            image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            oneDayDelivery: true,
+            description: {
+                uz: "Yangi va pishgan bananlar. Energiya uchun eng yaxshi tanlov.",
+                ru: "Свежие и спелые бананы. Лучший выбор для энергии.",
+                kr: "신선하고 잘 익은 바나나. 에너지 보충에 최고의 선택.",
+                en: "Fresh and ripe bananas. The best choice for energy."
+            }
+        },
+        {
+            id: 3,
+            name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' },
+            price: 2500,
+            category: 'Sabzavotlar',
+            image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            description: { uz: "Sarhal pomidorlar.", ru: "Свежие помидоры.", kr: "신선한 토마토.", en: "Fresh tomatoes." }
+        },
+        {
+            id: 4,
+            name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' },
+            price: 1500,
+            category: 'Sabzavotlar',
+            image: 'https://images.unsplash.com/photo-1449333256619-bc90bac43ed8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            description: { uz: "Qarsildoq bodringlar.", ru: "Хрустящие огурцы.", kr: "삭삭한 오이.", en: "Crunchy cucumbers." }
+        },
+        {
+            id: 5,
+            name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' },
+            price: 2800,
+            oldPrice: 3200,
+            category: 'Sutli',
+            image: 'https://images.unsplash.com/photo-1563636619-e910029339cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            oneDayDelivery: true,
+            description: { uz: "Tabiiy sigir suti.", ru: "Натуральное коровье молоко.", kr: "천연 우유.", en: "Natural cow milk." }
+        },
+        {
+            id: 6,
+            name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' },
+            price: 2000,
+            category: 'Sutli',
+            image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43454?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            description: { uz: "Foydali qatiq.", ru: "Полезный кефир.", kr: "요거트.", en: "Healthy yogurt." }
+        },
+        {
+            id: 7,
+            name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' },
+            price: 5000,
+            oldPrice: 6500,
+            category: 'Mevalar',
+            image: 'https://images.unsplash.com/photo-1541344999736-83eca872977a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            description: { uz: "Shirin anor.", ru: "Сладкий гранат.", kr: "석류.", en: "Sweet pomegranate." }
+        },
+        {
+            id: 8,
+            name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' },
+            price: 1000,
+            category: 'Ichimliklar',
+            image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+            oneDayDelivery: true,
+            description: { uz: "Toza ichimlik suvi.", ru: "Чистая питьевая вода.", kr: "생수.", en: "Pure drinking water." }
+        },
     ];
 
 

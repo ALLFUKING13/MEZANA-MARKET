@@ -227,6 +227,30 @@
             </div>
         </footer>
 
+        <div id="product-detail-modal" class="modal glass" style="display: none;">
+            <div class="modal-content glass product-detail-content">
+                <button class="close-modal-btn" onclick="closeProductDetail()">&times;</button>
+                <div class="detail-image-container">
+                    <img id="detail-img" src="" alt="">
+                    <div id="detail-delivery-badge" class="delivery-badge" style="display: none;">⚡ 1 kunda yetkazib
+                        berish</div>
+                </div>
+                <div class="detail-body">
+                    <h2 id="detail-title">Mahsulot nomi</h2>
+                    <div class="detail-price-row">
+                        <span id="detail-price" class="current-price">0 won</span>
+                        <span id="detail-old-price" class="old-price">0 won</span>
+                    </div>
+                    <p id="detail-desc" class="detail-description">Mahsulot tavsifi bu yerda bo'ladi...</p>
+
+                    <div class="detail-actions">
+                        <button class="quick-buy-btn" id="btn-quick-buy">⚡ 1-Klik Buyurtma</button>
+                        <button class="primary-btn" id="btn-add-modal">Savatga qo'shish</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="profile-modal" class="modal glass" style="display: none;">
             <div class="modal-content glass profile-content">
                 <div class="profile-header">
