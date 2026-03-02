@@ -141,13 +141,20 @@ const i18n = {
         },
         locationsTitle: "Our Stores",
         btnHome: "Home",
-        sidebarTitle: "Menu",
+        sidebarTitle: "Settings",
         labelAccount: "Account",
         labelSettings: "Settings",
+        labelDarkMode: "Dark Mode",
+        searchPlaceholder: "Search products...",
+        deliveryBadge: "1-day delivery",
         profileTitle: "Client Profile",
         btnClose: "Close"
     }
 };
+
+i18n.uz.labelDarkMode = "Tungi rejim"; i18n.uz.searchPlaceholder = "Mahsulot qidirish..."; i18n.uz.deliveryBadge = "1 kunda yetkazib berish";
+i18n.ru.labelDarkMode = "Тёмный режим"; i18n.ru.searchPlaceholder = "Поиск товаров..."; i18n.ru.deliveryBadge = "Доставка за 1 день";
+i18n.kr.labelDarkMode = "다크 모드"; i18n.kr.searchPlaceholder = "제품 검색..."; i18n.kr.deliveryBadge = "1일 배송";
 
 i18n.uz.profileTitle = "Mijoz Profili"; i18n.uz.btnClose = "Yopish";
 i18n.ru.profileTitle = "Профиль клиента"; i18n.ru.btnClose = "Закрыть";
@@ -190,6 +197,9 @@ function initElements() {
     elements.adminPanel = document.getElementById('admin-panel');
     elements.productFormModal = document.getElementById('product-form-modal');
     elements.profileModal = document.getElementById('profile-modal');
+    elements.searchInput = document.getElementById('search-input');
+    elements.categoriesGrid = document.getElementById('categories-grid');
+    elements.bannerSlider = document.getElementById('banner-slider');
 }
 
 // 4. Translation Logic
@@ -244,31 +254,54 @@ function updateStaticTranslations() {
     safeSet('label-account', t.labelAccount);
     safeSet('label-settings', t.labelSettings);
     safeSet('profile-name-title', t.profileTitle);
+    safeSet('label-dark-mode', t.labelDarkMode);
+    if (elements.searchInput) elements.searchInput.placeholder = t.searchPlaceholder;
     const closeBtn = elements.profileModal ? elements.profileModal.querySelector('.primary-btn') : null;
     if (closeBtn) closeBtn.textContent = t.btnClose;
 }
 
 // 5. Render Functions
 function renderCategories() {
-    if (!elements.categoriesList) return;
-    elements.categoriesList.innerHTML = categories.map(cat => {
+    if (!elements.categoriesGrid) return;
+
+    // Icon mapping for professional look
+    const icons = {
+        'Hammasi': '📦',
+        'Mevalar': '🍎',
+        'Sabzavotlar': '🥦',
+        'Sutli': '🥛',
+        'Ichimliklar': '🥤',
+        'Shirinliklar': '🍫'
+    };
+
+    elements.categoriesGrid.innerHTML = categories.map(cat => {
         const catLabel = (i18n[currentLang].categories && i18n[currentLang].categories[cat]) ? i18n[currentLang].categories[cat] : cat;
+        const icon = icons[cat] || '🏷️';
         return `
-            <div class="category-pill ${cat === activeCategory ? 'active' : ''}" onclick="filterProducts('${cat}')">
-                ${catLabel}
+            <div class="category-card ${cat === activeCategory ? 'active' : ''}" onclick="filterProducts('${cat}')">
+                <div class="category-icon">${icon}</div>
+                <div class="category-name">${catLabel}</div>
             </div>
         `;
     }).join('');
 }
 
-function renderProducts(filter = 'Hammasi') {
+function renderProducts(filter = 'Hammasi', searchQuery = '') {
     if (!elements.productsGrid) return;
 
     activeCategory = filter;
-    const filtered = filter === 'Hammasi' ? products : products.filter(p => p.category === filter);
+    let filtered = filter === 'Hammasi' ? products : products.filter(p => p.category === filter);
+
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(p =>
+            (p.name[currentLang] || p.name['uz']).toLowerCase().includes(q) ||
+            p.category.toLowerCase().includes(q)
+        );
+    }
 
     if (filtered.length === 0) {
-        elements.productsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color: #7f8c8d;">${currentLang === 'uz' ? "Mahsulotlar yo'q" : "Нет товаров"}</div>`;
+        elements.productsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color: #7f8c8d;">${currentLang === 'uz' ? "Mahsulotlar topilmadi" : "Товары не найдены"}</div>`;
         return;
     }
 
@@ -279,6 +312,7 @@ function renderProducts(filter = 'Hammasi') {
 
         return `
             <div class="product-card">
+                ${product.oneDayDelivery ? `<div class="delivery-badge">⚡ ${i18n[currentLang].deliveryBadge}</div>` : ''}
                 <div class="product-image">
                     <img src="${product.image || ''}" alt="${name}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
                 </div>
@@ -529,6 +563,18 @@ window.showAccount = () => {
 };
 window.showSettings = () => { showToast(i18n[currentLang].labelSettings); elements.sidebarDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); };
 
+window.toggleDarkMode = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('mezana_dark_mode', 'false');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('mezana_dark_mode', 'true');
+    }
+    vibrate('light');
+};
+
 window.toggleProfileModal = (show) => {
     if (!elements.profileModal) return;
     elements.profileModal.style.display = show ? 'flex' : 'none';
@@ -562,16 +608,41 @@ function populateProfileData() {
 window.addEventListener('DOMContentLoaded', () => {
     initElements();
 
+    // Dark Mode persistence
+    if (localStorage.getItem('mezana_dark_mode') === 'true') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
+    // Search event
+    if (elements.searchInput) {
+        elements.searchInput.addEventListener('input', (e) => {
+            renderProducts(activeCategory, e.target.value);
+        });
+    }
+
+    // Auto-slide banners
+    let slideIdx = 0;
+    setInterval(() => {
+        if (!elements.bannerSlider) return;
+        const items = elements.bannerSlider.querySelectorAll('.banner-item');
+        slideIdx = (slideIdx + 1) % items.length;
+        elements.bannerSlider.scrollTo({
+            left: items[slideIdx].offsetLeft - 20,
+            behavior: 'smooth'
+        });
+    }, 4000);
+
     const defaultProductsData = [
-        { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+        { id: 1, name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' }, price: 4000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
+        { id: 2, name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' }, price: 3500, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
         { id: 3, name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' }, price: 2500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
         { id: 4, name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' }, price: 1500, category: 'Sabzavotlar', image: 'https://images.unsplash.com/photo-1449333256619-bc90bac43ed8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 2800, category: 'Sutli', image: 'https://images.unsplash.com/photo-1563636619-e910029339cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+        { id: 5, name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' }, price: 2800, category: 'Sutli', image: 'https://images.unsplash.com/photo-1563636619-e910029339cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
         { id: 6, name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' }, price: 2000, category: 'Sutli', image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43454?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
         { id: 7, name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' }, price: 5000, category: 'Mevalar', image: 'https://images.unsplash.com/photo-1541344999736-83eca872977a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
-        { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
+        { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80', oneDayDelivery: true },
     ];
+
 
     products = JSON.parse(localStorage.getItem('mezana_products_local')) || defaultProductsData;
     if (products.length === 0) products = defaultProductsData;

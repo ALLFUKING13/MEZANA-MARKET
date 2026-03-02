@@ -59,13 +59,32 @@
         </header>
 
         <main>
-            <section class="hero">
-                <h1 id="hero-title">Tinchlik va <span class="highlight">Tabiat</span></h1>
-                <p id="hero-desc">Eng salla va yangi mahsulotlar eshigingizda</p>
+            <section class="banner-section">
+                <div class="banner-slider" id="banner-slider">
+                    <div class="banner-item">
+                        <div class="banner-content">
+                            <h2>Arzon va Sifatli</h2>
+                            <p>Barcha mahsulotlarga -10% chegirma!</p>
+                        </div>
+                    </div>
+                    <div class="banner-item" style="background: linear-gradient(135deg, #e67e22, #d35400);">
+                        <div class="banner-content">
+                            <h2>Yangi Kelganlar</h2>
+                            <p>Bugun yetkazib beramiz!</p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
-            <section class="categories" id="categories-list">
-                <!-- Categories will be injected here -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <span>🔍</span>
+                    <input type="text" id="search-input" class="search-input" placeholder="Mahsulot qidirish...">
+                </div>
+            </div>
+
+            <section class="categories" id="categories-grid">
+                <!-- Professional category cards will be injected here -->
             </section>
 
             <section class="products" id="products-grid">
@@ -86,6 +105,10 @@
                 <div class="sidebar-item" onclick="showSettings()">
                     <span class="icon">⚙️</span>
                     <span id="label-settings">Sozlamalar</span>
+                </div>
+                <div class="sidebar-item" onclick="toggleDarkMode()">
+                    <span class="icon">🌓</span>
+                    <span id="label-dark-mode">Tungi rejim</span>
                 </div>
             </div>
         </div>
