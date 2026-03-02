@@ -143,13 +143,11 @@
                 </div>
                 <div class="input-group">
                     <label>Kategoriya</label>
-                    <select id="admin-category">
-                        <option value="Mevalar">Mevalar</option>
-                        <option value="Sabzavotlar">Sabzavotlar</option>
-                        <option value="Sutli">Sutli</option>
-                        <option value="Ichimliklar">Ichimliklar</option>
-                        <option value="Shirinliklar">Shirinliklar</option>
+                    <select id="admin-category" onchange="toggleNewCategoryInput()">
+                        <!-- Dynamic categories will be injected here -->
                     </select>
+                    <input type="text" id="admin-new-category" placeholder="Yangi kategoriya nomi"
+                        style="display: none; margin-top: 10px;">
                 </div>
                 <div class="modal-actions">
                     <button class="secondary-btn" onclick="hideProductForm()">Bekor qilish</button>

@@ -144,7 +144,7 @@ let products = JSON.parse(localStorage.getItem('mezana_products_local')) || [
     { id: 8, name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' }, price: 1000, category: 'Ichimliklar', image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80' },
 ];
 
-const categories = ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar'];
+let categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar'];
 
 // 3. DOM Elements
 const productsGrid = document.getElementById('products-grid');
@@ -211,11 +211,14 @@ function updateStaticTranslations() {
 
 // 5. Render Functions
 function renderCategories() {
-    categoriesList.innerHTML = categories.map(cat => `
-        <div class="category-pill ${cat === activeCategory ? 'active' : ''}" onclick="filterProducts('${cat}')">
-            ${i18n[currentLang].categories[cat]}
-        </div>
-    `).join('');
+    categoriesList.innerHTML = categories.map(cat => {
+        const catLabel = (i18n[currentLang].categories && i18n[currentLang].categories[cat]) ? i18n[currentLang].categories[cat] : cat;
+        return `
+            <div class="category-pill ${cat === activeCategory ? 'active' : ''}" onclick="filterProducts('${cat}')">
+                ${catLabel}
+            </div>
+        `;
+    }).join('');
 }
 
 function renderProducts(filter = 'Hammasi') {
@@ -379,8 +382,20 @@ window.showProductForm = (id = null) => {
     const preview = document.getElementById('admin-image-preview');
     const base64Input = document.getElementById('admin-image-base64');
     const fileInput = document.getElementById('admin-image-file');
+    const catSelect = document.getElementById('admin-category');
+    const newCatInput = document.getElementById('admin-new-category');
 
     fileInput.value = ''; // Reset file input
+    newCatInput.style.display = 'none';
+    newCatInput.value = '';
+
+    // Populate categories in select
+    let optionsHtml = categories.filter(c => c !== 'Hammasi').map(c => {
+        const catLabel = (i18n[currentLang].categories && i18n[currentLang].categories[c]) ? i18n[currentLang].categories[c] : c;
+        return `<option value="${c}">${catLabel}</option>`;
+    }).join('');
+    optionsHtml += `<option value="NEW">+ Yangi kategoriya...</option>`;
+    catSelect.innerHTML = optionsHtml;
 
     if (id) {
         const p = products.find(prod => prod.id === id);
@@ -396,7 +411,7 @@ window.showProductForm = (id = null) => {
         document.getElementById('admin-name-kr').value = p.name.kr;
         document.getElementById('admin-name-en').value = p.name.en;
         document.getElementById('admin-price').value = p.price;
-        document.getElementById('admin-category').value = p.category;
+        catSelect.value = p.category;
     } else {
         title.textContent = "Yangi mahsulot";
         base64Input.value = '';
@@ -406,8 +421,14 @@ window.showProductForm = (id = null) => {
         document.getElementById('admin-name-kr').value = '';
         document.getElementById('admin-name-en').value = '';
         document.getElementById('admin-price').value = '';
-        document.getElementById('admin-category').value = 'Mevalar';
+        catSelect.value = categories.length > 1 ? categories[1] : 'Mevalar';
     }
+};
+
+window.toggleNewCategoryInput = () => {
+    const catSelect = document.getElementById('admin-category');
+    const newCatInput = document.getElementById('admin-new-category');
+    newCatInput.style.display = catSelect.value === 'NEW' ? 'block' : 'none';
 };
 
 window.previewImage = (event) => {
@@ -430,6 +451,19 @@ window.hideProductForm = () => {
 window.saveProduct = () => {
     const nameUz = document.getElementById('admin-name-uz').value;
     const price = document.getElementById('admin-price').value;
+    let category = document.getElementById('admin-category').value;
+
+    if (category === 'NEW') {
+        category = document.getElementById('admin-new-category').value.trim();
+        if (!category) {
+            showToast("Kategoriya nomini kiritin!");
+            return;
+        }
+        if (!categories.includes(category)) {
+            categories.push(category);
+            localStorage.setItem('mezana_categories_local', JSON.stringify(categories));
+        }
+    }
 
     if (!nameUz || !price) {
         showToast(i18n[currentLang].valError);
@@ -446,7 +480,7 @@ window.saveProduct = () => {
             en: document.getElementById('admin-name-en').value || nameUz
         },
         price: parseInt(price),
-        category: document.getElementById('admin-category').value
+        category: category
     };
 
     if (editingId) {
@@ -460,6 +494,7 @@ window.saveProduct = () => {
     localStorage.setItem('mezana_products_local', JSON.stringify(products));
     renderProducts(activeCategory);
     renderAdminProducts();
+    renderCategories();
     hideProductForm();
     showToast("Saqlandi!");
 };
