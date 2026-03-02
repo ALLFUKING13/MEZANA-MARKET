@@ -363,7 +363,9 @@ confirmOrderBtn.addEventListener('click', async () => {
         }
     } catch (error) {
         console.error('Order error:', error);
-        showToast("Xatolik yuz berdi. Qayta urinib ko'ring.");
+        // Batafsilroq xatolik xabarini ko'rsatish
+        const errorMsg = error.message || "Xatolik yuz berdi";
+        showToast(`Xato: ${errorMsg}`);
         confirmOrderBtn.disabled = false;
         confirmOrderBtn.textContent = i18n[currentLang].btnConfirm;
     }
