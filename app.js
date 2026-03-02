@@ -55,7 +55,7 @@ const i18n = {
         labelTotal: "Итого:",
         addedToast: "добавлено в корзину",
         valError: "Пожалуйста, заполните все поля",
-        currency: "сум",
+        currency: "KRW",
         categories: {
             "Hammasi": "Все",
             "Mevalar": "Фрукты",
@@ -85,7 +85,7 @@ const i18n = {
         labelTotal: "합계:",
         addedToast: "장바구니에 추가됨",
         valError: "모든 필드를 채워주세요",
-        currency: "숨",
+        currency: "원",
         categories: {
             "Hammasi": "전체",
             "Mevalar": "과일",
