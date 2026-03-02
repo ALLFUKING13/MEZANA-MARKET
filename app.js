@@ -326,6 +326,126 @@ function resetDrawer() {
     confirmOrderBtn.style.display = 'none';
 }
 
+// 8. Admin Logic
+let adminTimer;
+let editingId = null;
+
+window.handleAdminTriggerStart = () => {
+    adminTimer = setTimeout(() => {
+        toggleAdmin();
+        vibrate('heavy');
+    }, 3000); // 3 seconds long press
+};
+
+window.handleAdminTriggerEnd = () => {
+    clearTimeout(adminTimer);
+};
+
+window.toggleAdmin = () => {
+    const panel = document.getElementById('admin-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+        renderAdminProducts();
+    }
+};
+
+function renderAdminProducts() {
+    const list = document.getElementById('product-list-admin');
+    list.innerHTML = products.map(p => `
+        <div class="admin-product-item">
+            <span>${p.emoji} ${p.name[currentLang]}</span>
+            <div class="admin-item-controls">
+                <button class="edit-btn" onclick="editProduct(${p.id})">✎</button>
+                <button class="delete-btn" onclick="deleteProduct(${p.id})">×</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.showProductForm = (id = null) => {
+    editingId = id;
+    const modal = document.getElementById('product-form-modal');
+    const title = document.getElementById('form-title');
+    modal.style.display = 'flex';
+
+    if (id) {
+        const p = products.find(prod => prod.id === id);
+        title.textContent = "Tahrirlash";
+        document.getElementById('admin-emoji').value = p.emoji;
+        document.getElementById('admin-name-uz').value = p.name.uz;
+        document.getElementById('admin-name-ru').value = p.name.ru;
+        document.getElementById('admin-name-kr').value = p.name.kr;
+        document.getElementById('admin-name-en').value = p.name.en;
+        document.getElementById('admin-price').value = p.price;
+        document.getElementById('admin-category').value = p.category;
+    } else {
+        title.textContent = "Yangi mahsulot";
+        document.getElementById('admin-emoji').value = '🍎';
+        document.getElementById('admin-name-uz').value = '';
+        document.getElementById('admin-name-ru').value = '';
+        document.getElementById('admin-name-kr').value = '';
+        document.getElementById('admin-name-en').value = '';
+        document.getElementById('admin-price').value = '';
+        document.getElementById('admin-category').value = 'Mevalar';
+    }
+};
+
+window.hideProductForm = () => {
+    document.getElementById('product-form-modal').style.display = 'none';
+};
+
+window.saveProduct = () => {
+    const newProduct = {
+        id: editingId || Date.now(),
+        emoji: document.getElementById('admin-emoji').value || '📦',
+        name: {
+            uz: document.getElementById('admin-name-uz').value,
+            ru: document.getElementById('admin-name-ru').value,
+            kr: document.getElementById('admin-name-kr').value,
+            en: document.getElementById('admin-name-en').value
+        },
+        price: parseInt(document.getElementById('admin-price').value),
+        category: document.getElementById('admin-category').value
+    };
+
+    if (editingId) {
+        const idx = products.findIndex(p => p.id === editingId);
+        products[idx] = newProduct;
+    } else {
+        products.push(newProduct);
+    }
+
+    // Update main lists
+    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    renderProducts(activeCategory);
+    renderAdminProducts();
+    hideProductForm();
+    showToast("Saqlandi!");
+};
+
+window.editProduct = (id) => showProductForm(id);
+
+window.deleteProduct = (id) => {
+    if (confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
+        const idx = products.findIndex(p => p.id === id);
+        products.splice(idx, 1);
+        localStorage.setItem('mezana_products_local', JSON.stringify(products));
+        renderProducts(activeCategory);
+        renderAdminProducts();
+    }
+};
+
+window.exportData = () => {
+    const data = JSON.stringify(products, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mezana_products.json';
+    a.click();
+    showToast("Kod yuklab olindi (.json)");
+};
+
 checkoutBtn.addEventListener('click', () => {
     if (cart.length === 0) { showToast(i18n[currentLang].emptyCart); return; }
     cartItemsList.style.display = 'none';

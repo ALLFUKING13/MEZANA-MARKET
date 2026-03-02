@@ -19,7 +19,10 @@
                     <span class="user-name" id="user-name">Mehmon</span>
                 </div>
             </div>
-            <div style="font-weight: 800; color: var(--primary); font-size: 1.2rem;">Mezana Market</div>
+            <div style="font-weight: 800; color: var(--primary); font-size: 1.2rem; cursor: pointer;"
+                oncontextmenu="return false;" onmousedown="handleAdminTriggerStart()"
+                onmouseup="handleAdminTriggerEnd()" ontouchstart="handleAdminTriggerStart()"
+                ontouchend="handleAdminTriggerEnd()">Mezana Market</div>
 
             <div class="header-right">
                 <div class="lang-picker" id="lang-picker" onclick="toggleLanguage(event)">
@@ -88,6 +91,65 @@
                 </div>
                 <button id="checkout-btn" class="primary-btn">Buyurtma berish</button>
                 <button id="confirm-order-btn" class="primary-btn" style="display: none;">Tasdiqlash</button>
+            </div>
+        </div>
+
+        <div id="admin-panel" class="drawer glass admin-drawer">
+            <div class="drawer-header">
+                <h2>Admin Panel</h2>
+                <button onclick="toggleAdmin()" class="close-btn">&times;</button>
+            </div>
+            <div class="admin-content">
+                <div id="product-list-admin" class="admin-item-list">
+                    <!-- Admin product list here -->
+                </div>
+                <button class="primary-btn" onclick="showProductForm()">+ Yangi mahsulot</button>
+                <button class="secondary-btn" onclick="exportData()" style="margin-top: 10px; width: 100%;">Eksport
+                    (JSON)</button>
+            </div>
+        </div>
+
+        <div id="product-form-modal" class="modal glass" style="display: none;">
+            <div class="modal-content glass">
+                <h3 id="form-title">Mahsulot</h3>
+                <div class="input-group">
+                    <label>Emoji</label>
+                    <input type="text" id="admin-emoji" placeholder="🍎">
+                </div>
+                <div class="input-group">
+                    <label>Nom (UZ)</label>
+                    <input type="text" id="admin-name-uz">
+                </div>
+                <div class="input-group">
+                    <label>Nom (RU)</label>
+                    <input type="text" id="admin-name-ru">
+                </div>
+                <div class="input-group">
+                    <label>Nom (KR)</label>
+                    <input type="text" id="admin-name-kr">
+                </div>
+                <div class="input-group">
+                    <label>Nom (EN)</label>
+                    <input type="text" id="admin-name-en">
+                </div>
+                <div class="input-group">
+                    <label>Narx (Won)</label>
+                    <input type="number" id="admin-price">
+                </div>
+                <div class="input-group">
+                    <label>Kategoriya</label>
+                    <select id="admin-category">
+                        <option value="Mevalar">Mevalar</option>
+                        <option value="Sabzavotlar">Sabzavotlar</option>
+                        <option value="Sutli">Sutli</option>
+                        <option value="Ichimliklar">Ichimliklar</option>
+                        <option value="Shirinliklar">Shirinliklar</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="secondary-btn" onclick="hideProductForm()">Bekor qilish</button>
+                    <button class="primary-btn" onclick="saveProduct()">Saqlash</button>
+                </div>
             </div>
         </div>
 
