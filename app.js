@@ -1,7 +1,7 @@
-// Initialize Telegram WebApp
-const tg = window.Telegram.WebApp;
-tg.expand();
-tg.ready();
+// Initialize Telegram WebApp safely
+const tg = window.Telegram?.WebApp || {};
+if (tg.expand) tg.expand();
+if (tg.ready) tg.ready();
 
 // 1. Translations Map
 const i18n = {
@@ -1034,7 +1034,9 @@ async function handleConfirmOrder() {
             cart = [];
             localStorage.removeItem('mezana_cart');
             updateCartUI();
-            setTimeout(() => tg.close(), 1500);
+            setTimeout(() => {
+                if (tg.close) tg.close();
+            }, 1500);
         } else { throw new Error(result.error); }
     } catch (error) {
         showToast(`Xato: ${error.message}`);
