@@ -38,7 +38,16 @@ const i18n = {
         btnHome: "Bosh menyu",
         sidebarTitle: "Menyu",
         labelAccount: "Profil",
-        labelSettings: "Sozlamalar"
+        labelSettings: "Sozlamalar",
+        quickOrder: "⚡ 1-Klik Buyurtma",
+        addCart: "Savatga qo'shish",
+        labelDarkMode: "Tungi rejim",
+        searchPlaceholder: "Mahsulot qidirish...",
+        deliveryBadge: "1 kunda yetkazib berish",
+        profileTitle: "Mijoz Profili",
+        btnClose: "Yopish",
+        labelTheme: "Mavzu",
+        labelLangSelect: "Tilni tanlang"
     },
     ru: {
         greeting: "Привет,",
@@ -73,7 +82,16 @@ const i18n = {
         btnHome: "Главное меню",
         sidebarTitle: "Меню",
         labelAccount: "Профиль",
-        labelSettings: "Настройки"
+        labelSettings: "Настройки",
+        quickOrder: "⚡ 1-Клик Заказ",
+        addCart: "В корзину",
+        labelDarkMode: "Тёмный режим",
+        searchPlaceholder: "Поиск товаров...",
+        deliveryBadge: "Доставка за 1 день",
+        profileTitle: "Профиль клиента",
+        btnClose: "Закрыть",
+        labelTheme: "Тема",
+        labelLangSelect: "Выберите язык"
     },
     kr: {
         greeting: "안녕하세요,",
@@ -108,7 +126,16 @@ const i18n = {
         btnHome: "홈 메뉴",
         sidebarTitle: "메뉴",
         labelAccount: "프로필",
-        labelSettings: "설정"
+        labelSettings: "설정",
+        quickOrder: "⚡ 1-클릭 주문",
+        addCart: "장바구니 담기",
+        labelDarkMode: "다크 모드",
+        searchPlaceholder: "제품 검색...",
+        deliveryBadge: "1일 배송",
+        profileTitle: "고객 프로필",
+        btnClose: "닫기",
+        labelTheme: "테마",
+        labelLangSelect: "언어 선택"
     },
     en: {
         greeting: "Hello,",
@@ -154,18 +181,6 @@ const i18n = {
     }
 };
 
-i18n.uz.quickOrder = "⚡ 1-Klik Buyurtma"; i18n.uz.addCart = "Savatga qo'shish";
-i18n.ru.quickOrder = "⚡ 1-Клик Заказ"; i18n.ru.addCart = "В корзину";
-i18n.kr.quickOrder = "⚡ 1-클릭 주문"; i18n.kr.addCart = "장바구니 담기";
-
-i18n.uz.labelDarkMode = "Tungi rejim"; i18n.uz.searchPlaceholder = "Mahsulot qidirish..."; i18n.uz.deliveryBadge = "1 kunda yetkazib berish";
-i18n.ru.labelDarkMode = "Тёмный режим"; i18n.ru.searchPlaceholder = "Поиск товаров..."; i18n.ru.deliveryBadge = "Доставка за 1 день";
-i18n.kr.labelDarkMode = "다크 모드"; i18n.kr.searchPlaceholder = "제품 검색..."; i18n.kr.deliveryBadge = "1일 배송";
-
-i18n.uz.profileTitle = "Mijoz Profili"; i18n.uz.btnClose = "Yopish";
-i18n.ru.profileTitle = "Профиль клиента"; i18n.ru.btnClose = "Закрыть";
-i18n.kr.profileTitle = "고객 프로필"; i18n.kr.btnClose = "닫기";
-
 const langFlags = { uz: '🇺🇿', ru: '🇷🇺', kr: '🇰🇷', en: '🇺🇸' };
 let currentLang = localStorage.getItem('mezana_lang') || 'uz';
 
@@ -178,10 +193,17 @@ let editingId = null;
 let adminTimer;
 
 const elements = {};
+let drawerOverlay = null;
+
+// XSS protection — sanitize user input before inserting into HTML
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
 
 function initElements() {
     elements.productsGrid = document.getElementById('products-grid');
-    elements.categoriesList = document.getElementById('categories-list');
     elements.cartDrawer = document.getElementById('cart-drawer');
     elements.cartToggle = document.getElementById('cart-toggle');
     elements.closeCart = document.getElementById('close-cart');
@@ -197,33 +219,57 @@ function initElements() {
     elements.menuToggle = document.getElementById('menu-toggle');
     elements.sidebarDrawer = document.getElementById('sidebar-drawer');
     elements.closeSidebar = document.getElementById('close-sidebar');
-    elements.langPicker = document.getElementById('lang-picker');
-    elements.currentLangFlag = document.getElementById('current-lang-flag');
     elements.toast = document.getElementById('toast');
     elements.adminPanel = document.getElementById('admin-panel');
     elements.productFormModal = document.getElementById('product-form-modal');
-    elements.profileModal = document.getElementById('profile-modal');
     elements.searchInput = document.getElementById('search-input');
     elements.categoriesGrid = document.getElementById('categories-grid');
     elements.bannerSlider = document.getElementById('banner-slider');
     elements.productDetailModal = document.getElementById('product-detail-modal');
+    elements.profileModal = document.getElementById('profile-modal');
+    elements.settingsModal = document.getElementById('settings-modal');
+    elements.darkModeCheckbox = document.getElementById('dark-mode-toggle');
+    drawerOverlay = document.getElementById('drawer-overlay');
 }
 
-// 4. Translation Logic
-window.toggleLanguage = (e) => {
-    if (e) e.stopPropagation();
-    if (elements.langPicker) elements.langPicker.classList.toggle('active');
+window.toggleSettingsModal = (show) => {
+    if (!elements.settingsModal) return;
+    elements.settingsModal.style.display = show ? 'flex' : 'none';
+    if (show) {
+        document.body.classList.add('no-scroll');
+        if (elements.sidebarDrawer) elements.sidebarDrawer.classList.remove('open');
+        // Sync checkbox with current theme
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (elements.darkModeCheckbox) elements.darkModeCheckbox.checked = isDark;
+        // Highlight current lang
+        document.querySelectorAll('.lang-option').forEach(opt => opt.classList.remove('active'));
+        const activeOpt = document.getElementById(`lang-${currentLang}`);
+        if (activeOpt) activeOpt.classList.add('active');
+    } else {
+        if (!elements.adminPanel.classList.contains('open') &&
+            !elements.productDetailModal.classList.contains('open') &&
+            !elements.profileModal.classList.contains('open')) {
+            document.body.classList.remove('no-scroll');
+        }
+    }
 };
+
+// 4. Translation Logic
 
 window.setLanguage = (lang) => {
     currentLang = lang;
     localStorage.setItem('mezana_lang', lang);
-    if (elements.currentLangFlag) elements.currentLangFlag.textContent = langFlags[lang];
     updateStaticTranslations();
     renderCategories();
     renderProducts(activeCategory);
     updateCartUI();
-    if (elements.langPicker) elements.langPicker.classList.remove('active');
+
+    // Highlight active lang in Settings Modal
+    document.querySelectorAll('.lang-option').forEach(opt => opt.classList.remove('active'));
+    const activeOpt = document.getElementById(`lang-${lang}`);
+    if (activeOpt) activeOpt.classList.add('active');
+
+    vibrate('light');
 };
 
 function updateStaticTranslations() {
@@ -261,12 +307,17 @@ function updateStaticTranslations() {
     safeSet('label-account', t.labelAccount);
     safeSet('label-settings', t.labelSettings);
     safeSet('profile-name-title', t.profileTitle);
-    safeSet('label-dark-mode', t.labelDarkMode);
     safeSet('btn-quick-buy', t.quickOrder);
     safeSet('btn-add-modal', t.addCart);
     if (elements.searchInput) elements.searchInput.placeholder = t.searchPlaceholder;
-    const closeBtn = elements.profileModal ? elements.profileModal.querySelector('.primary-btn') : null;
-    if (closeBtn) closeBtn.textContent = t.btnClose;
+
+    // Settings Modal
+    safeSet('settings-title', t.labelSettings);
+    safeSet('label-theme', t.labelTheme);
+    safeSet('label-dark-mode-set', t.labelDarkMode);
+    safeSet('label-lang-select', t.labelLangSelect);
+    safeSet('btn-settings-close', t.btnClose);
+    safeSet('btn-profile-close', t.btnClose);
 }
 
 // 5. Render Functions
@@ -310,7 +361,13 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
     }
 
     if (filtered.length === 0) {
-        elements.productsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color: #7f8c8d;">${currentLang === 'uz' ? "Mahsulotlar topilmadi" : "Товары не найдены"}</div>`;
+        const notFoundMsg = {
+            uz: 'Mahsulotlar topilmadi',
+            ru: 'Товары не найдены',
+            kr: '제품을 찾을 수 없습니다',
+            en: 'No products found'
+        };
+        elements.productsGrid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 2rem; color: var(--text-muted);">${notFoundMsg[currentLang] || notFoundMsg.en}</div>`;
         return;
     }
 
@@ -323,7 +380,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
             <div class="product-card" onclick="openProductDetail(${product.id})">
                 ${product.oneDayDelivery ? `<div class="delivery-badge">⚡ ${i18n[currentLang].deliveryBadge}</div>` : ''}
                 <div class="product-image">
-                    <img src="${product.image || ''}" alt="${name}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
+                    <img src="${product.image || ''}" alt="${escapeHtml(name)}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
                 </div>
                 <div class="product-title">${name}</div>
                 <div class="product-footer">
@@ -387,11 +444,15 @@ function renderCartItems() {
         return;
     }
 
-    elements.cartItemsList.innerHTML = cart.map(item => `
+    elements.cartItemsList.innerHTML = cart.map(item => {
+        const itemName = escapeHtml(item.name[currentLang] || item.name['uz'] || 'Product');
+        return `
         <div class="cart-item">
-            <div class="cart-item-img">📦</div>
+            <div class="cart-item-img">
+                ${item.image ? `<img src="${item.image}" alt="${itemName}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.outerHTML='📦'">` : '📦'}
+            </div>
             <div class="cart-item-info">
-                <div class="cart-item-title">${item.name[currentLang]}</div>
+                <div class="cart-item-title">${itemName}</div>
                 <div class="cart-item-price">${item.price.toLocaleString()} ${i18n[currentLang].currency}</div>
             </div>
             <div class="cart-item-actions">
@@ -400,7 +461,8 @@ function renderCartItems() {
                 <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 window.updateQty = (id, delta) => {
@@ -451,11 +513,13 @@ window.toggleAdmin = () => {
     if (isOpen) {
         elements.adminPanel.classList.remove('open');
         document.body.classList.remove('no-scroll');
+        if (drawerOverlay) drawerOverlay.classList.remove('active');
     } else {
         const code = prompt(currentLang === 'uz' ? "Admin kodini kiriting:" : "Enter admin code:");
         if (code === '7777') {
             elements.adminPanel.classList.add('open');
             document.body.classList.add('no-scroll');
+            if (drawerOverlay) drawerOverlay.classList.add('active');
             renderAdminProducts();
         } else if (code !== null) {
             showToast(currentLang === 'uz' ? "Kod noto'g'ri!" : "Wrong code!");
@@ -487,6 +551,8 @@ window.showProductForm = (id = null) => {
 
     const preview = document.getElementById('admin-image-preview');
     const base64Input = document.getElementById('admin-image-base64');
+    const fileInput = document.getElementById('admin-image-file');
+    const removeBtn = document.getElementById('remove-image-btn');
     const catSelect = document.getElementById('admin-category');
     const newCatInput = document.getElementById('admin-new-category');
 
@@ -497,15 +563,28 @@ window.showProductForm = (id = null) => {
     if (catSelect) catSelect.innerHTML = optionsHtml;
 
     if (id) {
+        // Editing existing product
         const p = products.find(prod => prod.id === id);
         if (base64Input) base64Input.value = p.image || '';
         if (preview) preview.innerHTML = p.image ? `<img src="${p.image}" style="width: 100%; height: 100%; object-fit: cover;">` : 'Rasm yo\'q';
+        if (removeBtn) removeBtn.style.display = p.image ? 'block' : 'none';
         document.getElementById('admin-name-uz').value = p.name.uz;
         document.getElementById('admin-name-ru').value = p.name.ru;
         document.getElementById('admin-name-kr').value = p.name.kr;
         document.getElementById('admin-name-en').value = p.name.en;
         document.getElementById('admin-price').value = p.price;
         if (catSelect) catSelect.value = p.category;
+    } else {
+        // Reset form for new product
+        if (base64Input) base64Input.value = '';
+        if (preview) preview.innerHTML = '<span style="color: #888;">Rasm tanlanmagan</span>';
+        if (removeBtn) removeBtn.style.display = 'none';
+        if (fileInput) fileInput.value = '';
+        document.getElementById('admin-name-uz').value = '';
+        document.getElementById('admin-name-ru').value = '';
+        document.getElementById('admin-name-kr').value = '';
+        document.getElementById('admin-name-en').value = '';
+        document.getElementById('admin-price').value = '';
     }
 };
 
@@ -566,11 +645,66 @@ window.deleteProduct = (id) => {
     }
 };
 
+// --- Missing Admin Functions ---
+
+// Preview selected image in admin form
+window.previewImage = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const base64 = e.target.result;
+        const preview = document.getElementById('admin-image-preview');
+        const base64Input = document.getElementById('admin-image-base64');
+        const removeBtn = document.getElementById('remove-image-btn');
+        if (preview) preview.innerHTML = `<img src="${base64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+        if (base64Input) base64Input.value = base64;
+        if (removeBtn) removeBtn.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+};
+
+// Clear selected image in admin form
+window.clearImage = () => {
+    const preview = document.getElementById('admin-image-preview');
+    const base64Input = document.getElementById('admin-image-base64');
+    const fileInput = document.getElementById('admin-image-file');
+    const removeBtn = document.getElementById('remove-image-btn');
+    if (preview) preview.innerHTML = '<span style="color: #888;">Rasm tanlanmagan</span>';
+    if (base64Input) base64Input.value = '';
+    if (fileInput) fileInput.value = '';
+    if (removeBtn) removeBtn.style.display = 'none';
+};
+
+// Toggle new category input visibility
+window.toggleNewCategoryInput = () => {
+    const catSelect = document.getElementById('admin-category');
+    const newCatInput = document.getElementById('admin-new-category');
+    if (catSelect && newCatInput) {
+        newCatInput.style.display = catSelect.value === 'NEW' ? 'block' : 'none';
+    }
+};
+
+// Export products data as JSON
+window.exportData = () => {
+    const data = JSON.stringify(products, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mezana_products.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Eksport qilindi!');
+};
+
 window.showAccount = () => {
     if (elements.sidebarDrawer) elements.sidebarDrawer.classList.remove('open');
     toggleProfileModal(true);
 };
-window.showSettings = () => { showToast(i18n[currentLang].labelSettings); elements.sidebarDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); };
+window.showSettings = () => {
+    toggleSettingsModal(true);
+};
 
 window.openProductDetail = (id) => {
     const p = products.find(prod => prod.id === id);
@@ -794,17 +928,40 @@ window.addEventListener('DOMContentLoaded', () => {
 
     products = JSON.parse(localStorage.getItem('mezana_products_local')) || defaultProductsData;
     if (products.length === 0) products = defaultProductsData;
-    categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar'];
+    categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar', 'Shirinliklar'];
 
     updateStaticTranslations();
     updateCartUI();
     setLanguage(currentLang);
 
-    // Bind basic events
-    if (elements.cartToggle) elements.cartToggle.onclick = () => { elements.cartDrawer.classList.add('open'); document.body.classList.add('no-scroll'); };
-    if (elements.closeCart) elements.closeCart.onclick = () => { elements.cartDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); resetDrawer(); };
-    if (elements.menuToggle) elements.menuToggle.onclick = () => { elements.sidebarDrawer.classList.add('open'); document.body.classList.add('no-scroll'); };
-    if (elements.closeSidebar) elements.closeSidebar.onclick = () => { elements.sidebarDrawer.classList.remove('open'); document.body.classList.remove('no-scroll'); };
+    // Drawer open/close with overlay
+    function openDrawer(drawer) {
+        drawer.classList.add('open');
+        document.body.classList.add('no-scroll');
+        if (drawerOverlay) drawerOverlay.classList.add('active');
+    }
+    function closeDrawer(drawer) {
+        drawer.classList.remove('open');
+        document.body.classList.remove('no-scroll');
+        if (drawerOverlay) drawerOverlay.classList.remove('active');
+    }
+
+    if (elements.cartToggle) elements.cartToggle.onclick = () => openDrawer(elements.cartDrawer);
+    if (elements.closeCart) elements.closeCart.onclick = () => { closeDrawer(elements.cartDrawer); resetDrawer(); };
+    if (elements.menuToggle) elements.menuToggle.onclick = () => openDrawer(elements.sidebarDrawer);
+    if (elements.closeSidebar) elements.closeSidebar.onclick = () => closeDrawer(elements.sidebarDrawer);
+
+    // Close drawers when clicking overlay
+    if (drawerOverlay) {
+        drawerOverlay.onclick = () => {
+            closeDrawer(elements.cartDrawer);
+            closeDrawer(elements.sidebarDrawer);
+            if (elements.adminPanel.classList.contains('open')) {
+                elements.adminPanel.classList.remove('open');
+            }
+            resetDrawer();
+        };
+    }
     if (elements.checkoutBtn) elements.checkoutBtn.onclick = () => {
         if (cart.length === 0) { showToast(i18n[currentLang].emptyCart); return; }
         elements.cartItemsList.style.display = 'none';
@@ -833,11 +990,25 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function handleConfirmOrder() {
-    const name = document.getElementById('order-name').value;
-    const phone = document.getElementById('order-phone').value;
-    const address = document.getElementById('order-address').value;
+    const name = document.getElementById('order-name').value.trim();
+    const phone = document.getElementById('order-phone').value.trim();
+    const address = document.getElementById('order-address').value.trim();
 
     if (!name || !phone || !address) { showToast(i18n[currentLang].valError); vibrate('error'); return; }
+
+    // Phone validation — accepts Korean formats (010-1234-5678) and international (+82...)
+    const phoneClean = phone.replace(/[\s\-()]/g, '');
+    if (!/^(\+?\d{10,15}|01[016789]\d{7,8})$/.test(phoneClean)) {
+        const phoneError = {
+            uz: "Telefon raqam noto'g'ri formatda",
+            ru: "Неверный формат номера телефона",
+            kr: "잘못된 전화번호 형식입니다",
+            en: "Invalid phone number format"
+        };
+        showToast(phoneError[currentLang] || phoneError.en);
+        vibrate('error');
+        return;
+    }
 
     const orderData = {
         user: { name, phone, address },
@@ -858,7 +1029,8 @@ async function handleConfirmOrder() {
         });
         const result = await response.json();
         if (result.success) {
-            showToast(currentLang === 'uz' ? "Buyurtma qabul qilindi!" : "Заказ принят!");
+            const successMsg = { uz: 'Buyurtma qabul qilindi!', ru: 'Заказ принят!', kr: '주문이 접수되었습니다!', en: 'Order accepted!' };
+            showToast(successMsg[currentLang] || successMsg.en);
             cart = [];
             localStorage.removeItem('mezana_cart');
             updateCartUI();

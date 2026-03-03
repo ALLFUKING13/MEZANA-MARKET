@@ -8,3 +8,9 @@ tiiny.host - Webpage Editor_files/
 # Ignore thumbnails and other OS-specific files
 Thumbs.db
 .DS_Store
+
+# Ignore environment secrets
+.env
+
+# Ignore dependencies
+node_modules/
