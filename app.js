@@ -28,11 +28,7 @@ const i18n = {
         currency: "won",
         categories: {
             "Hammasi": "Hammasi",
-            "Mevalar": "Mevalar",
-            "Sabzavotlar": "Sabzavotlar",
-            "Sutli": "Sutli",
-            "Ichimliklar": "Ichimliklar",
-            "Shirinliklar": "Shirinliklar"
+            "Yangi": "Yangi"
         },
         locationsTitle: "Bizning do'konlar",
         btnHome: "Bosh menyu",
@@ -72,11 +68,7 @@ const i18n = {
         currency: "KRW",
         categories: {
             "Hammasi": "Все",
-            "Mevalar": "Фрукты",
-            "Sabzavotlar": "Овощи",
-            "Sutli": "Молочные",
-            "Ichimliklar": "Напитки",
-            "Shirinliklar": "Сладости"
+            "Yangi": "Новое"
         },
         locationsTitle: "Наши магазины",
         btnHome: "Главное меню",
@@ -116,11 +108,7 @@ const i18n = {
         currency: "원",
         categories: {
             "Hammasi": "전체",
-            "Mevalar": "과일",
-            "Sabzavotlar": "야채",
-            "Sutli": "유제품",
-            "Ichimliklar": "음료",
-            "Shirinliklar": "디저트"
+            "Yangi": "신상품"
         },
         locationsTitle: "우리 매장",
         btnHome: "홈 메뉴",
@@ -160,11 +148,7 @@ const i18n = {
         currency: "KRW",
         categories: {
             "Hammasi": "All",
-            "Mevalar": "Fruits",
-            "Sabzavotlar": "Vegetables",
-            "Sutli": "Dairy",
-            "Ichimliklar": "Drinks",
-            "Shirinliklar": "Sweets"
+            "Yangi": "New"
         },
         locationsTitle: "Our Stores",
         btnHome: "Home",
@@ -327,11 +311,7 @@ function renderCategories() {
     // Icon mapping for professional look
     const icons = {
         'Hammasi': '📦',
-        'Mevalar': '🍎',
-        'Sabzavotlar': '🥦',
-        'Sutli': '🥛',
-        'Ichimliklar': '🥤',
-        'Shirinliklar': '🍫'
+        'Yangi': '🆕'
     };
 
     elements.categoriesGrid.innerHTML = categories.map(cat => {
@@ -840,95 +820,12 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }, 4000);
 
-    const defaultProductsData = [
-        {
-            id: 1,
-            name: { uz: 'Olma "Golden"', ru: 'Яблоко "Голден"', kr: '사과 "골든"', en: 'Apple "Golden"' },
-            price: 4000,
-            oldPrice: 5500,
-            category: 'Mevalar',
-            image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            oneDayDelivery: true,
-            description: {
-                uz: "Shirin va sershira olma 'Golden' navi. Janubiy Koreyaning toza bog'laridan keltirilgan.",
-                ru: "Сладкое и сочное яблоко сорта 'Голден'. Привезено из экологически чистых садов Южной Кореи.",
-                kr: "달콤하고 즙이 많은 '골든' 품종의 사과. 한국의 깨끗한 과수원에서 재배되었습니다.",
-                en: "Sweet and juicy 'Golden' variety apple. From the clean orchards of South Korea."
-            }
-        },
-        {
-            id: 2,
-            name: { uz: 'Banan', ru: 'Банан', kr: '바나나', en: 'Banana' },
-            price: 3500,
-            oldPrice: 4000,
-            category: 'Mevalar',
-            image: 'https://images.unsplash.com/photo-1571771894821-ad996211fdf4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            oneDayDelivery: true,
-            description: {
-                uz: "Yangi va pishgan bananlar. Energiya uchun eng yaxshi tanlov.",
-                ru: "Свежие и спелые бананы. Лучший выбор для энергии.",
-                kr: "신선하고 잘 익은 바나나. 에너지 보충에 최고의 선택.",
-                en: "Fresh and ripe bananas. The best choice for energy."
-            }
-        },
-        {
-            id: 3,
-            name: { uz: 'Pomidor', ru: 'Помидор', kr: '토마토', en: 'Tomato' },
-            price: 2500,
-            category: 'Sabzavotlar',
-            image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            description: { uz: "Sarhal pomidorlar.", ru: "Свежие помидоры.", kr: "신선한 토마토.", en: "Fresh tomatoes." }
-        },
-        {
-            id: 4,
-            name: { uz: 'Bodring', ru: 'Огурец', kr: '오이', en: 'Cucumber' },
-            price: 1500,
-            category: 'Sabzavotlar',
-            image: 'https://images.unsplash.com/photo-1449333256619-bc90bac43ed8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            description: { uz: "Qarsildoq bodringlar.", ru: "Хрустящие огурцы.", kr: "삭삭한 오이.", en: "Crunchy cucumbers." }
-        },
-        {
-            id: 5,
-            name: { uz: 'Sut', ru: 'Молоко', kr: '우유', en: 'Milk' },
-            price: 2800,
-            oldPrice: 3200,
-            category: 'Sutli',
-            image: 'https://images.unsplash.com/photo-1563636619-e910029339cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            oneDayDelivery: true,
-            description: { uz: "Tabiiy sigir suti.", ru: "Натуральное коровье молоко.", kr: "천연 우유.", en: "Natural cow milk." }
-        },
-        {
-            id: 6,
-            name: { uz: 'Qatiq', ru: 'Кефир', kr: '요거트', en: 'Yogurt' },
-            price: 2000,
-            category: 'Sutli',
-            image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43454?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            description: { uz: "Foydali qatiq.", ru: "Полезный кефир.", kr: "요거트.", en: "Healthy yogurt." }
-        },
-        {
-            id: 7,
-            name: { uz: 'Anor', ru: 'Гранат', kr: '석류', en: 'Pomegranate' },
-            price: 5000,
-            oldPrice: 6500,
-            category: 'Mevalar',
-            image: 'https://images.unsplash.com/photo-1541344999736-83eca872977a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            description: { uz: "Shirin anor.", ru: "Сладкий гранат.", kr: "석류.", en: "Sweet pomegranate." }
-        },
-        {
-            id: 8,
-            name: { uz: 'Suv', ru: 'Вода', kr: '생수', en: 'Water' },
-            price: 1000,
-            category: 'Ichimliklar',
-            image: 'https://images.unsplash.com/photo-1560011961-4ab41261de01?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-            oneDayDelivery: true,
-            description: { uz: "Toza ichimlik suvi.", ru: "Чистая питьевая вода.", kr: "생수.", en: "Pure drinking water." }
-        },
-    ];
-
+    // Use generated products from products.js (429 items from Mahsulotlar folder)
+    const defaultProductsData = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
 
     products = JSON.parse(localStorage.getItem('mezana_products_local')) || defaultProductsData;
     if (products.length === 0) products = defaultProductsData;
-    categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Mevalar', 'Sabzavotlar', 'Sutli', 'Ichimliklar', 'Shirinliklar'];
+    categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Yangi'];
 
     updateStaticTranslations();
     updateCartUI();
