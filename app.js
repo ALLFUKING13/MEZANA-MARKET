@@ -176,6 +176,11 @@ let categories = [];
 let editingId = null;
 let adminTimer;
 
+// Pagination — show products in batches for performance
+const PRODUCTS_PER_PAGE = 20;
+let currentPage = 1;
+let currentFiltered = [];
+
 const elements = {};
 let drawerOverlay = null;
 
@@ -326,21 +331,26 @@ function renderCategories() {
     }).join('');
 }
 
-function renderProducts(filter = 'Hammasi', searchQuery = '') {
+function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
     if (!elements.productsGrid) return;
 
     activeCategory = filter;
-    let filtered = filter === 'Hammasi' ? products : products.filter(p => p.category === filter);
 
-    if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(p =>
-            (p.name[currentLang] || p.name['uz']).toLowerCase().includes(q) ||
-            p.category.toLowerCase().includes(q)
-        );
+    // Only recalculate filtered list when not appending
+    if (!append) {
+        currentPage = 1;
+        currentFiltered = filter === 'Hammasi' ? [...products] : products.filter(p => p.category === filter);
+
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            currentFiltered = currentFiltered.filter(p =>
+                (p.name[currentLang] || p.name['uz']).toLowerCase().includes(q) ||
+                p.category.toLowerCase().includes(q)
+            );
+        }
     }
 
-    if (filtered.length === 0) {
+    if (currentFiltered.length === 0) {
         const notFoundMsg = {
             uz: 'Mahsulotlar topilmadi',
             ru: 'Товары не найдены',
@@ -351,7 +361,26 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
         return;
     }
 
-    elements.productsGrid.innerHTML = filtered.map(product => {
+    const endIndex = currentPage * PRODUCTS_PER_PAGE;
+    const visibleProducts = currentFiltered.slice(0, endIndex);
+    const hasMore = endIndex < currentFiltered.length;
+    const remaining = currentFiltered.length - endIndex;
+
+    const loadMoreLabel = {
+        uz: `Yana ${Math.min(remaining, PRODUCTS_PER_PAGE)} ta ko'rsatish`,
+        ru: `Показать ещё ${Math.min(remaining, PRODUCTS_PER_PAGE)}`,
+        kr: `${Math.min(remaining, PRODUCTS_PER_PAGE)}개 더 보기`,
+        en: `Show ${Math.min(remaining, PRODUCTS_PER_PAGE)} more`
+    };
+
+    const countLabel = {
+        uz: `${visibleProducts.length} / ${currentFiltered.length} mahsulot`,
+        ru: `${visibleProducts.length} / ${currentFiltered.length} товаров`,
+        kr: `${visibleProducts.length} / ${currentFiltered.length} 제품`,
+        en: `${visibleProducts.length} / ${currentFiltered.length} products`
+    };
+
+    const cardsHtml = visibleProducts.map(product => {
         const cartItem = cart.find(item => item.id === product.id);
         const qty = cartItem ? cartItem.quantity : 0;
         const name = product.name[currentLang] || product.name['uz'] || 'Product';
@@ -360,7 +389,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
             <div class="product-card" onclick="openProductDetail(${product.id})">
                 ${product.oneDayDelivery ? `<div class="delivery-badge">⚡ ${i18n[currentLang].deliveryBadge}</div>` : ''}
                 <div class="product-image">
-                    <img src="${product.image || ''}" alt="${escapeHtml(name)}" onerror="this.src='https://via.placeholder.com/200?text=📦'">
+                    <img src="${product.image || ''}" alt="${escapeHtml(name)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/200?text=📦';this.classList.add('loaded')">
                 </div>
                 <div class="product-title">${name}</div>
                 <div class="product-footer">
@@ -378,7 +407,21 @@ function renderProducts(filter = 'Hammasi', searchQuery = '') {
             </div>
         `;
     }).join('');
+
+    const loadMoreHtml = hasMore
+        ? `<button class="load-more-btn" onclick="loadMoreProducts()">${loadMoreLabel[currentLang] || loadMoreLabel.en}</button>`
+        : '';
+    const countHtml = `<div class="products-count">${countLabel[currentLang] || countLabel.en}</div>`;
+
+    elements.productsGrid.innerHTML = cardsHtml + loadMoreHtml + countHtml;
 }
+
+// Load more products
+window.loadMoreProducts = () => {
+    currentPage++;
+    renderProducts(activeCategory, '', true);
+    // Scroll to the newly added products smoothly
+};
 
 window.filterProducts = (category) => {
     activeCategory = category;
