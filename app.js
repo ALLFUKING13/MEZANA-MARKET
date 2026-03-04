@@ -57,7 +57,7 @@ const i18n = {
         labelPhone: "Номер телефона",
         labelAddress: "Адрес",
         placeholderName: "Введите ваше имя",
-        placeholderPhone: "010-1234-5678",
+        placeholderPhone: "010-****-****",
         placeholderAddress: "Домашний адрес и ориентир",
         btnCheckout: "Оформить заказ",
         btnConfirm: "Подтвердить",
