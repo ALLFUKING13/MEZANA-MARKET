@@ -863,12 +863,15 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }, 4000);
 
-    // Use generated products from products.js (429 items from Mahsulotlar folder)
+    // Use generated products from products.js (always use fresh data)
     const defaultProductsData = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
 
-    products = JSON.parse(localStorage.getItem('mezana_products_local')) || defaultProductsData;
-    if (products.length === 0) products = defaultProductsData;
-    categories = JSON.parse(localStorage.getItem('mezana_categories_local')) || ['Hammasi', 'Yangi'];
+    // Always use fresh products from products.js, fallback to localStorage only if generatedProducts is empty
+    products = defaultProductsData.length > 0 ? defaultProductsData : (JSON.parse(localStorage.getItem('mezana_products_local')) || []);
+
+    // Auto-generate categories from product data
+    const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
+    categories = ['Hammasi', ...uniqueCats];
 
     updateStaticTranslations();
     updateCartUI();
