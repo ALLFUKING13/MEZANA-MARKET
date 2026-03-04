@@ -177,7 +177,7 @@ let editingId = null;
 let adminTimer;
 
 // Pagination — show products in batches for performance
-const PRODUCTS_PER_PAGE = 20;
+const PRODUCTS_PER_PAGE = 9999; // Show all products at once
 let currentPage = 1;
 let currentFiltered = [];
 
