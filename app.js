@@ -1051,3 +1051,75 @@ async function handleConfirmOrder() {
         elements.confirmOrderBtn.textContent = i18n[currentLang].btnConfirm;
     }
 }
+
+// 9. Clock and Weather Widget
+function initClock() {
+    const clockEl = document.getElementById('real-time-clock');
+    if (!clockEl) return;
+
+    // Initial call to avoid 1s delay
+    const updateTime = () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        clockEl.textContent = `${hours}:${minutes}`;
+    };
+    updateTime();
+    setInterval(updateTime, 1000);
+}
+
+async function fetchWeather(lat, lon) {
+    const weatherIconEl = document.getElementById('weather-icon');
+    const weatherTempEl = document.getElementById('weather-temp');
+    if (!weatherIconEl || !weatherTempEl) return;
+
+    try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const data = await res.json();
+
+        if (data && data.current_weather) {
+            const temp = Math.round(data.current_weather.temperature);
+            const weathercode = data.current_weather.weathercode;
+
+            // Map WMO weather codes to emojis
+            let icon = '☀️'; // default clear
+            if ([1, 2, 3].includes(weathercode)) icon = '⛅'; // partly cloudy
+            if ([45, 48].includes(weathercode)) icon = '🌫️'; // fog
+            if ([51, 53, 55, 56, 57].includes(weathercode)) icon = '🌧️'; // drizzle
+            if ([61, 63, 65, 66, 67].includes(weathercode)) icon = '🌧️'; // rain
+            if ([71, 73, 75, 77].includes(weathercode)) icon = '❄️'; // snow
+            if ([80, 81, 82].includes(weathercode)) icon = '🌦️'; // rain showers
+            if ([85, 86].includes(weathercode)) icon = '🌨️'; // snow showers
+            if ([95, 96, 99].includes(weathercode)) icon = '⛈️'; // thunderstorm
+
+            weatherIconEl.textContent = icon;
+            weatherTempEl.textContent = `${temp}°C`;
+        }
+    } catch (e) {
+        console.error("Failed to fetch weather", e);
+    }
+}
+
+function initWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                fetchWeather(latitude, longitude);
+            },
+            (error) => {
+                console.warn("Geolocation denied or failed:", error);
+                // Fallback to Seoul
+                fetchWeather(37.5665, 126.9780);
+            }
+        );
+    } else {
+        fetchWeather(37.5665, 126.9780);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initClock();
+    initWeather();
+    setInterval(initWeather, 30 * 60 * 1000); // 30 mins
+});

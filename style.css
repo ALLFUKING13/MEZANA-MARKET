@@ -100,9 +100,43 @@ header {
 .header-center {
     flex: 2;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.widget-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clock-widget,
+.weather-widget {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    display: flex;
     align-items: center;
     gap: 6px;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 2px 5px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+}
+
+[data-theme="dark"] .clock-widget,
+[data-theme="dark"] .weather-widget {
+    background: rgba(30, 41, 59, 0.6);
+    color: var(--text-color);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.05), 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#weather-icon {
+    font-size: 1.1rem;
 }
 
 .marquee-container {
@@ -1357,43 +1391,49 @@ select {
     text-align: center;
 }
 
-.location-card {
-    margin-bottom: 12px;
+.location-cards-wrapper {
+    display: flex;
+    gap: 12px;
 }
 
-.location-card:last-child {
-    margin-bottom: 0;
+.location-card {
+    flex: 1;
+    background: var(--surface-color);
+    padding: 15px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .location-card h4 {
-    margin-bottom: 3px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+    margin: 0;
 }
 
 .location-card p {
-    font-size: 0.75rem;
-    color: var(--text-color);
-    opacity: 0.8;
-    margin-bottom: 4px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
     line-height: 1.3;
-    text-align: center;
 }
 
 .location-link {
-    display: block;
-    text-align: center;
+    display: inline-block;
+    margin-top: auto;
+    text-align: left;
     color: var(--primary);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     transition: 0.2s;
 }
 
-.location-link:hover {
-    opacity: 0.8;
+@media (max-width: 480px) {
+    .location-cards-wrapper {
+        flex-direction: column;
+    }
 }
