@@ -457,7 +457,17 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
                 </div>
                 <div class="product-title">${name}</div>
                 <div class="product-footer">
-                    <div class="product-price">${product.price.toLocaleString()} ${i18n[currentLang].currency}</div>
+                    <div class="product-price">
+                        ${product.oldPrice ? `
+                            <div class="discount-badge-small">🔥 Aksiya</div>
+                            <div class="price-row">
+                                <span class="old-price-small">${product.oldPrice.toLocaleString()}</span>
+                                <span class="current-price-small">${product.price.toLocaleString()} ${i18n[currentLang].currency}</span>
+                            </div>
+                        ` : `
+                            <div>${product.price.toLocaleString()} ${i18n[currentLang].currency}</div>
+                        `}
+                    </div>
                     <div class="qty-control ${qty > 0 ? 'active' : ''}" onclick="event.stopPropagation()">
                         ${qty === 0 ? `
                             <button class="add-btn-large" onclick="addToCart(${product.id})">+</button>
@@ -620,11 +630,14 @@ function renderAdminProducts() {
     list.innerHTML = products.map(p => `
         <div class="admin-product-item">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="${p.image || ''}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/30?text=📦'">
+                <div style="width: 50px; height: 50px; border-radius: 6px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; flex-shrink: 0; overflow: hidden;">
+                    ${p.image ? `<img src="${p.image}" style="width: 100%; height: 100%; object-fit: cover;">` : '📦'}
+                </div>
                 <span>${p.name[currentLang]}</span>
             </div>
             <div class="admin-item-controls">
                 <button class="edit-btn" onclick="editProduct(${p.id})">✎</button>
+                <button class="discount-btn" onclick="setDiscount(${p.id})">%</button>
                 <button class="delete-btn" onclick="deleteProduct(${p.id})">×</button>
             </div>
         </div>
@@ -641,12 +654,8 @@ window.showProductForm = (id = null) => {
     const fileInput = document.getElementById('admin-image-file');
     const removeBtn = document.getElementById('remove-image-btn');
     const catSelect = document.getElementById('admin-category');
-    const newCatInput = document.getElementById('admin-new-category');
-
-    if (newCatInput) { newCatInput.style.display = 'none'; newCatInput.value = ''; }
 
     let optionsHtml = categories.filter(c => c !== 'Hammasi').map(c => `<option value="${c}">${c}</option>`).join('');
-    optionsHtml += `<option value="NEW">+ Yangi...</option>`;
     if (catSelect) catSelect.innerHTML = optionsHtml;
 
     if (id) {
@@ -685,13 +694,9 @@ window.saveProduct = () => {
     const price = document.getElementById('admin-price').value;
     let category = document.getElementById('admin-category').value;
 
-    if (category === 'NEW') {
-        category = document.getElementById('admin-new-category').value.trim();
-        if (!category) return;
-        if (!categories.includes(category)) {
-            categories.push(category);
-            localStorage.setItem('mezana_categories_local', JSON.stringify(categories));
-        }
+    if (!category) {
+        alert("Kategoriyani tanlang!");
+        return;
     }
 
     const newProduct = {
@@ -730,6 +735,28 @@ window.deleteProduct = (id) => {
         renderProducts(activeCategory);
         renderAdminProducts();
     }
+};
+window.setDiscount = (id) => {
+    const product = products.find(p => p.id === id);
+    if (!product) return;
+    const discountPercent = prompt("Chegirma foizini kiriting (masalan: 10):", "0");
+    if (discountPercent === null || discountPercent === "") return;
+    const discount = parseFloat(discountPercent);
+    if (isNaN(discount) || discount < 0 || discount > 100) {
+        alert("Noto'g'ri foiz!");
+        return;
+    }
+    if (discount === 0) {
+        product.price = product.oldPrice || product.price;
+        delete product.oldPrice;
+    } else {
+        product.oldPrice = product.oldPrice || product.price;
+        product.price = Math.round(product.oldPrice * (1 - discount / 100));
+    }
+    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    renderProducts(activeCategory);
+    renderAdminProducts();
+    showToast("Chegirma qo'ldi!");
 };
 
 // --- Missing Admin Functions ---
@@ -770,6 +797,132 @@ window.toggleNewCategoryInput = () => {
     if (catSelect && newCatInput) {
         newCatInput.style.display = catSelect.value === 'NEW' ? 'block' : 'none';
     }
+};
+
+// Show category form dialog
+window.showCategoryForm = () => {
+    const categoryList = categories.filter(c => c !== 'Hammasi');
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.5); display: flex; align-items: center; 
+        justify-content: center; z-index: 3000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background: white; border-radius: 16px; padding: 20px; 
+        max-width: 400px; width: 90%; max-height: 70vh; overflow-y: auto;
+    `;
+    
+    let html = `
+        <h3 style="margin: 0 0 20px 0;">Kategoriyalarni boshqarish</h3>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input type="text" id="new-cat-input" placeholder="Yangi kategoriya..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            <button onclick="window.addNewCategoryFromModal()" style="padding: 10px 16px; background: #2ecc71; color: white; border: none; border-radius: 8px; cursor: pointer;">Qo'sh</button>
+        </div>
+        <div style="margin-bottom: 20px;">
+    `;
+    
+    categoryList.forEach(cat => {
+        html += `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f5f5f5; border-radius: 8px; margin-bottom: 8px;">
+                <span>${cat}</span>
+                <div style="display: flex; gap: 5px;">
+                    <button onclick="window.editCategoryName('${cat}')" style="padding: 5px 10px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">✎</button>
+                    <button onclick="window.deleteCategory('${cat}')" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">×</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `
+        </div>
+        <button onclick="document.querySelector('[data-close-cat]').click()" style="width: 100%; padding: 12px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">Yopish</button>
+    `;
+    
+    content.innerHTML = html;
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    // Store modal reference for closing
+    const closeBtn = document.createElement('button');
+    closeBtn.setAttribute('data-close-cat', '');
+    closeBtn.style.display = 'none';
+    closeBtn.onclick = () => {
+        modal.remove();
+        modal.storage = null;
+    };
+    modal.appendChild(closeBtn);
+    modal.storage = { modal };
+};
+
+window.addNewCategoryFromModal = () => {
+    const input = document.getElementById('new-cat-input');
+    if (!input) return;
+    const newCategory = input.value.trim();
+    if (!newCategory) {
+        alert("Kategoriya nomini kiriting!");
+        return;
+    }
+    if (categories.includes(newCategory)) {
+        alert("Bu kategoriya allaqachon mavjud!");
+        return;
+    }
+    categories.push(newCategory);
+    categories.sort();
+    localStorage.setItem('mezana_categories', JSON.stringify(categories));
+    
+    // Refresh UI
+    const closeBtn = document.querySelector('[data-close-cat]');
+    if (closeBtn) closeBtn.click();
+    showCategoryForm();
+    showToast("Kategoriya qo'shildi!");
+};
+
+window.editCategoryName = (oldName) => {
+    const newName = prompt(`Yangi nomi kiriting:`, oldName);
+    if (!newName || newName === oldName || newName.trim() === '') return;
+    
+    const newNameTrim = newName.trim();
+    if (categories.includes(newNameTrim)) {
+        alert("Bu nomi bilan kategoriya allaqachon mavjud!");
+        return;
+    }
+    
+    // Update category in array
+    const idx = categories.indexOf(oldName);
+    if (idx !== -1) categories[idx] = newNameTrim;
+    
+    // Update in products
+    products.forEach(p => {
+        if (p.category === oldName) p.category = newNameTrim;
+    });
+    
+    categories.sort();
+    localStorage.setItem('mezana_categories', JSON.stringify(categories));
+    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    
+    const closeBtn = document.querySelector('[data-close-cat]');
+    if (closeBtn) closeBtn.click();
+    showCategoryForm();
+    renderProducts(activeCategory);
+    renderCategories();
+    showToast("Kategoriya o'zgartirildi!");
+};
+
+window.deleteCategory = (catName) => {
+    if (!confirm(`"${catName}" kategoriyasini o'chirmoqchimiz? Bu kategoriyalar mahsulotlar boshqa kategoriyaga ko'chirilmayadi!`)) return;
+    
+    // Remove category
+    categories = categories.filter(c => c !== catName);
+    localStorage.setItem('mezana_categories', JSON.stringify(categories));
+    
+    showToast("Kategoriya o'chirildi!");
+    const closeBtn = document.querySelector('[data-close-cat]');
+    if (closeBtn) closeBtn.click();
+    showCategoryForm();
+    renderCategories();
 };
 
 // Export products data as JSON
@@ -927,15 +1080,23 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }, 4000);
 
-    // Use generated products from products.js (always use fresh data)
+    // Use generated products from products.js as default
     const defaultProductsData = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
 
-    // Always use fresh products from products.js, fallback to localStorage only if generatedProducts is empty
-    products = defaultProductsData.length > 0 ? defaultProductsData : (JSON.parse(localStorage.getItem('mezana_products_local')) || []);
+    // Load from localStorage if exists, else use default and save to localStorage
+    let savedProducts = JSON.parse(localStorage.getItem('mezana_products_local')) || [];
+    if (savedProducts.length === 0 && defaultProductsData.length > 0) {
+        products = defaultProductsData;
+        localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    } else {
+        products = savedProducts;
+    }
 
-    // Auto-generate categories from product data
+    // Auto-generate categories from product data and localStorage
     const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
-    categories = ['Hammasi', ...uniqueCats];
+    const savedCategories = JSON.parse(localStorage.getItem('mezana_categories')) || [];
+    const allCats = [...new Set([...uniqueCats, ...savedCategories])];
+    categories = ['Hammasi', ...allCats.sort()];
 
     updateStaticTranslations();
     updateCartUI();

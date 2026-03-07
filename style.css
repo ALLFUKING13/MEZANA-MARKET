@@ -812,6 +812,18 @@ main {
     justify-content: center;
     overflow: hidden;
     position: relative;
+    perspective: 1000px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.08) rotateX(3deg) rotateY(3deg);
 }
 
 /* Skeleton loading shimmer */
@@ -933,6 +945,32 @@ main {
     font-weight: 800;
     color: var(--primary-dark);
     font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+}
+
+.discount-badge-small {
+    font-size: 0.75rem;
+    color: #D32F2F;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.old-price-small {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.current-price-small {
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    font-weight: 800;
+    color: var(--primary);
 }
 
 .qty-control {
@@ -1285,6 +1323,12 @@ main {
     z-index: 1001;
 }
 
+/* lift admin panel a bit when open to reveal bottom content */
+.admin-drawer.open {
+    top: 10vh;   /* move up more */
+    height: 90vh; /* increase height further */
+}
+
 .admin-content {
     padding: 1.5rem;
     display: flex;
@@ -1293,7 +1337,7 @@ main {
 }
 
 .admin-item-list {
-    flex: 1;
+    height: 60vh;
     overflow-y: auto;
     margin-bottom: 1rem;
 }
@@ -1332,6 +1376,11 @@ main {
 .delete-btn {
     background: #FFEBEE;
     color: #D32F2F;
+}
+
+.discount-btn {
+    background: #FFF3E0;
+    color: #F57C00;
 }
 
 /* Modal */

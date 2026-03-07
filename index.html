@@ -64,13 +64,13 @@
                     <div class="banner-item">
                         <div class="banner-content">
                             <h2>Arzon va Sifatli</h2>
-                            <p>Barcha mahsulotlarga -10% chegirma!</p>
+                            <p>Chegirmadagi mahsulotlarimiz!</p>
                         </div>
                     </div>
                     <div class="banner-item" style="background: linear-gradient(135deg, #e67e22, #d35400);">
                         <div class="banner-content">
-                            <h2>Yangi Kelganlar</h2>
-                            <p>Bugun yetkazib beramiz!</p>
+                            <h2>Yangi mahsulotlar</h2>
+                            <p>Tezda yetkazib beramiz!</p>
                         </div>
                     </div>
                 </div>
@@ -153,12 +153,14 @@
                 <button onclick="toggleAdmin()" class="close-btn">&times;</button>
             </div>
             <div class="admin-content">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button class="primary-btn" onclick="showProductForm()" style="flex: 1; padding: 10px 16px; font-size: 0.9rem;">+ Mahsulot</button>
+                    <button class="secondary-btn" onclick="showCategoryForm()" style="flex: 1; padding: 10px 16px; font-size: 0.9rem;">+ Kategoriya</button>
+                </div>
+                <button class="secondary-btn" onclick="exportData()" style="margin-bottom: 10px; width: 100%;">Eksport (JSON)</button>
                 <div id="product-list-admin" class="admin-item-list">
                     <!-- Admin product list here -->
                 </div>
-                <button class="primary-btn" onclick="showProductForm()">+ Yangi mahsulot</button>
-                <button class="secondary-btn" onclick="exportData()" style="margin-top: 10px; width: 100%;">Eksport
-                    (JSON)</button>
             </div>
         </div>
 
@@ -198,11 +200,9 @@
                 </div>
                 <div class="input-group">
                     <label>Kategoriya</label>
-                    <select id="admin-category" onchange="toggleNewCategoryInput()">
+                    <select id="admin-category">
                         <!-- Dynamic categories will be injected here -->
                     </select>
-                    <input type="text" id="admin-new-category" placeholder="Yangi kategoriya nomi"
-                        style="display: none; margin-top: 10px;">
                 </div>
                 <div class="modal-actions">
                     <button class="secondary-btn" onclick="hideProductForm()">Bekor qilish</button>
