@@ -49,6 +49,9 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
+    background-image: url('jpgs/background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
@@ -316,6 +319,62 @@ header {
     font-size: 0.9rem;
     opacity: 0.95;
     font-weight: 500;
+}
+
+.banner-with-image {
+    position: relative;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.banner-image {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 45%;
+    object-fit: cover;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    opacity: 0.85;
+}
+
+.banner-with-image .banner-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Dual Images Banner */
+.banner-with-dual-images {
+    position: relative;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.banner-images-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 55%;
+    display: flex;
+    overflow: hidden;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+}
+
+.banner-with-dual-images .banner-image {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    border-radius: 0;
+    right: auto;
+    top: auto;
+}
+
+.banner-with-dual-images .banner-content {
+    position: relative;
+    z-index: 2;
 }
 
 /* Search Bar */
@@ -686,6 +745,21 @@ input:checked+.slider:before {
     height: 24px;
 }
 
+.home-button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+}
+
+.home-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
 .avatar {
     width: 40px;
     height: 40px;
@@ -746,6 +820,20 @@ input:checked+.slider:before {
     border: 2px solid var(--bg-color);
 }
 
+.halal-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+}
+
+.halal-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
 /* Mobile-first responsive */
 main {
     padding: 0.75rem 0.75rem 5rem 0.75rem;
@@ -798,13 +886,13 @@ main {
 /* Products Grid */
 .products {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: clamp(8px, 2vw, 14px);
 }
 
 .product-image {
     width: 100%;
-    aspect-ratio: 1;
+    height: 140px;
     background: var(--surface-color);
     border-radius: 14px;
     display: flex;

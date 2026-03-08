@@ -282,6 +282,7 @@ function initElements() {
     elements.profileModal = document.getElementById('profile-modal');
     elements.settingsModal = document.getElementById('settings-modal');
     elements.darkModeCheckbox = document.getElementById('dark-mode-toggle');
+    elements.homeButton = document.getElementById('home-button');
     drawerOverlay = document.getElementById('drawer-overlay');
 }
 
@@ -395,6 +396,16 @@ function renderCategories() {
     }).join('');
 }
 
+// Shuffle array (Fisher-Yates algorithm)
+function shuffleArray(arr) {
+    const shuffled = [...arr];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
 function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
     if (!elements.productsGrid) return;
 
@@ -403,7 +414,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
     // Only recalculate filtered list when not appending
     if (!append) {
         currentPage = 1;
-        currentFiltered = filter === 'Hammasi' ? [...products] : products.filter(p => p.category === filter);
+        currentFiltered = filter === 'Hammasi' ? shuffleArray(products) : products.filter(p => p.category === filter);
 
         if (searchQuery) {
             const q = searchQuery.toLowerCase();
@@ -1083,14 +1094,9 @@ window.addEventListener('DOMContentLoaded', () => {
     // Use generated products from products.js as default
     const defaultProductsData = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
 
-    // Load from localStorage if exists, else use default and save to localStorage
-    let savedProducts = JSON.parse(localStorage.getItem('mezana_products_local')) || [];
-    if (savedProducts.length === 0 && defaultProductsData.length > 0) {
-        products = defaultProductsData;
-        localStorage.setItem('mezana_products_local', JSON.stringify(products));
-    } else {
-        products = savedProducts;
-    }
+    // Always use default products data
+    products = defaultProductsData;
+    localStorage.setItem('mezana_products_local', JSON.stringify(products));
 
     // Auto-generate categories from product data and localStorage
     const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
@@ -1118,6 +1124,12 @@ window.addEventListener('DOMContentLoaded', () => {
     if (elements.closeCart) elements.closeCart.onclick = () => { closeDrawer(elements.cartDrawer); resetDrawer(); };
     if (elements.menuToggle) elements.menuToggle.onclick = () => openDrawer(elements.sidebarDrawer);
     if (elements.closeSidebar) elements.closeSidebar.onclick = () => closeDrawer(elements.sidebarDrawer);
+    if (elements.homeButton) elements.homeButton.onclick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closeDrawer(elements.cartDrawer);
+        closeDrawer(elements.sidebarDrawer);
+        renderProducts('Hammasi');
+    };
 
     // Close drawers when clicking overlay
     if (drawerOverlay) {
