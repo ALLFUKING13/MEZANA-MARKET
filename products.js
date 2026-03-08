@@ -5316,3 +5316,32 @@ const generatedProducts = [
     "image": "jpgs/tuxum.jpg"
   }
 ];
+const generatedCategories = [
+  "Choy",
+  "Gazaklar",
+  "Go'sht mahsulotlari",
+  "Guruch",
+  "Ichimliklar",
+  "Konservalar",
+  "Makaron",
+  "Mevalar",
+  "Murabbo",
+  "Muzlatilgan mahsulotlar",
+  "Qahva",
+  "Quritilgan Mevalar",
+  "Sabzavotlar",
+  "Shirinliklar",
+  "Sous",
+  "Sut Mahsulotlari",
+  "Sut mahsulotlari",
+  "Tomat",
+  "Tozalash",
+  "Tuxumlar",
+  "Tuzlamalar",
+  "Un",
+  "Xurmo",
+  "Yangi",
+  "Yog'",
+  "Yormalar",
+  "Ziravorlar"
+];
