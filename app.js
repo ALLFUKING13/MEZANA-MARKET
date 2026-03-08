@@ -819,13 +819,13 @@ window.showCategoryForm = () => {
         background: rgba(0,0,0,0.5); display: flex; align-items: center; 
         justify-content: center; z-index: 3000;
     `;
-    
+
     const content = document.createElement('div');
     content.style.cssText = `
         background: white; border-radius: 16px; padding: 20px; 
         max-width: 400px; width: 90%; max-height: 70vh; overflow-y: auto;
     `;
-    
+
     let html = `
         <h3 style="margin: 0 0 20px 0;">Kategoriyalarni boshqarish</h3>
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -834,7 +834,7 @@ window.showCategoryForm = () => {
         </div>
         <div style="margin-bottom: 20px;">
     `;
-    
+
     categoryList.forEach(cat => {
         html += `
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f5f5f5; border-radius: 8px; margin-bottom: 8px;">
@@ -846,16 +846,16 @@ window.showCategoryForm = () => {
             </div>
         `;
     });
-    
+
     html += `
         </div>
         <button onclick="document.querySelector('[data-close-cat]').click()" style="width: 100%; padding: 12px; background: #95a5a6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem;">Yopish</button>
     `;
-    
+
     content.innerHTML = html;
     modal.appendChild(content);
     document.body.appendChild(modal);
-    
+
     // Store modal reference for closing
     const closeBtn = document.createElement('button');
     closeBtn.setAttribute('data-close-cat', '');
@@ -883,7 +883,7 @@ window.addNewCategoryFromModal = () => {
     categories.push(newCategory);
     categories.sort();
     localStorage.setItem('mezana_categories', JSON.stringify(categories));
-    
+
     // Refresh UI
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
@@ -894,26 +894,26 @@ window.addNewCategoryFromModal = () => {
 window.editCategoryName = (oldName) => {
     const newName = prompt(`Yangi nomi kiriting:`, oldName);
     if (!newName || newName === oldName || newName.trim() === '') return;
-    
+
     const newNameTrim = newName.trim();
     if (categories.includes(newNameTrim)) {
         alert("Bu nomi bilan kategoriya allaqachon mavjud!");
         return;
     }
-    
+
     // Update category in array
     const idx = categories.indexOf(oldName);
     if (idx !== -1) categories[idx] = newNameTrim;
-    
+
     // Update in products
     products.forEach(p => {
         if (p.category === oldName) p.category = newNameTrim;
     });
-    
+
     categories.sort();
     localStorage.setItem('mezana_categories', JSON.stringify(categories));
     localStorage.setItem('mezana_products_local', JSON.stringify(products));
-    
+
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
     showCategoryForm();
@@ -924,11 +924,11 @@ window.editCategoryName = (oldName) => {
 
 window.deleteCategory = (catName) => {
     if (!confirm(`"${catName}" kategoriyasini o'chirmoqchimiz? Bu kategoriyalar mahsulotlar boshqa kategoriyaga ko'chirilmayadi!`)) return;
-    
+
     // Remove category
     categories = categories.filter(c => c !== catName);
     localStorage.setItem('mezana_categories', JSON.stringify(categories));
-    
+
     showToast("Kategoriya o'chirildi!");
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
@@ -1107,6 +1107,11 @@ window.addEventListener('DOMContentLoaded', () => {
     updateStaticTranslations();
     updateCartUI();
     setLanguage(currentLang);
+
+    // Hide loader after a short delay for smooth transition
+    setTimeout(() => {
+        document.body.classList.add('loaded');
+    }, 500);
 
     // Drawer open/close with overlay
     function openDrawer(drawer) {
