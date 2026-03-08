@@ -34,58 +34,56 @@ export default async function handler(req, res) {
     message += `\n💰 <b>Jami:</b> ${orderData.total.toLocaleString()} ${orderData.currency || 'so\'m'}`;
 
     try {
-        // Send main message
-        const textPayload = {
-            chat_id: ADMIN_CHAT_ID,
-            text: message,
-            parse_mode: 'HTML'
-        };
-
-        if (THREAD_ID) {
-            textPayload.message_thread_id = parseInt(THREAD_ID);
-        }
-
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(textPayload)
-        });
-
-        // Send product photos
         const baseUrl = process.env.SITE_URL || 'https://raw.githubusercontent.com/ALLFUKING13/MEZANA-MARKET/main';
 
-        for (const item of orderData.items) {
-            if (item.image && !item.image.startsWith('data:')) {
-                let photoUrl = item.image;
-                if (!photoUrl.startsWith('http')) {
-                    photoUrl = `${baseUrl}/${photoUrl.replace(/^\/+/, '')}`;
-                }
+        let mediaGroup = [];
+        const validItems = orderData.items.filter(item => item.image && !item.image.startsWith('data:'));
 
-                // Use wsrv.nl image resizing service to send 60x60 thumbnail
-                const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(photoUrl)}&w=60&h=60&fit=cover`;
+        validItems.slice(0, 10).forEach((item, index) => {
+            let photoUrl = item.image;
+            if (!photoUrl.startsWith('http')) {
+                photoUrl = `${baseUrl}/${photoUrl.replace(/^\/+/, '')}`;
+            }
+            photoUrl = encodeURI(photoUrl);
 
-                const photoCaption = `<b>${item.name}</b>\nSoni: ${item.qty} x ${item.price.toLocaleString()} = ${(item.price * item.qty).toLocaleString()} ${orderData.currency || 'so\'m'}`;
+            mediaGroup.push({
+                type: 'photo',
+                media: photoUrl,
+                caption: index === 0 && message.length <= 1024 ? message : '',
+                parse_mode: 'HTML'
+            });
+        });
 
-                const photoPayload = {
-                    chat_id: ADMIN_CHAT_ID,
-                    photo: proxyUrl,
-                    caption: photoCaption,
-                    parse_mode: 'HTML'
-                };
-
-                if (THREAD_ID) {
-                    photoPayload.message_thread_id = parseInt(THREAD_ID);
-                }
-
-                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+        if (mediaGroup.length > 0) {
+            // If message is too long for a picture caption, send it as a separate text message first
+            if (message.length > 1024) {
+                const textPayload = { chat_id: ADMIN_CHAT_ID, text: message, parse_mode: 'HTML' };
+                if (THREAD_ID) textPayload.message_thread_id = parseInt(THREAD_ID);
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(photoPayload)
+                    body: JSON.stringify(textPayload)
                 });
-
-                // Add small delay to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 300));
             }
+
+            const payload = { chat_id: ADMIN_CHAT_ID, media: mediaGroup };
+            if (THREAD_ID) payload.message_thread_id = parseInt(THREAD_ID);
+
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        } else {
+            // If no images are available, just send a basic text message
+            const textPayload = { chat_id: ADMIN_CHAT_ID, text: message, parse_mode: 'HTML' };
+            if (THREAD_ID) textPayload.message_thread_id = parseInt(THREAD_ID);
+
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(textPayload)
+            });
         }
 
         res.status(200).json({ success: true });
