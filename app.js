@@ -1192,7 +1192,7 @@ async function handleConfirmOrder() {
 
     const orderData = {
         user: { name, phone, address },
-        items: cart.map(i => ({ name: i.name[currentLang], price: i.price, qty: i.quantity })),
+        items: cart.map(i => ({ name: i.name[currentLang], price: i.price, qty: i.quantity, image: i.image })),
         total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
         currency: i18n[currentLang].currency,
         lang: currentLang
