@@ -949,6 +949,40 @@ window.exportData = () => {
     showToast('Eksport qilindi!');
 };
 
+window.syncToServer = async () => {
+    if (!confirm("O'zgarishlar asosiy saytga o'tqaziladi. Davom etamizmi?")) return;
+
+    const btn = document.querySelector('button[onclick="syncToServer()"]');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saqlanmoqda...';
+    }
+
+    try {
+        const fileContent = `const generatedProducts = ${JSON.stringify(products, null, 2)};`;
+        const response = await fetch('/api/update-products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: fileContent })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showToast("Serverga Saqlandi! Sayt 15-30 soniyada yangilanadi.");
+        } else {
+            throw new Error(result.error || 'Server error');
+        }
+    } catch (e) {
+        alert("Xatolik yuz berdi: " + e.message + ". GITHUB_TOKEN o'rnatilganligiga ishonch hosil qiling.");
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Serverga Saqlash';
+        }
+    }
+};
+
 window.showAccount = () => {
     if (elements.sidebarDrawer) elements.sidebarDrawer.classList.remove('open');
     toggleProfileModal(true);
