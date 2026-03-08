@@ -52,13 +52,20 @@ export default async function handler(req, res) {
         });
 
         // Send product photos
-        const baseUrl = process.env.SITE_URL || 'https://marketkr.uz';
-        
+        const baseUrl = process.env.SITE_URL || 'https://raw.githubusercontent.com/ALLFUKING13/MEZANA-MARKET/main';
+
         for (const item of orderData.items) {
-            if (item.image) {
-                const photoUrl = `${baseUrl}/${item.image}`;
+            if (item.image && !item.image.startsWith('data:')) {
+                let photoUrl = item.image;
+                if (!photoUrl.startsWith('http')) {
+                    photoUrl = `${baseUrl}/${photoUrl.replace(/^\/+/, '')}`;
+                }
+
+                // Encode URL to handle spaces and special characters in file names
+                photoUrl = encodeURI(photoUrl);
+
                 const photoCaption = `<b>${item.name}</b>\nSoni: ${item.qty} x ${item.price.toLocaleString()} = ${(item.price * item.qty).toLocaleString()} ${orderData.currency || 'so\'m'}`;
-                
+
                 const photoPayload = {
                     chat_id: ADMIN_CHAT_ID,
                     photo: photoUrl,
@@ -77,7 +84,7 @@ export default async function handler(req, res) {
                 });
 
                 // Add small delay to avoid rate limiting
-                await new Promise(resolve => setTimeout(resolve, 200));
+                await new Promise(resolve => setTimeout(resolve, 300));
             }
         }
 
