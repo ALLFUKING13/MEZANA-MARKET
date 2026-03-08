@@ -949,15 +949,6 @@ window.exportData = () => {
     showToast('Eksport qilindi!');
 };
 
-window.resetData = () => {
-    const isUz = currentLang === 'uz';
-    if (confirm(isUz ? "Hamma o'zgarishlar o'chadi va boshlang'ich holatiga qaytadi. Davom etamizmi?" : "All local changes will be lost and restored to default. Continue?")) {
-        localStorage.removeItem('mezana_products_local');
-        localStorage.removeItem('mezana_categories');
-        location.reload();
-    }
-};
-
 window.showAccount = () => {
     if (elements.sidebarDrawer) elements.sidebarDrawer.classList.remove('open');
     toggleProfileModal(true);
@@ -1103,14 +1094,9 @@ window.addEventListener('DOMContentLoaded', () => {
     // Use generated products from products.js as default
     const defaultProductsData = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
 
-    // Use local storage if available so admin changes are saved across reloads
-    const savedProducts = JSON.parse(localStorage.getItem('mezana_products_local'));
-    if (savedProducts && savedProducts.length > 0) {
-        products = savedProducts;
-    } else {
-        products = defaultProductsData;
-        localStorage.setItem('mezana_products_local', JSON.stringify(products));
-    }
+    // Always use default products data
+    products = defaultProductsData;
+    localStorage.setItem('mezana_products_local', JSON.stringify(products));
 
     // Auto-generate categories from product data and localStorage
     const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
