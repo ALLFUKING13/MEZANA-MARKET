@@ -923,7 +923,7 @@ window.editCategoryName = (oldName) => {
 };
 
 window.deleteCategory = (catName) => {
-    if (!confirm(`"${catName}" kategoriyasini o'chirmoqchimiz? Bu kategoriyalar mahsulotlar boshqa kategoriyaga ko'chirilmayadi!`)) return;
+    if (!confirm(`"${catName}" kategoriyasini o'chirmoqchimiz? Bu kategoriyaga tegishli mahsulotlar boshqa kategoriyaga o'tmaydi. Davom etasizmi?`)) return;
 
     // Remove category
     categories = categories.filter(c => c !== catName);
@@ -959,7 +959,8 @@ window.syncToServer = async () => {
     }
 
     try {
-        const fileContent = `const generatedProducts = ${JSON.stringify(products, null, 2)};`;
+        const categoriesData = categories.filter(c => c !== 'Hammasi');
+        const fileContent = `const generatedProducts = ${JSON.stringify(products, null, 2)};\nconst generatedCategories = ${JSON.stringify(categoriesData, null, 2)};`;
         const response = await fetch('/api/update-products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1133,10 +1134,15 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('mezana_products_local', JSON.stringify(products));
 
     // Auto-generate categories from product data and localStorage
-    const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
-    const savedCategories = JSON.parse(localStorage.getItem('mezana_categories')) || [];
-    const allCats = [...new Set([...uniqueCats, ...savedCategories])];
-    categories = ['Hammasi', ...allCats.sort()];
+    const serverCategories = (typeof generatedCategories !== 'undefined') ? generatedCategories : null;
+    let baseCats = [];
+    if (serverCategories) {
+        baseCats = serverCategories;
+    } else {
+        baseCats = [...new Set(products.map(p => p.category).filter(Boolean))];
+    }
+    categories = ['Hammasi', ...baseCats.sort()];
+    localStorage.setItem('mezana_categories', JSON.stringify(categories));
 
     updateStaticTranslations();
     updateCartUI();
