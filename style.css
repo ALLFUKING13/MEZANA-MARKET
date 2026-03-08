@@ -1577,3 +1577,142 @@ select {
         flex-direction: column;
     }
 }
+
+/* Optimized Mobile Responsive Design */
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+    }
+
+    main {
+        padding: 0.5rem 0.5rem 4.5rem 0.5rem;
+    }
+
+    .header-main {
+        gap: 8px;
+    }
+
+    .header-center {
+        flex: 1.5;
+        gap: 10px;
+    }
+
+    .clock-widget,
+    .weather-widget {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    .welcome {
+        display: none;
+    }
+
+    .banner-item {
+        min-width: 90%;
+        height: 140px;
+        padding: 1rem;
+    }
+
+    .banner-content h2 {
+        font-size: 1.2rem;
+    }
+
+    .banner-content p {
+        font-size: 0.8rem;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .product-card {
+        padding: 10px;
+    }
+
+    .product-card h3 {
+        font-size: 0.9rem;
+    }
+
+    .product-card .price {
+        font-size: 0.85rem;
+    }
+
+    .cartSvg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Very Small Phones */
+@media (max-width: 320px) {
+    header {
+        min-height: 95px;
+        padding: 0.4rem 0.5rem;
+        gap: 6px;
+    }
+
+    .header-center {
+        flex: 1;
+    }
+
+    .clock-widget,
+    .weather-widget {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .menu-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .home-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .halal-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .banner-item {
+        height: 120px;
+        padding: 0.8rem;
+    }
+
+    .banner-content h2 {
+        font-size: 1rem;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .product-card {
+        padding: 8px;
+    }
+}
+
+/* Landscape Mode */
+@media (max-height: 500px) {
+    header {
+        min-height: 90px;
+    }
+
+    .banner-item {
+        height: 120px;
+    }
+
+    main {
+        padding: 0.5rem 0.5rem 4rem 0.5rem;
+    }
+}
