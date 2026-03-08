@@ -25,15 +25,15 @@ const generatedProducts = [
   },
   {
     "id": 102,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-02.jpg",
     "name": {
       "uz": "Lipton Yellow Label 100 paket",
       "ru": "Lipton Yellow Label 100 пакетов",
       "kr": "Lipton Yellow Label 100개입",
       "en": "Lipton Yellow Label 100 bags"
     },
-    "price": 1,
-    "category": "Choy",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-02.jpg"
+    "price": 10000,
+    "category": "Choy"
   },
   {
     "id": 103,
@@ -61,51 +61,51 @@ const generatedProducts = [
   },
   {
     "id": 105,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-05.jpg",
     "name": {
       "uz": "Tess Blueberry Tart 20 paket",
       "ru": "Tess Blueberry Tart 20 пакетов",
       "kr": "Tess Blueberry Tart 20개입",
       "en": "Tess Blueberry Tart 20 bags"
     },
-    "price": 1,
-    "category": "Choy",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-05.jpg"
+    "price": 1500,
+    "category": "Choy"
   },
   {
     "id": 106,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-06 (2).jpg",
     "name": {
       "uz": "Tess Forest Dream 20 paket",
       "ru": "Tess Forest Dream 20 пакетов",
       "kr": "Tess Forest Dream 20개입",
       "en": "Tess Forest Dream 20 bags"
     },
-    "price": 1,
-    "category": "Choy",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-06 (2).jpg"
+    "price": 1500,
+    "category": "Choy"
   },
   {
     "id": 107,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-06.jpg",
     "name": {
       "uz": "Tess Summer Time 20 paket",
       "ru": "Tess Summer Time 20 пакетов",
       "kr": "Tess Summer Time 20개입",
       "en": "Tess Summer Time 20 bags"
     },
-    "price": 1,
-    "category": "Choy",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-06.jpg"
+    "price": 1500,
+    "category": "Choy"
   },
   {
     "id": 108,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-07.jpg",
     "name": {
       "uz": "Tess Berry Bar 20 paket",
       "ru": "Tess Berry Bar 20 пакетов",
       "kr": "Tess Berry Bar 20개입",
       "en": "Tess Berry Bar 20 bags"
     },
-    "price": 1,
-    "category": "Choy",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-07.jpg"
+    "price": 1500,
+    "category": "Choy"
   },
   {
     "id": 109,
@@ -133,15 +133,15 @@ const generatedProducts = [
   },
   {
     "id": 111,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-09.jpg",
     "name": {
       "uz": "Tess Earl Grey 100g",
       "ru": "Tess Earl Grey 100г",
       "kr": "Tess Earl Grey 100g",
       "en": "Tess Earl Grey 100g"
     },
-    "price": 1,
-    "category": "Choy",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-09.jpg"
+    "price": 1500,
+    "category": "Choy"
   },
   {
     "id": 112,
