@@ -13,15 +13,15 @@ const generatedProducts = [
   },
   {
     "id": 101,
-    "image": "Mahsulotlar/photo_2026-03-04_06-04-38.jpg",
     "name": {
       "uz": "Jardin Guatemala Atitlan",
       "ru": "Jardin Guatemala Atitlan",
       "kr": "Jardin Guatemala Atitlan",
       "en": "Jardin Guatemala Atitlan"
     },
-    "price": 1000,
-    "category": "Qahva"
+    "price": 1,
+    "category": "Qahva",
+    "image": "Mahsulotlar/photo_2026-03-04_06-04-38.jpg"
   },
   {
     "id": 102,
@@ -32,20 +32,20 @@ const generatedProducts = [
       "kr": "Lipton Yellow Label 100개입",
       "en": "Lipton Yellow Label 100 bags"
     },
-    "price": 1000,
+    "price": 10000,
     "category": "Choy"
   },
   {
     "id": 103,
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-03.jpg",
     "name": {
       "uz": "Etre Royal Ceylon 200g",
       "ru": "Etre Royal Ceylon 200г",
       "kr": "Etre Royal Ceylon 200g",
       "en": "Etre Royal Ceylon 200g"
     },
-    "price": 1000,
-    "category": "Choy"
+    "price": 1,
+    "category": "Choy",
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-03.jpg"
   },
   {
     "id": 104,
