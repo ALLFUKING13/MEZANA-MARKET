@@ -61,14 +61,14 @@ export default async function handler(req, res) {
                     photoUrl = `${baseUrl}/${photoUrl.replace(/^\/+/, '')}`;
                 }
 
-                // Encode URL to handle spaces and special characters in file names
-                photoUrl = encodeURI(photoUrl);
+                // Use wsrv.nl image resizing service to send 60x60 thumbnail
+                const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(photoUrl)}&w=60&h=60&fit=cover`;
 
                 const photoCaption = `<b>${item.name}</b>\nSoni: ${item.qty} x ${item.price.toLocaleString()} = ${(item.price * item.qty).toLocaleString()} ${orderData.currency || 'so\'m'}`;
 
                 const photoPayload = {
                     chat_id: ADMIN_CHAT_ID,
-                    photo: photoUrl,
+                    photo: proxyUrl,
                     caption: photoCaption,
                     parse_mode: 'HTML'
                 };
