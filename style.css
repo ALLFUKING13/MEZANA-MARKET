@@ -46,15 +46,32 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+html,
+body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
-    background-image: url('jpgs/background.jpg');
-    background-size: cover;
-    background-attachment: fixed;
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url('jpgs/background.jpg');
+    background-size: cover, cover;
+    background-attachment: fixed, fixed;
     color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
+    overflow-y: auto;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -80,11 +97,12 @@ header {
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
-    /* Vertical stack for better control */
     gap: 8px;
     min-height: 110px;
     border-radius: 0 0 var(--radius) var(--radius);
     animation: slideDown 0.5s ease-out;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .header-top {
@@ -837,37 +855,10 @@ input:checked+.slider:before {
 /* Mobile-first responsive */
 main {
     padding: 0.75rem 0.75rem 5rem 0.75rem;
+    width: 100%;
     max-width: 600px;
     margin: 0 auto;
-}
-
-/* Small phones */
-@media (max-width: 360px) {
-    .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
-    }
-
-    .product-card {
-        padding: 8px;
-    }
-
-    .banner-item {
-        min-width: 92%;
-        height: 130px;
-        padding: 1rem;
-    }
-
-    .banner-content h2 {
-        font-size: 1.1rem;
-    }
-}
-
-/* Medium phones */
-@media (min-width: 361px) and (max-width: 480px) {
-    main {
-        padding: 0.75rem 0.75rem 5rem 0.75rem;
-    }
+    box-sizing: border-box;
 }
 
 /* Larger phones / small tablets */
@@ -1572,11 +1563,6 @@ select {
     transition: 0.2s;
 }
 
-@media (max-width: 480px) {
-    .location-cards-wrapper {
-        flex-direction: column;
-    }
-}
 
 /* Optimized Mobile Responsive Design */
 @media (max-width: 768px) {
@@ -1586,74 +1572,118 @@ select {
 
     main {
         padding: 0.5rem 0.5rem 4.5rem 0.5rem;
+        max-width: 100%;
+    }
+
+    header {
+        min-height: 100px;
+        padding: 0.5rem 0.5rem;
+        gap: 6px;
     }
 
     .header-main {
-        gap: 8px;
-    }
-
-    .header-center {
-        flex: 1.5;
-        gap: 10px;
-    }
-
-    .clock-widget,
-    .weather-widget {
-        padding: 4px 8px;
-        font-size: 0.8rem;
-    }
-
-    .welcome {
-        display: none;
-    }
-
-    .banner-item {
-        min-width: 90%;
-        height: 140px;
-        padding: 1rem;
-    }
-
-    .banner-content h2 {
-        font-size: 1.2rem;
-    }
-
-    .banner-content p {
-        font-size: 0.8rem;
-    }
-
-    .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-
-    .product-card {
-        padding: 10px;
-    }
-
-    .product-card h3 {
-        font-size: 0.9rem;
-    }
-
-    .product-card .price {
-        font-size: 0.85rem;
-    }
-
-    .cartSvg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-/* Very Small Phones */
-@media (max-width: 320px) {
-    header {
-        min-height: 95px;
-        padding: 0.4rem 0.5rem;
         gap: 6px;
     }
 
     .header-center {
         flex: 1;
+        gap: 8px;
+    }
+
+    .clock-widget,
+    .weather-widget {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+
+    .greeting {
+        display: none;
+    }
+
+    .user-name {
+        font-size: 0.8rem;
+    }
+
+    .avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 0.95rem;
+    }
+
+    .menu-toggle svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .home-img {
+        width: 55px;
+        height: 55px;
+    }
+
+    .halal-img {
+        width: 44px;
+        height: 44px;
+    }
+
+    .cart-anchor svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .banner-item {
+        min-width: 88%;
+        height: 130px;
+        padding: 0.8rem;
+    }
+
+    .banner-content h2 {
+        font-size: 1.1rem;
+    }
+
+    .banner-content p {
+        font-size: 0.75rem;
+    }
+
+    .products {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .product-card {
+        padding: 8px;
+    }
+
+    .product-card h3 {
+        font-size: 0.85rem;
+    }
+
+    .product-card .price {
+        font-size: 0.8rem;
+    }
+
+    .search-input {
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Phones - 480px and below */
+@media (max-width: 480px) {
+    main {
+        padding: 0.4rem 0.4rem 4rem 0.4rem;
+        max-width: 100%;
+    }
+
+    header {
+        min-height: 95px;
+        padding: 0.4rem 0.3rem;
+    }
+
+    .header-main {
+        gap: 5px;
+    }
+
+    .header-center {
+        gap: 6px;
     }
 
     .clock-widget,
@@ -1665,7 +1695,7 @@ select {
     .avatar {
         width: 32px;
         height: 32px;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     .menu-toggle svg {
@@ -1684,35 +1714,123 @@ select {
     }
 
     .banner-item {
+        min-width: 88%;
         height: 120px;
-        padding: 0.8rem;
+        padding: 0.7rem;
     }
 
     .banner-content h2 {
         font-size: 1rem;
+        margin-bottom: 3px;
+    }
+
+    .banner-content p {
+        font-size: 0.7rem;
+    }
+
+    .search-wrapper {
+        padding: 0.6rem 1rem;
+        gap: 10px;
+    }
+
+    .search-input {
+        font-size: 0.85rem;
     }
 
     .products {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 6px;
     }
 
     .product-card {
-        padding: 8px;
+        padding: 6px;
+    }
+
+    .product-card h3 {
+        font-size: 0.8rem;
+    }
+
+    .product-card .price {
+        font-size: 0.75rem;
+    }
+
+    .location-cards-wrapper {
+        flex-direction: column;
+    }
+}
+
+/* Extra Small Phones - 360px and below */
+@media (max-width: 360px) {
+    main {
+        padding: 0.3rem 0.3rem 3.8rem 0.3rem;
+    }
+
+    header {
+        min-height: 90px;
+        padding: 0.3rem 0.2rem;
+        gap: 4px;
+    }
+
+    .header-top {
+        display: none;
+    }
+
+    .menu-toggle svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .home-img {
+        width: 46px;
+        height: 46px;
+    }
+
+    .halal-img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+
+    .banner-item {
+        min-width: 90%;
+        height: 110px;
+        padding: 0.6rem;
+    }
+
+    .banner-content h2 {
+        font-size: 0.95rem;
+    }
+
+    .banner-content p {
+        font-size: 0.65rem;
+    }
+
+    .products {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+    }
+
+    .product-card {
+        padding: 4px;
     }
 }
 
 /* Landscape Mode */
 @media (max-height: 500px) {
     header {
-        min-height: 90px;
+        min-height: 80px;
     }
 
     .banner-item {
-        height: 120px;
+        height: 100px;
     }
 
     main {
-        padding: 0.5rem 0.5rem 4rem 0.5rem;
+        padding: 0.3rem 0.3rem 3.5rem 0.3rem;
     }
 }
