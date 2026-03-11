@@ -577,15 +577,15 @@ const generatedProducts = [
   },
   {
     "id": 149,
+    "image": "Mahsulotlar/photo_2026-03-04_06-05-45 (2).jpg",
     "name": {
-      "uz": "Konserva Tushonka",
-      "ru": "Консерва Тушёнка",
-      "kr": "통조림 고기",
-      "en": "Canned Stewed Meat"
+      "uz": "TUZ 1kg",
+      "ru": "соль 1kg",
+      "kr": "꽃소금 1kg",
+      "en": "Salt"
     },
-    "price": 1,
-    "category": "Konserva",
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-45 (2).jpg"
+    "price": 1700,
+    "category": "Ziravorlar"
   },
   {
     "id": 150,
@@ -1136,7 +1136,7 @@ const generatedProducts = [
       "en": "Khalvinka Candy"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-20.jpg"
   },
   {
@@ -1148,7 +1148,7 @@ const generatedProducts = [
       "en": "Almaty Halva (Peanut, Raisin)"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-21.jpg"
   },
   {
@@ -1160,7 +1160,7 @@ const generatedProducts = [
       "en": "Almaty Halva Sunflower"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-22 (2).jpg"
   },
   {
@@ -1172,7 +1172,7 @@ const generatedProducts = [
       "en": "Dostik Halva"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-22.jpg"
   },
   {
@@ -1184,7 +1184,7 @@ const generatedProducts = [
       "en": "Kazakh Halva Sunflower"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-23.jpg"
   },
   {
@@ -1424,7 +1424,7 @@ const generatedProducts = [
       "en": "Rice 4000W"
     },
     "price": 1,
-    "category": "Guruch",
+    "category": "Go'sht va Baliq",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-38 (2).jpg"
   },
   {
@@ -1436,7 +1436,7 @@ const generatedProducts = [
       "en": "Monsoon Biryani Rice 1kg"
     },
     "price": 1,
-    "category": "Guruch",
+    "category": "Go'sht va Baliq",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-38.jpg"
   },
   {
@@ -1448,7 +1448,7 @@ const generatedProducts = [
       "en": "Bamasi Pai Sela Basmati Rice 1kg"
     },
     "price": 1,
-    "category": "Guruch",
+    "category": "Go'sht va Baliq",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-39.jpg"
   },
   {
@@ -1700,7 +1700,7 @@ const generatedProducts = [
       "en": "Deepak Gol Gappa 200g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-48.jpg"
   },
   {
@@ -1724,7 +1724,7 @@ const generatedProducts = [
       "en": "Deepak Gol Gappa 200g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-06-56.jpg"
   },
   {
@@ -2144,7 +2144,7 @@ const generatedProducts = [
       "en": "Toast Rusk 250g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-08-55.jpg"
   },
   {
@@ -2156,7 +2156,7 @@ const generatedProducts = [
       "en": "Alin Baby Toast"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-08-57.jpg"
   },
   {
@@ -2168,7 +2168,7 @@ const generatedProducts = [
       "en": "Banoful Dry Cake"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-00.jpg"
   },
   {
@@ -2180,7 +2180,7 @@ const generatedProducts = [
       "en": "Pran Dry Cake"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-01.jpg"
   },
   {
@@ -2192,7 +2192,7 @@ const generatedProducts = [
       "en": "United King Soan Papdi 250g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-03.jpg"
   },
   {
@@ -2276,7 +2276,7 @@ const generatedProducts = [
       "en": "Teer Puffed Rice 250g"
     },
     "price": 1,
-    "category": "Guruch",
+    "category": "Go'sht va Baliq",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-12.jpg"
   },
   {
@@ -2312,7 +2312,7 @@ const generatedProducts = [
       "en": "Ülker Milk Chocolate"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-17.jpg"
   },
   {
@@ -2324,7 +2324,7 @@ const generatedProducts = [
       "en": "Babayevskiy Elite 75% Cocoa"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-18.jpg"
   },
   {
@@ -2336,7 +2336,7 @@ const generatedProducts = [
       "en": "Babayevskiy Dark Chocolate with Almonds"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-19.jpg"
   },
   {
@@ -2348,7 +2348,7 @@ const generatedProducts = [
       "en": "Babayevskiy Dark with Hazelnuts & Raisins"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-20.jpg"
   },
   {
@@ -2360,7 +2360,7 @@ const generatedProducts = [
       "en": "Alyonka Triple Dessert 3 Flavors"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-21.jpg"
   },
   {
@@ -2372,7 +2372,7 @@ const generatedProducts = [
       "en": "Alyonka Porous Milk Chocolate"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-22.jpg"
   },
   {
@@ -2384,7 +2384,7 @@ const generatedProducts = [
       "en": "Alionka Milk Chocolate Hazelnut"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-23.jpg"
   },
   {
@@ -2396,7 +2396,7 @@ const generatedProducts = [
       "en": "Alionka Milk Chocolate Sticks 100g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-25.jpg"
   },
   {
@@ -2408,7 +2408,7 @@ const generatedProducts = [
       "en": "Alionka Milk Chocolate"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-26.jpg"
   },
   {
@@ -2420,7 +2420,7 @@ const generatedProducts = [
       "en": "Bonucci Waffle Cake Cocoa"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-27.jpg"
   },
   {
@@ -2432,7 +2432,7 @@ const generatedProducts = [
       "en": "Snickers 51g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-28.jpg"
   },
   {
@@ -2444,7 +2444,7 @@ const generatedProducts = [
       "en": "Snickers Box 24x51g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-29.jpg"
   },
   {
@@ -2456,7 +2456,7 @@ const generatedProducts = [
       "en": "Rakhat Kazakhstan Dark Chocolate"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-30 (2).jpg"
   },
   {
@@ -2468,7 +2468,7 @@ const generatedProducts = [
       "en": "Ülker Metro Classic"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-30.jpg"
   },
   {
@@ -2480,7 +2480,7 @@ const generatedProducts = [
       "en": "Yashkino Milk Chocolate 90g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-31.jpg"
   },
   {
@@ -2492,7 +2492,7 @@ const generatedProducts = [
       "en": "Yashkino Milk Chocolate with Peanuts 90g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-32.jpg"
   },
   {
@@ -2504,7 +2504,7 @@ const generatedProducts = [
       "en": "Babayevskiy Pear & Almond 54.8%"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-33.jpg"
   },
   {
@@ -2516,7 +2516,7 @@ const generatedProducts = [
       "en": "Babayevskiy Cashew & Hazelnut 54.8%"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-34.jpg"
   },
   {
@@ -2528,7 +2528,7 @@ const generatedProducts = [
       "en": "Babayevskiy Raspberry & Almond 54.8%"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-35.jpg"
   },
   {
@@ -2552,7 +2552,7 @@ const generatedProducts = [
       "en": "Elvan Truffle Assortment 1000g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-37.jpg"
   },
   {
@@ -2564,7 +2564,7 @@ const generatedProducts = [
       "en": "Piccadeli Silka Crispies Chocolate"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-38.jpg"
   },
   {
@@ -2576,7 +2576,7 @@ const generatedProducts = [
       "en": "Baldyozh Wafer Bar with Nut Paste"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-39.jpg"
   },
   {
@@ -2588,7 +2588,7 @@ const generatedProducts = [
       "en": "Kalpa Wafer Coconut Chocolate 20g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-40.jpg"
   },
   {
@@ -2600,7 +2600,7 @@ const generatedProducts = [
       "en": "35 Emotion Chocolate Candy"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-41.jpg"
   },
   {
@@ -2612,7 +2612,7 @@ const generatedProducts = [
       "en": "Snickers Fun Size 500g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-42.jpg"
   },
   {
@@ -2624,7 +2624,7 @@ const generatedProducts = [
       "en": "Twix Minis 500g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-43.jpg"
   },
   {
@@ -2636,7 +2636,7 @@ const generatedProducts = [
       "en": "Vkusnaya Konfeta Baldyozh 500g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-44.jpg"
   },
   {
@@ -2660,7 +2660,7 @@ const generatedProducts = [
       "en": "Dayozh Vkusnaya Konfeta Banana"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-45.jpg"
   },
   {
@@ -2684,7 +2684,7 @@ const generatedProducts = [
       "en": "Mello Marshmallow Round Twist 135g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-47.jpg"
   },
   {
@@ -2696,7 +2696,7 @@ const generatedProducts = [
       "en": "Mello Marshmallow Mello Twist 135g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-48.jpg"
   },
   {
@@ -2708,7 +2708,7 @@ const generatedProducts = [
       "en": "Korovka Candy 30% Milk 250g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-49.jpg"
   },
   {
@@ -2720,7 +2720,7 @@ const generatedProducts = [
       "en": "Kopiko Cappuccino Coffee Candy"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-50.jpg"
   },
   {
@@ -2732,7 +2732,7 @@ const generatedProducts = [
       "en": "Kopiko Coffee Candy"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-51.jpg"
   },
   {
@@ -2744,7 +2744,7 @@ const generatedProducts = [
       "en": "Ülker Metro Mini"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-52.jpg"
   },
   {
@@ -2756,7 +2756,7 @@ const generatedProducts = [
       "en": "Krokant with Almond 180g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-53.jpg"
   },
   {
@@ -2780,7 +2780,7 @@ const generatedProducts = [
       "en": "Korovka Wafers Baked Milk 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-55.jpg"
   },
   {
@@ -2792,7 +2792,7 @@ const generatedProducts = [
       "en": "Korovka Wafers Chocolate 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-56.jpg"
   },
   {
@@ -2804,7 +2804,7 @@ const generatedProducts = [
       "en": "Korovka Wafers Baked Milk 150g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-57 (2).jpg"
   },
   {
@@ -2816,7 +2816,7 @@ const generatedProducts = [
       "en": "Korovka Wafers Chocolate 150g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-57.jpg"
   },
   {
@@ -2828,7 +2828,7 @@ const generatedProducts = [
       "en": "Korovka Sugar Cookies with Cocoa"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-58.jpg"
   },
   {
@@ -2840,7 +2840,7 @@ const generatedProducts = [
       "en": "Korovka Sugar Cookies Baked Milk"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-09-59.jpg"
   },
   {
@@ -2852,7 +2852,7 @@ const generatedProducts = [
       "en": "Korovka Sugar Cookies with Milk"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-00.jpg"
   },
   {
@@ -2864,7 +2864,7 @@ const generatedProducts = [
       "en": "Korovka Sugar Cookies Condensed Milk"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-01.jpg"
   },
   {
@@ -2876,7 +2876,7 @@ const generatedProducts = [
       "en": "Lyubimoye Cookies Vanilla Flavor"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-06.jpg"
   },
   {
@@ -2888,7 +2888,7 @@ const generatedProducts = [
       "en": "Lyubimoye Cookies Condensed Milk"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-07.jpg"
   },
   {
@@ -2900,7 +2900,7 @@ const generatedProducts = [
       "en": "Korovka Sugar Cookies Cocoa (large)"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-08.jpg"
   },
   {
@@ -2912,7 +2912,7 @@ const generatedProducts = [
       "en": "Nissin Wafers Strawberry 100g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-09.jpg"
   },
   {
@@ -2924,7 +2924,7 @@ const generatedProducts = [
       "en": "Maliban Hawaiian Cookies Coconut 200g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-10.jpg"
   },
   {
@@ -2984,7 +2984,7 @@ const generatedProducts = [
       "en": "KB Halal Food Green Raisins 500g"
     },
     "price": 1,
-    "category": "Quritilgan Mevalar",
+    "category": "Tayyor yegulik",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-15.jpg"
   },
   {
@@ -3056,7 +3056,7 @@ const generatedProducts = [
       "en": "KB Halal Food Dried Apricots"
     },
     "price": 1,
-    "category": "Quritilgan Mevalar",
+    "category": "Tayyor yegulik",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-21.jpg"
   },
   {
@@ -3068,7 +3068,7 @@ const generatedProducts = [
       "en": "Chudo Khrustinka Cocoa Milk 400g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-22.jpg"
   },
   {
@@ -3080,7 +3080,7 @@ const generatedProducts = [
       "en": "Yashkino Glazed Wafers with Nuts 200g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-23 (2).jpg"
   },
   {
@@ -3092,7 +3092,7 @@ const generatedProducts = [
       "en": "Chudo Khrustinka Chocolate 400g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-23.jpg"
   },
   {
@@ -3104,7 +3104,7 @@ const generatedProducts = [
       "en": "Yashkino Wafers with Halva 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-24.jpg"
   },
   {
@@ -3116,7 +3116,7 @@ const generatedProducts = [
       "en": "Yashkino Wafers Condensed Milk 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-25.jpg"
   },
   {
@@ -3128,7 +3128,7 @@ const generatedProducts = [
       "en": "Yashkino Wafers Nut 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-26.jpg"
   },
   {
@@ -3140,7 +3140,7 @@ const generatedProducts = [
       "en": "Yashkino Wafers Chocolate 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-27.jpg"
   },
   {
@@ -3152,7 +3152,7 @@ const generatedProducts = [
       "en": "Yashkino Wafers Lemon-Lime 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-28.jpg"
   },
   {
@@ -3164,7 +3164,7 @@ const generatedProducts = [
       "en": "Yashkino Wafer Cake Chocolate Hazelnut 250g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-29.jpg"
   },
   {
@@ -3176,7 +3176,7 @@ const generatedProducts = [
       "en": "Yashkino Wafers Cream 300g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-32.jpg"
   },
   {
@@ -3188,7 +3188,7 @@ const generatedProducts = [
       "en": "Korovka Wafer Candies Milk 250g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-33.jpg"
   },
   {
@@ -3200,7 +3200,7 @@ const generatedProducts = [
       "en": "Korovka Wafer Candies Chocolate 250g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-34.jpg"
   },
   {
@@ -3212,7 +3212,7 @@ const generatedProducts = [
       "en": "RotFront Caramel Duchesse Candy"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-35.jpg"
   },
   {
@@ -3224,7 +3224,7 @@ const generatedProducts = [
       "en": "RotFront Caramel Barberry Candy"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-36.jpg"
   },
   {
@@ -3236,7 +3236,7 @@ const generatedProducts = [
       "en": "Krasnyy Oktyabr Kara-Kum Candies"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-37.jpg"
   },
   {
@@ -3248,7 +3248,7 @@ const generatedProducts = [
       "en": "Krasnyy Oktyabr Toffee Original Candies"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-38.jpg"
   },
   {
@@ -3428,7 +3428,7 @@ const generatedProducts = [
       "en": "Ergül Hazelnut Cream with Cocoa and Milky Cream"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-51.jpg"
   },
   {
@@ -3440,7 +3440,7 @@ const generatedProducts = [
       "en": "Ergül Hazelnut Cream with Cocoa 350g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-52.jpg"
   },
   {
@@ -3452,7 +3452,7 @@ const generatedProducts = [
       "en": "Nutella Hazelnut Spread with Cocoa"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-53.jpg"
   },
   {
@@ -3464,7 +3464,7 @@ const generatedProducts = [
       "en": "Wellnut Krember Cocoa Hazelnut Spread"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-54.jpg"
   },
   {
@@ -3536,7 +3536,7 @@ const generatedProducts = [
       "en": "Mr. Chai Peanut Butter Crunchy 510g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-00.jpg"
   },
   {
@@ -3548,7 +3548,7 @@ const generatedProducts = [
       "en": "Safo Dried Prunes"
     },
     "price": 1,
-    "category": "Quritilgan Mevalar",
+    "category": "Tayyor yegulik",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-01 (2).jpg"
   },
   {
@@ -3560,7 +3560,7 @@ const generatedProducts = [
       "en": "Mr. Chai Peanut Butter Creamy 510g"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-01.jpg"
   },
   {
@@ -3584,7 +3584,7 @@ const generatedProducts = [
       "en": "Safo Eastern Dried Fruits 500g"
     },
     "price": 1,
-    "category": "Quritilgan Mevalar",
+    "category": "Tayyor yegulik",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-03.jpg"
   },
   {
@@ -3668,7 +3668,7 @@ const generatedProducts = [
       "en": "KB Halal Food Raisins"
     },
     "price": 1,
-    "category": "Quritilgan Mevalar",
+    "category": "Tayyor yegulik",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-11.jpg"
   },
   {
@@ -3680,7 +3680,7 @@ const generatedProducts = [
       "en": "KB Halal Food Dried Green Grapes 200g"
     },
     "price": 1,
-    "category": "Quritilgan Mevalar",
+    "category": "Tayyor yegulik",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-12.jpg"
   },
   {
@@ -5132,7 +5132,7 @@ const generatedProducts = [
       "en": "Assorted Cakes"
     },
     "price": 1,
-    "category": "Shirinliklar",
+    "category": "Fresh & Fast",
     "image": "Mahsulotlar/photo_2026-03-04_06-13-22.jpg"
   },
   {
@@ -5144,7 +5144,7 @@ const generatedProducts = [
       "en": "Apple"
     },
     "price": 4000,
-    "category": "Mevalar",
+    "category": "Oziq-ovqat",
     "image": "jpgs/olma.jpg"
   },
   {
@@ -5156,7 +5156,7 @@ const generatedProducts = [
       "en": "Banana"
     },
     "price": 3500,
-    "category": "Mevalar",
+    "category": "Oziq-ovqat",
     "image": "jpgs/banan.jpg"
   },
   {
@@ -5168,7 +5168,7 @@ const generatedProducts = [
       "en": "Orange"
     },
     "price": 3000,
-    "category": "Mevalar",
+    "category": "Oziq-ovqat",
     "image": "Mahsulotlar/photo_2026-03-04_06-05-02.jpg"
   },
   {
@@ -5180,7 +5180,7 @@ const generatedProducts = [
       "en": "Grape"
     },
     "price": 5000,
-    "category": "Mevalar",
+    "category": "Oziq-ovqat",
     "image": "jpgs/1.jpg"
   },
   {
@@ -5192,7 +5192,7 @@ const generatedProducts = [
       "en": "Carrot"
     },
     "price": 2000,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/sabzi.jpg"
   },
   {
@@ -5204,7 +5204,7 @@ const generatedProducts = [
       "en": "Pumpkin"
     },
     "price": 3000,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/oshqovoq.jpg"
   },
   {
@@ -5216,7 +5216,7 @@ const generatedProducts = [
       "en": "Onion"
     },
     "price": 1500,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/piyoz.jpg"
   },
   {
@@ -5228,7 +5228,7 @@ const generatedProducts = [
       "en": "Pineapple"
     },
     "price": 6000,
-    "category": "Mevalar",
+    "category": "Oziq-ovqat",
     "image": "jpgs/ananas.jpg"
   },
   {
@@ -5240,7 +5240,7 @@ const generatedProducts = [
       "en": "Eggplant"
     },
     "price": 2500,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/baqlajon.jpg"
   },
   {
@@ -5252,7 +5252,7 @@ const generatedProducts = [
       "en": "Cabbage"
     },
     "price": 2000,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/karom.jpg"
   },
   {
@@ -5264,7 +5264,7 @@ const generatedProducts = [
       "en": "Potato"
     },
     "price": 1800,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/kartoshka.jpg"
   },
   {
@@ -5276,7 +5276,7 @@ const generatedProducts = [
       "en": "Tomato"
     },
     "price": 2500,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/pamidor.jpg"
   },
   {
@@ -5288,7 +5288,7 @@ const generatedProducts = [
       "en": "Garlic"
     },
     "price": 3000,
-    "category": "Sabzavotlar",
+    "category": "Katta chegirmalar",
     "image": "jpgs/sarimsoq piyoz.jpg"
   },
   {
@@ -5305,25 +5305,12 @@ const generatedProducts = [
   }
 ];
 const generatedCategories = [
-  "Choy",
-  "Dukkakli mahsulotlar",
+  "Fresh & Fast",
   "Go'sht mahsulotlari",
-  "Guruch",
+  "Go'sht va Baliq",
   "Ichimliklar",
-  "Konservalar",
-  "Makaron",
-  "Mevalar",
-  "Murabbo",
-  "Qahva",
-  "Quritilgan Mevalar",
-  "Sabzavotlar",
-  "Shirinliklar",
-  "Sous",
-  "Tomat",
-  "Tuxumlar",
-  "Tuzlamalar",
-  "Un",
-  "Xurmo",
-  "Yog'",
-  "Ziravorlar"
+  "Katta chegirmalar",
+  "Oziq-ovqat",
+  "Tayyor yegulik",
+  "Yog'"
 ];
