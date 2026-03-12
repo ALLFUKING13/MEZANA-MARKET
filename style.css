@@ -51,13 +51,7 @@ body {
     width: 100%;
     height: 100%;
     position: relative;
-}
-
-html,
-body {
-    width: 100%;
-    height: 100%;
-    position: relative;
+    overflow-x: hidden;
 }
 
 body {
@@ -1675,7 +1669,7 @@ select {
     }
 
     .banner-item {
-        min-width: 88%;
+        min-width: 92%;
         height: 130px;
         padding: 0.8rem;
     }
@@ -1688,8 +1682,9 @@ select {
         font-size: 0.75rem;
     }
 
+    /* Cap at 3 columns on tablet-sized screens */
     .products {
-        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 8px;
     }
 
@@ -1708,26 +1703,43 @@ select {
     .search-input {
         font-size: 0.9rem;
     }
+
+    /* Modals fill more of the screen on tablets */
+    .product-detail-content {
+        width: 95%;
+    }
+
+    .modal {
+        padding: 0.75rem;
+    }
 }
 
-/* Small Phones - 480px and below */
-@media (max-width: 480px) {
+/* Phones - 600px and below */
+@media (max-width: 600px) {
     main {
         padding: 0.4rem 0.4rem 4rem 0.4rem;
-        max-width: 100%;
     }
 
     header {
-        min-height: 95px;
+        min-height: 90px;
         padding: 0.4rem 0.3rem;
     }
 
     .header-main {
-        gap: 5px;
+        gap: 4px;
+    }
+
+    /* Hide non-essential header elements */
+    .welcome {
+        display: none;
+    }
+
+    .halal-logo {
+        display: none;
     }
 
     .header-center {
-        gap: 6px;
+        gap: 4px;
     }
 
     .clock-widget,
@@ -1742,23 +1754,187 @@ select {
         font-size: 0.85rem;
     }
 
+    .home-img {
+        width: 46px;
+        height: 46px;
+    }
+
+    .cart-anchor {
+        padding: 6px;
+    }
+
+    .cart-anchor svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Force 2 columns for phones */
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .product-image {
+        height: 130px;
+    }
+
+    .product-title {
+        font-size: 0.78rem;
+        height: 2rem;
+    }
+
+    .product-price {
+        font-size: 0.85rem;
+    }
+
+    /* Banners fill full width */
+    .banner-section {
+        padding: 0 0.4rem;
+    }
+
+    .banner-item {
+        min-width: 100%;
+        height: 125px;
+    }
+
+    .search-container {
+        padding: 0 0.4rem;
+        margin: 1rem 0;
+    }
+
+    .search-wrapper {
+        padding: 0.6rem 1rem;
+    }
+
+    /* Category pills tighter */
+    .category-card {
+        padding: 8px 14px;
+        gap: 6px;
+    }
+
+    .category-icon {
+        font-size: 1.1rem;
+    }
+
+    .category-name {
+        font-size: 0.78rem;
+    }
+
+    #categories-grid {
+        padding: 0 0.4rem 6px 0.4rem;
+    }
+
+    /* Modals fill 100% on phones */
+    .modal {
+        padding: 0.4rem;
+    }
+
+    .modal-content {
+        max-width: 100%;
+        border-radius: 20px;
+        padding: 1.5rem;
+    }
+
+    .product-detail-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .detail-image-container {
+        height: 220px;
+    }
+
+    .detail-body {
+        padding: 1rem;
+    }
+
+    /* Location cards stack */
+    .location-cards-wrapper {
+        flex-direction: column;
+    }
+
+    .locations {
+        padding: 20px 12px 80px 12px;
+    }
+
+    .cart-footer {
+        padding: 1rem 1rem calc(4rem + env(safe-area-inset-bottom, 15px)) 1rem;
+    }
+
+    .drawer-header {
+        padding: 1rem;
+    }
+
+    .primary-btn {
+        padding: 0.85rem;
+        font-size: 1rem;
+        border-radius: 14px;
+    }
+}
+
+/* Small Phones - 480px and below */
+@media (max-width: 480px) {
+    main {
+        padding: 0.4rem 0.4rem 4rem 0.4rem;
+        max-width: 100%;
+    }
+
+    header {
+        min-height: 90px;
+        padding: 0.4rem 0.3rem;
+    }
+
+    .header-main {
+        gap: 4px;
+    }
+
+    .header-center {
+        gap: 4px;
+    }
+
+    .clock-widget,
+    .weather-widget {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+
+    /* Hide welcome text to save space */
+    .welcome {
+        display: none;
+    }
+
+    /* Hide halal logo on small phones */
+    .halal-logo {
+        display: none;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+
     .menu-toggle svg {
         width: 20px;
         height: 20px;
     }
 
     .home-img {
-        width: 50px;
-        height: 50px;
+        width: 44px;
+        height: 44px;
     }
 
-    .halal-img {
-        width: 40px;
-        height: 40px;
+    .cart-anchor {
+        padding: 6px;
+    }
+
+    /* Banners fill full width */
+    .banner-section {
+        padding: 0 0.4rem;
     }
 
     .banner-item {
-        min-width: 88%;
+        min-width: 100%;
         height: 120px;
         padding: 0.7rem;
     }
@@ -1772,6 +1948,11 @@ select {
         font-size: 0.7rem;
     }
 
+    .search-container {
+        padding: 0 0.4rem;
+        margin: 1rem 0;
+    }
+
     .search-wrapper {
         padding: 0.6rem 1rem;
         gap: 10px;
@@ -1781,42 +1962,173 @@ select {
         font-size: 0.85rem;
     }
 
+    /* Force exactly 2 columns for consistent layout */
     .products {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 8px;
-        /* Increased from 6px for better spacing */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
     }
 
     .product-card {
         padding: 6px;
     }
 
-    .product-card h3 {
-        font-size: 0.8rem;
+    .product-image {
+        height: 120px;
     }
 
-    .product-card .price {
-        font-size: 0.75rem;
+    .product-title {
+        font-size: 0.78rem;
+        height: 2rem;
+    }
+
+    .product-price {
+        font-size: 0.82rem;
+    }
+
+    .current-price-small {
+        font-size: 0.82rem;
+    }
+
+    .old-price-small {
+        font-size: 0.72rem;
+    }
+
+    .discount-badge-small {
+        font-size: 0.65rem;
+    }
+
+    .qty-control {
+        min-width: 40px;
+        height: 40px;
+        border-radius: 12px;
+    }
+
+    .add-btn-large {
+        font-size: 1.4rem;
+    }
+
+    .qty-inner-btn {
+        font-size: 1.2rem;
+        min-width: 30px;
+    }
+
+    .qty-num {
+        font-size: 0.85rem;
+        min-width: 22px;
+    }
+
+    /* Category pills tighter */
+    .category-card {
+        padding: 8px 14px;
+        gap: 6px;
+    }
+
+    .category-icon {
+        font-size: 1.1rem;
+    }
+
+    .category-name {
+        font-size: 0.78rem;
+    }
+
+    #categories-grid {
+        padding: 0 0.4rem 6px 0.4rem;
+    }
+
+    /* Modals fill 100% on phones */
+    .modal {
+        padding: 0.4rem;
+    }
+
+    .modal-content {
+        max-width: 100%;
+        border-radius: 20px;
+        padding: 1.5rem;
+    }
+
+    .product-detail-content {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .detail-image-container {
+        height: 200px;
+    }
+
+    .detail-body {
+        padding: 1rem;
+    }
+
+    .current-price {
+        font-size: 1.3rem;
+    }
+
+    .old-price {
+        font-size: 0.95rem;
+    }
+
+    /* Delivery badge smaller */
+    .delivery-badge {
+        padding: 3px 7px;
+        font-size: 0.6rem;
     }
 
     .location-cards-wrapper {
         flex-direction: column;
+    }
+
+    .locations {
+        padding: 20px 12px 80px 12px;
+    }
+
+    .location-card {
+        padding: 12px;
+    }
+
+    .location-card h4 {
+        font-size: 0.82rem;
+    }
+
+    .location-card p {
+        font-size: 0.72rem;
+    }
+
+    /* Cart drawer footer safe area */
+    .cart-footer {
+        padding: 1rem 1rem calc(4rem + env(safe-area-inset-bottom, 15px)) 1rem;
+    }
+
+    .drawer-header {
+        padding: 1rem;
+    }
+
+    .primary-btn {
+        padding: 0.85rem;
+        font-size: 1rem;
+        border-radius: 14px;
     }
 }
 
 /* Extra Small Phones - 360px and below */
 @media (max-width: 360px) {
     main {
-        padding: 0.3rem 0.3rem 3.8rem 0.3rem;
+        padding: 0.25rem 0.25rem 3.8rem 0.25rem;
     }
 
     header {
-        min-height: 90px;
-        padding: 0.3rem 0.2rem;
-        gap: 4px;
+        min-height: 80px;
+        padding: 0.25rem 0.2rem;
+        gap: 3px;
     }
 
+    /* Hide marquee on tiny screens */
     .header-top {
+        display: none;
+    }
+
+    /* Hide clock and weather widgets */
+    .header-center {
         display: none;
     }
 
@@ -1826,43 +2138,229 @@ select {
     }
 
     .home-img {
-        width: 46px;
-        height: 46px;
-    }
-
-    .halal-img {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
     }
 
     .avatar {
-        width: 30px;
-        height: 30px;
-        font-size: 0.75rem;
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+
+    .home-button {
+        padding: 0 4px;
+    }
+
+    .cart-anchor {
+        padding: 5px;
+    }
+
+    .cart-anchor svg {
+        width: 20px;
+        height: 20px;
     }
 
     .banner-item {
-        min-width: 90%;
-        height: 110px;
-        padding: 0.6rem;
+        min-width: 100%;
+        height: 100px;
+        padding: 0.5rem;
     }
 
     .banner-content h2 {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
 
     .banner-content p {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
     }
 
+    .banner-section {
+        padding: 0 0.25rem;
+    }
+
+    .search-container {
+        padding: 0 0.25rem;
+        margin: 0.75rem 0;
+    }
+
+    .search-wrapper {
+        padding: 0.5rem 0.8rem;
+        gap: 8px;
+    }
+
+    .search-input {
+        font-size: 0.8rem;
+    }
+
+    /* 2-column grid guaranteed */
     .products {
-        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-        gap: 6px;
-        /* Increased from 4px for better spacing */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
     }
 
     .product-card {
         padding: 4px;
+        border-radius: 12px;
+    }
+
+    .product-image {
+        height: 100px;
+        border-radius: 10px;
+    }
+
+    .product-title {
+        font-size: 0.72rem;
+        height: 1.9rem;
+    }
+
+    .product-price {
+        font-size: 0.75rem;
+    }
+
+    .current-price-small {
+        font-size: 0.75rem;
+    }
+
+    .old-price-small {
+        font-size: 0.65rem;
+    }
+
+    .price-row {
+        gap: 4px;
+    }
+
+    .qty-control {
+        min-width: 36px;
+        height: 36px;
+        border-radius: 10px;
+    }
+
+    .add-btn-large {
+        font-size: 1.2rem;
+    }
+
+    .qty-inner-btn {
+        font-size: 1rem;
+        min-width: 26px;
+    }
+
+    .qty-num {
+        font-size: 0.8rem;
+        min-width: 18px;
+    }
+
+    .category-card {
+        padding: 6px 10px;
+        gap: 4px;
+    }
+
+    .category-icon {
+        font-size: 1rem;
+    }
+
+    .category-name {
+        font-size: 0.7rem;
+    }
+
+    #categories-grid {
+        padding: 0 0.25rem 4px 0.25rem;
+        gap: 6px;
+    }
+
+    .modal {
+        padding: 0.25rem;
+    }
+
+    .modal-content {
+        padding: 1.2rem;
+        border-radius: 18px;
+    }
+
+    .detail-image-container {
+        height: 180px;
+    }
+
+    .detail-body {
+        padding: 0.8rem;
+    }
+
+    .product-rating-badge {
+        font-size: 0.65rem;
+    }
+
+    .product-rating-badge .rating-star {
+        font-size: 0.68rem;
+    }
+
+    .delivery-badge {
+        padding: 2px 6px;
+        font-size: 0.55rem;
+        top: 6px;
+        right: 6px;
+    }
+
+    .locations {
+        padding: 15px 8px 70px 8px;
+    }
+}
+
+/* Ultra Small Phones - 320px and below (iPhone SE 1st gen, etc.) */
+@media (max-width: 320px) {
+    main {
+        padding: 0.2rem 0.2rem 3.5rem 0.2rem;
+    }
+
+    header {
+        min-height: 70px;
+        padding: 0.2rem;
+    }
+
+    .home-img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 0.6rem;
+    }
+
+    .banner-item {
+        height: 85px;
+        padding: 0.4rem;
+    }
+
+    .banner-content h2 {
+        font-size: 0.8rem;
+    }
+
+    .banner-content p {
+        font-size: 0.55rem;
+    }
+
+    .product-image {
+        height: 85px;
+        border-radius: 8px;
+    }
+
+    .product-title {
+        font-size: 0.68rem;
+        height: 1.7rem;
+    }
+
+    .product-price {
+        font-size: 0.7rem;
+    }
+
+    .qty-control {
+        min-width: 32px;
+        height: 32px;
+    }
+
+    .detail-image-container {
+        height: 160px;
     }
 }
 
