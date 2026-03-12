@@ -1734,7 +1734,8 @@ select {
         display: none;
     }
 
-    .halal-logo {
+    /* Hide home logo on phones to save header space */
+    .home-button {
         display: none;
     }
 
@@ -1768,14 +1769,14 @@ select {
         height: 20px;
     }
 
-    /* Force 2 columns for phones */
+    /* Force 3 columns for phones */
     .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
     }
 
     .product-image {
-        height: 130px;
+        height: 110px;
     }
 
     .product-title {
