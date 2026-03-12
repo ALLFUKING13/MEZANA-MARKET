@@ -44,7 +44,13 @@ const i18n = {
             "Soslar": "Soslar",
             "Makaron": "Makaron",
             "Guruch": "Guruch",
-            "Non Mahsulotlari": "Non Mahsulotlari"
+            "Non Mahsulotlari": "Non Mahsulotlari",
+            "Oziq-ovqat": "Oziq-ovqat",
+            "Ichimliklar": "Ichimliklar",
+            "Konserva va Tuzlamalar": "Konserva va Tuzlamalar",
+            "Souslar va Ziravorlar": "Souslar va Ziravorlar",
+            "Shirinlik va Gazaklar": "Shirinlik va Gazaklar",
+            "Boshqalar": "Boshqalar"
         },
         locationsTitle: "Bizning do'konlar",
         btnHome: "Bosh menyu",
@@ -100,7 +106,13 @@ const i18n = {
             "Soslar": "Соусы",
             "Makaron": "Макароны",
             "Guruch": "Рис",
-            "Non Mahsulotlari": "Хлеб"
+            "Non Mahsulotlari": "Хлеб",
+            "Oziq-ovqat": "Продукты",
+            "Ichimliklar": "Напитки",
+            "Konserva va Tuzlamalar": "Консервы и Соленья",
+            "Souslar va Ziravorlar": "Соусы и Специи",
+            "Shirinlik va Gazaklar": "Сладости и Снеки",
+            "Boshqalar": "Другое"
         },
         locationsTitle: "Наши магазины",
         btnHome: "Главное меню",
@@ -156,7 +168,13 @@ const i18n = {
             "Soslar": "소스",
             "Makaron": "파스타",
             "Guruch": "쌀",
-            "Non Mahsulotlari": "빵"
+            "Non Mahsulotlari": "빵",
+            "Oziq-ovqat": "식품류",
+            "Ichimliklar": "음료",
+            "Konserva va Tuzlamalar": "통조림 및 피클",
+            "Souslar va Ziravorlar": "소스 및 향신료",
+            "Shirinlik va Gazaklar": "스낵 및 과자",
+            "Boshqalar": "기타"
         },
         locationsTitle: "우리 매장",
         btnHome: "홈 메뉴",
@@ -212,7 +230,13 @@ const i18n = {
             "Soslar": "Sauces",
             "Makaron": "Pasta",
             "Guruch": "Rice",
-            "Non Mahsulotlari": "Bread"
+            "Non Mahsulotlari": "Bread",
+            "Oziq-ovqat": "Groceries",
+            "Ichimliklar": "Beverages",
+            "Konserva va Tuzlamalar": "Canned & Pickled",
+            "Souslar va Ziravorlar": "Sauces & Spices",
+            "Shirinlik va Gazaklar": "Sweets & Snacks",
+            "Boshqalar": "Others"
         },
         locationsTitle: "Our Stores",
         btnHome: "Home",
@@ -235,10 +259,43 @@ let currentLang = localStorage.getItem('mezana_lang') || 'uz';
 // 2. Global State & Elements
 let cart = JSON.parse(localStorage.getItem('mezana_cart')) || [];
 let activeCategory = 'Hammasi';
+let activeParentCategory = null;
 let products = [];
 let categories = [];
 let editingId = null;
 let adminTimer;
+
+// Default category tree — loaded from localStorage if available
+const defaultCategoryTree = {
+    "Oziq-ovqat": ["Makaron", "Yog'", "Dukkaklilar", "Guruch", "Un Mahsulotlari", "Non Mahsulotlari"],
+    "Ichimliklar": ["Qahva", "Choy", "Ichimliklar"],
+    "Konserva va Tuzlamalar": ["Konserva", "Tuzlamalar", "Tomat", "Murabbo"],
+    "Souslar va Ziravorlar": ["Soslar", "Ziravorlar", "Sous"],
+    "Shirinlik va Gazaklar": ["Shirinliklar", "Gazaklar", "Quritilgan Mevalar", "Shirinlik", "Pechenye"]
+};
+let categoryTree = JSON.parse(localStorage.getItem('mezana_category_tree')) || defaultCategoryTree;
+
+function saveCategoryTree() {
+    localStorage.setItem('mezana_category_tree', JSON.stringify(categoryTree));
+}
+
+function getParentCategory(cat) {
+    for (const [parent, children] of Object.entries(categoryTree)) {
+        if (children.includes(cat)) return parent;
+    }
+    return "Boshqalar";
+}
+
+let reviews = JSON.parse(localStorage.getItem('mezana_reviews')) || {};
+let ratings = JSON.parse(localStorage.getItem('mezana_ratings')) || {};
+
+// Get average rating for a product
+function getAvgRating(productId) {
+    const prodRatings = ratings[productId];
+    if (!prodRatings || prodRatings.length === 0) return { avg: 0, count: 0 };
+    const sum = prodRatings.reduce((s, r) => s + r.stars, 0);
+    return { avg: (sum / prodRatings.length).toFixed(1), count: prodRatings.length };
+}
 
 // Pagination — show products in batches for performance
 const PRODUCTS_PER_PAGE = 9999; // Show all products at once
@@ -375,25 +432,87 @@ function updateStaticTranslations() {
 }
 
 // 5. Render Functions
+window.filterParentCategory = (parentCat) => {
+    if (parentCat === 'Hammasi') {
+        activeParentCategory = null;
+        activeCategory = 'Hammasi';
+        renderProducts('Hammasi');
+    } else {
+        activeParentCategory = parentCat;
+        activeCategory = 'Hammasi'; // Show all in this parent
+        renderProducts('Hammasi');
+    }
+    renderCategories();
+};
+
+window.filterSubCategory = (subCat) => {
+    activeCategory = subCat;
+    renderProducts(subCat);
+    renderCategories();
+};
+
+window.backToParents = () => {
+    activeParentCategory = null;
+    activeCategory = 'Hammasi';
+    renderProducts('Hammasi');
+    renderCategories();
+};
+
 function renderCategories() {
     if (!elements.categoriesGrid) return;
 
-    // Icon mapping for professional look
-    const icons = {
-        'Hammasi': '📦',
-        'Yangi': '🆕'
+    const parentIcons = {
+        'Hammasi': '🌐',
+        'Oziq-ovqat': '🍝',
+        'Ichimliklar': '🥤',
+        'Konserva va Tuzlamalar': '🥫',
+        'Souslar va Ziravorlar': '🧂',
+        'Shirinlik va Gazaklar': '🍫',
+        'Boshqalar': '📦'
     };
 
-    elements.categoriesGrid.innerHTML = categories.map(cat => {
-        const catLabel = (i18n[currentLang].categories && i18n[currentLang].categories[cat]) ? i18n[currentLang].categories[cat] : cat;
-        const icon = icons[cat] || '🏷️';
-        return `
-            <div class="category-card ${cat === activeCategory ? 'active' : ''}" onclick="filterProducts('${cat}')">
-                <div class="category-icon">${icon}</div>
-                <div class="category-name">${catLabel}</div>
+    if (!activeParentCategory) {
+        // Show Parent Categories
+        const activeParents = [...new Set(categories.filter(c => c !== 'Hammasi').map(c => getParentCategory(c)))];
+        const parentsToShow = ['Hammasi', ...activeParents];
+
+        elements.categoriesGrid.innerHTML = parentsToShow.map(pCat => {
+            const icon = parentIcons[pCat] || '🏷️';
+            const catLabel = (i18n[currentLang].categories && i18n[currentLang].categories[pCat]) ? i18n[currentLang].categories[pCat] : pCat;
+            return `
+                <div class="category-card ${pCat === 'Hammasi' && activeCategory === 'Hammasi' ? 'active' : ''}" onclick="filterParentCategory('${pCat}')">
+                    <div class="category-icon">${icon}</div>
+                    <div class="category-name">${catLabel}</div>
+                </div>
+            `;
+        }).join('');
+    } else {
+        // Show Subcategories
+        const subCats = categories.filter(c => c !== 'Hammasi' && getParentCategory(c) === activeParentCategory);
+
+        let html = `
+            <div class="category-card" onclick="backToParents()">
+                <div class="category-icon">🔙</div>
+                <div class="category-name">Orqaga</div>
+            </div>
+            <div class="category-card ${activeCategory === 'Hammasi' ? 'active' : ''}" onclick="filterParentCategory('${activeParentCategory}')">
+                <div class="category-icon">📁</div>
+                <div class="category-name">Barchasi</div>
             </div>
         `;
-    }).join('');
+
+        html += subCats.map(cat => {
+            const catLabel = (i18n[currentLang].categories && i18n[currentLang].categories[cat]) ? i18n[currentLang].categories[cat] : cat;
+            return `
+                <div class="category-card ${cat === activeCategory ? 'active' : ''}" onclick="filterSubCategory('${cat}')">
+                    <div class="category-icon">🏷️</div>
+                    <div class="category-name">${catLabel}</div>
+                </div>
+            `;
+        }).join('');
+
+        elements.categoriesGrid.innerHTML = html;
+    }
 }
 
 // Shuffle array (Fisher-Yates algorithm)
@@ -414,13 +533,22 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
     // Only recalculate filtered list when not appending
     if (!append) {
         currentPage = 1;
-        currentFiltered = filter === 'Hammasi' ? shuffleArray(products) : products.filter(p => p.category === filter);
+
+        if (filter === 'Hammasi') {
+            if (activeParentCategory) {
+                currentFiltered = products.filter(p => getParentCategory(p.category) === activeParentCategory);
+            } else {
+                currentFiltered = shuffleArray(products);
+            }
+        } else {
+            currentFiltered = products.filter(p => p.category === filter);
+        }
 
         if (searchQuery) {
             const q = searchQuery.toLowerCase();
             currentFiltered = currentFiltered.filter(p =>
                 (p.name[currentLang] || p.name['uz']).toLowerCase().includes(q) ||
-                p.category.toLowerCase().includes(q)
+                (p.category || '').toLowerCase().includes(q)
             );
         }
     }
@@ -459,6 +587,14 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
         const cartItem = cart.find(item => item.id === product.id);
         const qty = cartItem ? cartItem.quantity : 0;
         const name = product.name[currentLang] || product.name['uz'] || 'Product';
+        const { avg, count } = getAvgRating(product.id);
+        const ratingHtml = count > 0 ? `
+            <div class="product-rating-badge">
+                <span class="rating-star">★</span>
+                <span>${avg}</span>
+                <span class="rating-count">(${count})</span>
+            </div>
+        ` : '';
 
         return `
             <div class="product-card" onclick="openProductDetail(${product.id})">
@@ -467,6 +603,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
                     <img src="${product.image || ''}" alt="${escapeHtml(name)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://via.placeholder.com/200?text=📦';this.classList.add('loaded')">
                 </div>
                 <div class="product-title">${name}</div>
+                ${ratingHtml}
                 <div class="product-footer">
                     <div class="product-price">
                         ${product.oldPrice ? `
@@ -655,6 +792,43 @@ function renderAdminProducts() {
     `).join('');
 }
 
+// Populate admin parent category and subcategory selects
+function populateAdminCategorySelects(selectedCategory) {
+    const parentSelect = document.getElementById('admin-parent-category');
+    const subSelect = document.getElementById('admin-category');
+    if (!parentSelect || !subSelect) return;
+
+    const parentCats = Object.keys(categoryTree);
+    parentSelect.innerHTML = parentCats.map(pc => `<option value="${pc}">${pc}</option>`).join('');
+
+    // Find the parent of the selected category
+    let selectedParent = parentCats[0];
+    if (selectedCategory) {
+        for (const [parent, children] of Object.entries(categoryTree)) {
+            if (children.includes(selectedCategory)) {
+                selectedParent = parent;
+                break;
+            }
+        }
+    }
+    parentSelect.value = selectedParent;
+
+    // Populate subcategories
+    const subCats = categoryTree[selectedParent] || [];
+    subSelect.innerHTML = subCats.map(sc => `<option value="${sc}">${sc}</option>`).join('');
+    if (selectedCategory && subCats.includes(selectedCategory)) {
+        subSelect.value = selectedCategory;
+    }
+}
+
+window.onAdminParentCategoryChange = () => {
+    const parentSelect = document.getElementById('admin-parent-category');
+    const subSelect = document.getElementById('admin-category');
+    if (!parentSelect || !subSelect) return;
+    const subCats = categoryTree[parentSelect.value] || [];
+    subSelect.innerHTML = subCats.map(sc => `<option value="${sc}">${sc}</option>`).join('');
+};
+
 window.showProductForm = (id = null) => {
     editingId = id;
     if (elements.productFormModal) elements.productFormModal.style.display = 'flex';
@@ -664,10 +838,6 @@ window.showProductForm = (id = null) => {
     const base64Input = document.getElementById('admin-image-base64');
     const fileInput = document.getElementById('admin-image-file');
     const removeBtn = document.getElementById('remove-image-btn');
-    const catSelect = document.getElementById('admin-category');
-
-    let optionsHtml = categories.filter(c => c !== 'Hammasi').map(c => `<option value="${c}">${c}</option>`).join('');
-    if (catSelect) catSelect.innerHTML = optionsHtml;
 
     if (id) {
         // Editing existing product
@@ -680,7 +850,15 @@ window.showProductForm = (id = null) => {
         document.getElementById('admin-name-kr').value = p.name.kr;
         document.getElementById('admin-name-en').value = p.name.en;
         document.getElementById('admin-price').value = p.price;
-        if (catSelect) catSelect.value = p.category;
+        populateAdminCategorySelects(p.category);
+        
+        // Show and render reviews when editing
+        const adminReviewsSection = document.getElementById('admin-reviews-section');
+        const submitReviewBtn = document.getElementById('btn-submit-review-admin');
+        if (adminReviewsSection) adminReviewsSection.style.display = 'flex';
+        adminReviewsSection.style.flexDirection = 'column';
+        if (submitReviewBtn) submitReviewBtn.onclick = () => submitAdminReview();
+        renderAdminReviews(id);
     } else {
         // Reset form for new product
         if (base64Input) base64Input.value = '';
@@ -692,7 +870,50 @@ window.showProductForm = (id = null) => {
         document.getElementById('admin-name-kr').value = '';
         document.getElementById('admin-name-en').value = '';
         document.getElementById('admin-price').value = '';
+        populateAdminCategorySelects(null);
+        
+        // Hide reviews section when adding new product
+        const adminReviewsSection = document.getElementById('admin-reviews-section');
+        if (adminReviewsSection) adminReviewsSection.style.display = 'none';
     }
+};
+
+function renderAdminReviews(id) {
+    const list = document.getElementById('reviews-list-admin');
+    if (!list) return;
+    const prodReviews = reviews[id] || [];
+    if (prodReviews.length === 0) {
+        list.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding: 10px 0;">Hozircha sharhlar yo'q.</div>`;
+        return;
+    }
+    list.innerHTML = prodReviews.map(r => `
+        <div style="background:var(--card-bg);padding:10px;border-radius:10px;border:1px solid var(--border-color);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:700;font-size:0.85rem;">${escapeHtml(r.user)}</span>
+                <span style="font-size:0.7rem;color:var(--text-muted);">${r.date}</span>
+            </div>
+            <div style="font-size:0.9rem;line-height:1.4;">${escapeHtml(r.comment)}</div>
+        </div>
+    `).join('');
+    list.scrollTop = list.scrollHeight;
+}
+
+window.submitAdminReview = () => {
+    if (!editingId) return;
+    
+    const input = document.getElementById('admin-review-input');
+    const comment = input.value.trim();
+    if (!comment) return;
+    
+    if (!reviews[editingId]) reviews[editingId] = [];
+    const date = new Date().toLocaleDateString('uz-UZ');
+    
+    reviews[editingId].push({ user: 'Admin', comment: comment, date: date, isAdmin: true });
+    localStorage.setItem('mezana_reviews', JSON.stringify(reviews));
+    
+    input.value = '';
+    renderAdminReviews(editingId);
+    showToast("Sharh qo'shildi!");
 };
 
 window.hideProductForm = () => {
@@ -810,9 +1031,8 @@ window.toggleNewCategoryInput = () => {
     }
 };
 
-// Show category form dialog
+// Show category form dialog — with parent/sub hierarchy
 window.showCategoryForm = () => {
-    const categoryList = categories.filter(c => c !== 'Hammasi');
     const modal = document.createElement('div');
     modal.style.cssText = `
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -822,29 +1042,67 @@ window.showCategoryForm = () => {
 
     const content = document.createElement('div');
     content.style.cssText = `
-        background: white; border-radius: 16px; padding: 20px; 
-        max-width: 400px; width: 90%; max-height: 70vh; overflow-y: auto;
+        background: var(--card-bg, white); border-radius: 16px; padding: 20px; 
+        max-width: 420px; width: 90%; max-height: 75vh; overflow-y: auto;
+        color: var(--text-color, #333);
     `;
+
+    const parentCats = Object.keys(categoryTree);
 
     let html = `
-        <h3 style="margin: 0 0 20px 0;">Kategoriyalarni boshqarish</h3>
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <input type="text" id="new-cat-input" placeholder="Yangi kategoriya..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-            <button onclick="window.addNewCategoryFromModal()" style="padding: 10px 16px; background: #2ecc71; color: white; border: none; border-radius: 8px; cursor: pointer;">Qo'sh</button>
+        <h3 style="margin: 0 0 16px 0;">Kategoriyalar boshqarish</h3>
+        
+        <!-- Add parent category -->
+        <div style="margin-bottom: 16px; padding: 12px; background: var(--surface-color, #f5f5f5); border-radius: 12px;">
+            <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">Bosh kategoriya qo'shish</div>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="new-parent-cat-input" placeholder="Yangi bosh kategoriya..." style="flex: 1; padding: 10px; border: 1px solid var(--border-color, #ddd); border-radius: 8px; background: var(--input-bg, white); color: var(--text-color, #333);">
+                <button onclick="window.addNewParentCategory()" style="padding: 10px 16px; background: #2ecc71; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+</button>
+            </div>
         </div>
-        <div style="margin-bottom: 20px;">
+
+        <!-- Add sub category -->
+        <div style="margin-bottom: 16px; padding: 12px; background: var(--surface-color, #f5f5f5); border-radius: 12px;">
+            <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">Ichki kategoriya qo'shish</div>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <select id="sub-cat-parent-select" style="flex: 1; padding: 10px; border: 1px solid var(--border-color, #ddd); border-radius: 8px; background: var(--input-bg, white); color: var(--text-color, #333);">
+                    ${parentCats.map(pc => `<option value="${pc}">${pc}</option>`).join('')}
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="new-sub-cat-input" placeholder="Yangi ichki kategoriya..." style="flex: 1; padding: 10px; border: 1px solid var(--border-color, #ddd); border-radius: 8px; background: var(--input-bg, white); color: var(--text-color, #333);">
+                <button onclick="window.addNewSubCategory()" style="padding: 10px 16px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">+</button>
+            </div>
+        </div>
+
+        <!-- Category tree view -->
+        <div style="margin-bottom: 16px;">
     `;
 
-    categoryList.forEach(cat => {
+    parentCats.forEach(parent => {
+        const subCats = categoryTree[parent] || [];
         html += `
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #f5f5f5; border-radius: 8px; margin-bottom: 8px;">
-                <span>${cat}</span>
-                <div style="display: flex; gap: 5px;">
-                    <button onclick="window.editCategoryName('${cat}')" style="padding: 5px 10px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">✎</button>
-                    <button onclick="window.deleteCategory('${cat}')" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">×</button>
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: linear-gradient(135deg, var(--primary, #2ecc71), var(--primary-dark, #27ae60)); color: white; border-radius: 10px 10px ${subCats.length ? '0 0' : '10px 10px'}; font-weight: 700; font-size: 0.9rem;">
+                    <span>📁 ${parent}</span>
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="window.editParentCategoryName('${parent}')" style="padding: 4px 8px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">✎</button>
+                        <button onclick="window.deleteParentCategory('${parent}')" style="padding: 4px 8px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">×</button>
+                    </div>
                 </div>
-            </div>
         `;
+        subCats.forEach(sub => {
+            html += `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 8px 28px; background: var(--surface-color, #f5f5f5); border-bottom: 1px solid var(--border-color, #eee); font-size: 0.85rem;">
+                    <span>└ ${sub}</span>
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="window.editSubCategoryName('${parent}', '${sub}')" style="padding: 3px 8px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">✎</button>
+                        <button onclick="window.deleteSubCategory('${parent}', '${sub}')" style="padding: 3px 8px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">×</button>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div>`;
     });
 
     html += `
@@ -856,84 +1114,118 @@ window.showCategoryForm = () => {
     modal.appendChild(content);
     document.body.appendChild(modal);
 
-    // Store modal reference for closing
     const closeBtn = document.createElement('button');
     closeBtn.setAttribute('data-close-cat', '');
     closeBtn.style.display = 'none';
-    closeBtn.onclick = () => {
-        modal.remove();
-        modal.storage = null;
-    };
+    closeBtn.onclick = () => modal.remove();
     modal.appendChild(closeBtn);
-    modal.storage = { modal };
 };
 
-window.addNewCategoryFromModal = () => {
-    const input = document.getElementById('new-cat-input');
-    if (!input) return;
-    const newCategory = input.value.trim();
-    if (!newCategory) {
-        alert("Kategoriya nomini kiriting!");
-        return;
-    }
-    if (categories.includes(newCategory)) {
-        alert("Bu kategoriya allaqachon mavjud!");
-        return;
-    }
-    categories.push(newCategory);
-    categories.sort();
+// Rebuild flat categories from categoryTree
+function rebuildCategoriesFromTree() {
+    const allSubCats = Object.values(categoryTree).flat();
+    categories = ['Hammasi', ...allSubCats.sort()];
     localStorage.setItem('mezana_categories', JSON.stringify(categories));
+    saveCategoryTree();
+}
 
-    // Refresh UI
+window.addNewParentCategory = () => {
+    const input = document.getElementById('new-parent-cat-input');
+    if (!input) return;
+    const name = input.value.trim();
+    if (!name) { alert("Nomini kiriting!"); return; }
+    if (categoryTree[name]) { alert("Bu bosh kategoriya mavjud!"); return; }
+    categoryTree[name] = [];
+    rebuildCategoriesFromTree();
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
     showCategoryForm();
-    showToast("Kategoriya qo'shildi!");
+    renderCategories();
+    showToast("Bosh kategoriya qo'shildi!");
 };
 
-window.editCategoryName = (oldName) => {
-    const newName = prompt(`Yangi nomi kiriting:`, oldName);
-    if (!newName || newName === oldName || newName.trim() === '') return;
+window.addNewSubCategory = () => {
+    const parentSelect = document.getElementById('sub-cat-parent-select');
+    const input = document.getElementById('new-sub-cat-input');
+    if (!parentSelect || !input) return;
+    const parent = parentSelect.value;
+    const name = input.value.trim();
+    if (!name) { alert("Nomini kiriting!"); return; }
+    if (!categoryTree[parent]) { alert("Bosh kategoriya topilmadi!"); return; }
+    if (categoryTree[parent].includes(name)) { alert("Bu ichki kategoriya mavjud!"); return; }
+    categoryTree[parent].push(name);
+    rebuildCategoriesFromTree();
+    const closeBtn = document.querySelector('[data-close-cat]');
+    if (closeBtn) closeBtn.click();
+    showCategoryForm();
+    renderCategories();
+    showToast("Ichki kategoriya qo'shildi!");
+};
 
-    const newNameTrim = newName.trim();
-    if (categories.includes(newNameTrim)) {
-        alert("Bu nomi bilan kategoriya allaqachon mavjud!");
-        return;
-    }
+window.editParentCategoryName = (oldName) => {
+    const newName = prompt("Yangi nomini kiriting:", oldName);
+    if (!newName || newName.trim() === '' || newName.trim() === oldName) return;
+    const trimmed = newName.trim();
+    if (categoryTree[trimmed]) { alert("Bu nom band!"); return; }
+    categoryTree[trimmed] = categoryTree[oldName];
+    delete categoryTree[oldName];
+    rebuildCategoriesFromTree();
+    const closeBtn = document.querySelector('[data-close-cat]');
+    if (closeBtn) closeBtn.click();
+    showCategoryForm();
+    renderCategories();
+    showToast("O'zgartirildi!");
+};
 
-    // Update category in array
-    const idx = categories.indexOf(oldName);
-    if (idx !== -1) categories[idx] = newNameTrim;
-
-    // Update in products
-    products.forEach(p => {
-        if (p.category === oldName) p.category = newNameTrim;
-    });
-
-    categories.sort();
-    localStorage.setItem('mezana_categories', JSON.stringify(categories));
+window.editSubCategoryName = (parent, oldName) => {
+    const newName = prompt("Yangi nomini kiriting:", oldName);
+    if (!newName || newName.trim() === '' || newName.trim() === oldName) return;
+    const trimmed = newName.trim();
+    const idx = categoryTree[parent].indexOf(oldName);
+    if (idx !== -1) categoryTree[parent][idx] = trimmed;
+    // Update products
+    products.forEach(p => { if (p.category === oldName) p.category = trimmed; });
     localStorage.setItem('mezana_products_local', JSON.stringify(products));
-
+    rebuildCategoriesFromTree();
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
     showCategoryForm();
     renderProducts(activeCategory);
     renderCategories();
-    showToast("Kategoriya o'zgartirildi!");
+    showToast("Ichki kategoriya o'zgartirildi!");
 };
 
-window.deleteCategory = (catName) => {
-    if (!confirm(`"${catName}" kategoriyasini o'chirmoqchimiz? Bu kategoriyaga tegishli mahsulotlar boshqa kategoriyaga o'tmaydi. Davom etasizmi?`)) return;
-
-    // Remove category
-    categories = categories.filter(c => c !== catName);
-    localStorage.setItem('mezana_categories', JSON.stringify(categories));
-
-    showToast("Kategoriya o'chirildi!");
+window.deleteParentCategory = (name) => {
+    if (!confirm(`"${name}" bosh kategoriyasini va barcha ichki kategoriyalarini o'chirmoqchimisiz?`)) return;
+    delete categoryTree[name];
+    rebuildCategoriesFromTree();
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
     showCategoryForm();
     renderCategories();
+    showToast("Bosh kategoriya o'chirildi!");
+};
+
+window.deleteSubCategory = (parent, name) => {
+    if (!confirm(`"${name}" ichki kategoriyasini o'chirmoqchimisiz?`)) return;
+    categoryTree[parent] = categoryTree[parent].filter(c => c !== name);
+    rebuildCategoriesFromTree();
+    const closeBtn = document.querySelector('[data-close-cat]');
+    if (closeBtn) closeBtn.click();
+    showCategoryForm();
+    renderCategories();
+    showToast("Ichki kategoriya o'chirildi!");
+};
+
+// Legacy wrapper for backward compatibility
+window.addNewCategoryFromModal = window.addNewSubCategory;
+window.editCategoryName = (oldName) => {
+    const parent = getParentCategory(oldName);
+    window.editSubCategoryName(parent, oldName);
+};
+window.deleteCategory = (catName) => {
+    const parent = getParentCategory(catName);
+    window.deleteSubCategory(parent, catName);
 };
 
 // Export products data as JSON
@@ -1004,6 +1296,7 @@ window.openProductDetail = (id) => {
     const badge = document.getElementById('detail-delivery-badge');
     const btnQuick = document.getElementById('btn-quick-buy');
     const btnAdd = document.getElementById('btn-add-modal');
+    const btnSubmitReview = document.getElementById('btn-submit-review');
 
     if (img) img.src = p.image || '';
     if (title) title.textContent = p.name[currentLang] || p.name['uz'];
@@ -1021,9 +1314,164 @@ window.openProductDetail = (id) => {
 
     if (btnQuick) btnQuick.onclick = () => quickOrder(p.id);
     if (btnAdd) btnAdd.onclick = () => { addToCart(p.id); closeProductDetail(); };
+    if (btnSubmitReview) btnSubmitReview.onclick = () => submitReview(p.id);
+
+    // Render star rating
+    renderStarRating(p.id);
+    // Render reviews
+    renderReviews(p.id);
 
     elements.productDetailModal.style.display = 'flex';
     document.body.classList.add('no-scroll');
+};
+
+// ===== Star Rating System =====
+function renderStarRating(productId) {
+    const container = document.getElementById('star-rating-container');
+    const summary = document.getElementById('rating-summary');
+    if (!container || !summary) return;
+
+    const { avg, count } = getAvgRating(productId);
+    const userRating = getUserRating(productId);
+
+    // Update stars visual
+    const stars = container.querySelectorAll('.star');
+    stars.forEach(star => {
+        const val = parseInt(star.dataset.star);
+        star.classList.toggle('active', val <= (userRating || Math.round(avg)));
+    });
+
+    // Summary text
+    if (count > 0) {
+        const summaryLabels = {
+            uz: `O'rtacha: ${avg} ★ (${count} ta baho)`,
+            ru: `Среднее: ${avg} ★ (${count} оценок)`,
+            kr: `평균: ${avg} ★ (${count}개 평가)`,
+            en: `Average: ${avg} ★ (${count} ratings)`
+        };
+        summary.textContent = summaryLabels[currentLang] || summaryLabels.en;
+    } else {
+        const noRatingLabels = {
+            uz: "Hali baholanmagan",
+            ru: "Ещё не оценено",
+            kr: "아직 평가 없음",
+            en: "Not yet rated"
+        };
+        summary.textContent = noRatingLabels[currentLang] || noRatingLabels.en;
+    }
+
+    // Star click handlers
+    stars.forEach(star => {
+        star.onclick = (e) => {
+            e.stopPropagation();
+            const starVal = parseInt(star.dataset.star);
+            submitRating(productId, starVal);
+        };
+        star.onmouseenter = () => {
+            const hoverVal = parseInt(star.dataset.star);
+            stars.forEach(s => {
+                s.classList.toggle('hover', parseInt(s.dataset.star) <= hoverVal);
+            });
+        };
+        star.onmouseleave = () => {
+            stars.forEach(s => s.classList.remove('hover'));
+        };
+    });
+}
+
+function getUserRating(productId) {
+    const prodRatings = ratings[productId] || [];
+    const userId = getUserId();
+    const existing = prodRatings.find(r => r.userId === userId);
+    return existing ? existing.stars : 0;
+}
+
+function getUserId() {
+    // Use Telegram user ID or generate anonymous ID
+    if (tg.initDataUnsafe?.user?.id) return 'tg_' + tg.initDataUnsafe.user.id;
+    let anonId = localStorage.getItem('mezana_anon_id');
+    if (!anonId) {
+        anonId = 'anon_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem('mezana_anon_id', anonId);
+    }
+    return anonId;
+}
+
+function submitRating(productId, stars) {
+    if (!ratings[productId]) ratings[productId] = [];
+    const userId = getUserId();
+    
+    // Update existing or add new
+    const existing = ratings[productId].find(r => r.userId === userId);
+    if (existing) {
+        existing.stars = stars;
+    } else {
+        ratings[productId].push({ userId, stars });
+    }
+    
+    localStorage.setItem('mezana_ratings', JSON.stringify(ratings));
+    renderStarRating(productId);
+    
+    const ratingLabels = {
+        uz: `${stars} yulduz baho qo'yildi!`,
+        ru: `Поставлена оценка ${stars} звёзд!`,
+        kr: `${stars}점 평가 완료!`,
+        en: `Rated ${stars} stars!`
+    };
+    showToast(ratingLabels[currentLang] || ratingLabels.en);
+    vibrate('light');
+}
+
+// ===== Customer Reviews =====
+function renderReviews(productId) {
+    const list = document.getElementById('reviews-list');
+    if (!list) return;
+    const prodReviews = reviews[productId] || [];
+
+    if (prodReviews.length === 0) {
+        const emptyLabels = {
+            uz: "Hozircha sharhlar yo'q. Birinchi bo'lib sharh qoldiring!",
+            ru: "Отзывов пока нет. Оставьте первый отзыв!",
+            kr: "아직 리뷰가 없습니다. 첫 리뷰를 작성하세요!",
+            en: "No reviews yet. Be the first to review!"
+        };
+        list.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:0.85rem;padding:10px 0;">${emptyLabels[currentLang] || emptyLabels.en}</div>`;
+        return;
+    }
+
+    list.innerHTML = prodReviews.map(r => {
+        const adminBadge = r.isAdmin ? '<span class="review-admin-badge">Admin</span>' : '';
+        const starsHtml = r.stars ? `<div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>` : '';
+        return `
+            <div class="review-item">
+                <div class="review-header">
+                    <span class="review-user">${escapeHtml(r.user)}${adminBadge}</span>
+                    <span class="review-date">${r.date}</span>
+                </div>
+                ${starsHtml}
+                <div class="review-comment">${escapeHtml(r.comment)}</div>
+            </div>
+        `;
+    }).join('');
+    list.scrollTop = list.scrollHeight;
+}
+
+window.submitReview = (id) => {
+    const input = document.getElementById('review-input');
+    const comment = input.value.trim();
+    if (!comment) return;
+
+    if (!reviews[id]) reviews[id] = [];
+    const userName = (typeof tg !== 'undefined' && tg.initDataUnsafe?.user?.first_name) || i18n[currentLang].guest || 'Mijoz';
+    const date = new Date().toLocaleDateString(currentLang === 'uz' ? 'uz-UZ' : 'en-US');
+    const userRating = getUserRating(id);
+
+    reviews[id].push({ user: userName, comment, date, stars: userRating || 0, isAdmin: false });
+    localStorage.setItem('mezana_reviews', JSON.stringify(reviews));
+
+    input.value = '';
+    renderReviews(id);
+    showToast("Sharhingiz qo'shildi!");
 };
 
 window.closeProductDetail = () => {

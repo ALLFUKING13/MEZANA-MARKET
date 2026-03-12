@@ -63,7 +63,7 @@ body {
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
-    background-image: 
+    background-image:
         linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
         url('jpgs/background.jpg');
     background-size: cover, cover;
@@ -85,7 +85,10 @@ body.no-scroll {
 /* Site Loader CSS GIF */
 .site-loader {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: var(--bg-color);
     z-index: 99999;
     display: flex;
@@ -105,8 +108,13 @@ body.no-scroll {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 body.loaded .site-loader {
@@ -484,6 +492,8 @@ header {
     padding: 0;
     overflow: hidden;
     position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 .close-modal-btn {
@@ -888,7 +898,7 @@ input:checked+.slider:before {
 main {
     padding: 0.75rem 0.75rem 5rem 0.75rem;
     width: 100%;
-    max-width: 600px;
+    max-width: 1200px;
     margin: 0 auto;
     box-sizing: border-box;
 }
@@ -896,7 +906,7 @@ main {
 /* Larger phones / small tablets */
 @media (min-width: 481px) {
     .products {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     }
 
     main {
@@ -909,7 +919,7 @@ main {
 /* Products Grid */
 .products {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: clamp(8px, 2vw, 14px);
 }
 
@@ -1438,8 +1448,10 @@ main {
 
 /* lift admin panel a bit when open to reveal bottom content */
 .admin-drawer.open {
-    top: 10vh;   /* move up more */
-    height: 90vh; /* increase height further */
+    top: 10vh;
+    /* move up more */
+    height: 90vh;
+    /* increase height further */
 }
 
 .admin-content {
@@ -1677,7 +1689,7 @@ select {
     }
 
     .products {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
         gap: 8px;
     }
 
@@ -1770,8 +1782,9 @@ select {
     }
 
     .products {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
+        /* Increased from 6px for better spacing */
     }
 
     .product-card {
@@ -1843,8 +1856,9 @@ select {
     }
 
     .products {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 4px;
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 6px;
+        /* Increased from 4px for better spacing */
     }
 
     .product-card {
@@ -1865,4 +1879,185 @@ select {
     main {
         padding: 0.3rem 0.3rem 3.5rem 0.3rem;
     }
+}
+
+/* ========== Star Rating ========== */
+.star-rating-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+}
+
+.star-rating-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.star-rating {
+    display: flex;
+    gap: 6px;
+}
+
+.star-rating .star {
+    font-size: 1.8rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.15s ease;
+    line-height: 1;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.star-rating .star:active {
+    transform: scale(1.3);
+}
+
+.star-rating .star.active {
+    color: #f59e0b;
+}
+
+.star-rating .star.hover {
+    color: #fbbf24;
+}
+
+.rating-summary {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Product card rating badge */
+.product-rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #f59e0b;
+    margin-top: 2px;
+}
+
+.product-rating-badge .rating-star {
+    font-size: 0.75rem;
+}
+
+.product-rating-badge .rating-count {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.65rem;
+}
+
+/* ========== Reviews Section ========== */
+.reviews-section {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.reviews-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text-color);
+}
+
+.reviews-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+    scrollbar-width: thin;
+}
+
+.review-item {
+    background: var(--surface-color);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    animation: fadeIn 0.3s ease;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.review-user {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.review-date {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+.review-stars {
+    color: #f59e0b;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.review-comment {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.review-admin-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.review-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.review-input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.review-input:focus {
+    border-color: var(--primary);
+}
+
+.review-submit-btn {
+    width: 44px !important;
+    min-width: 44px;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    font-size: 1.2rem !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
