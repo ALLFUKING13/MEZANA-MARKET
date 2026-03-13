@@ -49,8 +49,15 @@
 html,
 body {
     width: 100%;
+    max-width: 100vw;
     height: 100%;
     position: relative;
+    overflow-x: hidden;
+}
+
+#app {
+    width: 100%;
+    max-width: 100vw;
     overflow-x: hidden;
 }
 
@@ -136,7 +143,9 @@ header {
     border-radius: 0 0 var(--radius) var(--radius);
     animation: slideDown 0.5s ease-out;
     width: 100%;
+    max-width: 100vw;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .header-top {
@@ -1196,7 +1205,7 @@ main {
     position: fixed;
     top: 100%;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 80vh;
     z-index: 200;
     border-radius: 24px 24px 0 0;
@@ -1507,7 +1516,7 @@ main {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     z-index: 2000;
     display: flex;
@@ -1550,6 +1559,9 @@ select {
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--glass-border);
     border-radius: 30px 30px 0 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    box-sizing: border-box;
 }
 
 .locations h3 {
@@ -1877,26 +1889,28 @@ select {
 @media (max-width: 480px) {
     main {
         padding: 0.4rem 0.4rem 4rem 0.4rem;
-        max-width: 100%;
+        max-width: 100vw;
     }
 
     header {
-        min-height: 90px;
-        padding: 0.4rem 0.3rem;
+        min-height: 80px;
+        padding: 0.3rem 0.25rem;
     }
 
     .header-main {
-        gap: 4px;
+        gap: 3px;
     }
 
     .header-center {
-        gap: 4px;
+        gap: 3px;
+        flex: 0 1 auto;
     }
 
     .clock-widget,
     .weather-widget {
-        padding: 3px 6px;
-        font-size: 0.7rem;
+        padding: 2px 5px;
+        font-size: 0.65rem;
+        gap: 3px;
     }
 
     /* Hide welcome text to save space */
@@ -1909,10 +1923,15 @@ select {
         display: none;
     }
 
+    /* Hide home button on small phones */
+    .home-button {
+        display: none;
+    }
+
     .avatar {
-        width: 32px;
-        height: 32px;
-        font-size: 0.85rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
     }
 
     .menu-toggle svg {
@@ -1920,13 +1939,12 @@ select {
         height: 20px;
     }
 
-    .home-img {
-        width: 44px;
-        height: 44px;
+    .cart-anchor {
+        padding: 5px;
     }
 
-    .cart-anchor {
-        padding: 6px;
+    .cart-anchor span {
+        font-size: 1.2rem !important;
     }
 
     /* Banners fill full width */
@@ -1963,94 +1981,116 @@ select {
         font-size: 0.85rem;
     }
 
-    /* Force exactly 2 columns for consistent layout */
+    /* Force 3 columns on small phones */
     .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 6px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
     }
 
     .product-card {
-        padding: 6px;
+        padding: 5px;
     }
 
     .product-image {
-        height: 120px;
+        height: 100px;
+        border-radius: 10px;
     }
 
     .product-title {
-        font-size: 0.78rem;
-        height: 2rem;
+        font-size: 0.72rem;
+        height: 1.9rem;
     }
 
     .product-price {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
     }
 
     .current-price-small {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
     }
 
     .old-price-small {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
     }
 
     .discount-badge-small {
-        font-size: 0.65rem;
+        font-size: 0.62rem;
     }
 
     .qty-control {
-        min-width: 40px;
-        height: 40px;
-        border-radius: 12px;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 10px;
     }
 
     .add-btn-large {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
 
     .qty-inner-btn {
-        font-size: 1.2rem;
-        min-width: 30px;
+        font-size: 1.1rem;
+        min-width: 26px;
     }
 
     .qty-num {
-        font-size: 0.85rem;
-        min-width: 22px;
+        font-size: 0.8rem;
+        min-width: 20px;
+    }
+
+    .product-footer {
+        gap: 4px;
+    }
+
+    .price-row {
+        gap: 4px;
     }
 
     /* Category pills tighter */
     .category-card {
-        padding: 8px 14px;
-        gap: 6px;
+        padding: 7px 12px;
+        gap: 5px;
     }
 
     .category-icon {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
     .category-name {
-        font-size: 0.78rem;
+        font-size: 0.72rem;
     }
 
     #categories-grid {
         padding: 0 0.4rem 6px 0.4rem;
     }
 
-    /* Modals fill 100% on phones */
+    /* Modals fill 100% on phones — full width bottom sheet */
     .modal {
-        padding: 0.4rem;
+        padding: 0;
+        align-items: flex-end;
     }
 
     .modal-content {
         max-width: 100%;
-        border-radius: 20px;
+        width: 100vw;
+        border-radius: 20px 20px 0 0;
         padding: 1.5rem;
     }
 
     .product-detail-content {
-        width: 100%;
-        max-width: 100%;
+        width: 100vw;
+        max-width: 100vw;
         border-radius: 20px 20px 0 0;
+        max-height: 95vh;
+    }
+
+    .settings-content {
+        max-width: 100%;
+        width: 100vw;
+    }
+
+    .profile-content {
+        max-width: 100%;
+        width: 100vw;
     }
 
     .detail-image-container {
@@ -2081,6 +2121,7 @@ select {
 
     .locations {
         padding: 20px 12px 80px 12px;
+        border-radius: 20px 20px 0 0;
     }
 
     .location-card {
@@ -2097,7 +2138,7 @@ select {
 
     /* Cart drawer footer safe area */
     .cart-footer {
-        padding: 1rem 1rem calc(4rem + env(safe-area-inset-bottom, 15px)) 1rem;
+        padding: 1rem 1rem calc(3.5rem + env(safe-area-inset-bottom, 10px)) 1rem;
     }
 
     .drawer-header {
@@ -2109,18 +2150,23 @@ select {
         font-size: 1rem;
         border-radius: 14px;
     }
+
+    /* Drawer full width */
+    .drawer {
+        width: 100vw;
+    }
 }
 
 /* Extra Small Phones - 360px and below */
 @media (max-width: 360px) {
     main {
-        padding: 0.25rem 0.25rem 3.8rem 0.25rem;
+        padding: 0.2rem 0.2rem 3.5rem 0.2rem;
     }
 
     header {
-        min-height: 80px;
-        padding: 0.25rem 0.2rem;
-        gap: 3px;
+        min-height: 60px;
+        padding: 0.2rem;
+        gap: 2px;
     }
 
     /* Hide marquee on tiny screens */
@@ -2138,148 +2184,156 @@ select {
         height: 18px;
     }
 
-    .home-img {
-        width: 38px;
-        height: 38px;
-    }
-
     .avatar {
-        width: 28px;
-        height: 28px;
-        font-size: 0.7rem;
+        width: 26px;
+        height: 26px;
+        font-size: 0.65rem;
     }
 
     .home-button {
-        padding: 0 4px;
+        display: none;
     }
 
     .cart-anchor {
-        padding: 5px;
+        padding: 4px;
     }
 
-    .cart-anchor svg {
-        width: 20px;
-        height: 20px;
+    .cart-anchor span {
+        font-size: 1.1rem !important;
     }
 
     .banner-item {
         min-width: 100%;
-        height: 100px;
+        height: 95px;
         padding: 0.5rem;
     }
 
     .banner-content h2 {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     .banner-content p {
-        font-size: 0.6rem;
+        font-size: 0.58rem;
     }
 
     .banner-section {
-        padding: 0 0.25rem;
+        padding: 0 0.2rem;
     }
 
     .search-container {
-        padding: 0 0.25rem;
-        margin: 0.75rem 0;
+        padding: 0 0.2rem;
+        margin: 0.6rem 0;
     }
 
     .search-wrapper {
-        padding: 0.5rem 0.8rem;
-        gap: 8px;
-    }
-
-    .search-input {
-        font-size: 0.8rem;
-    }
-
-    /* 2-column grid guaranteed */
-    .products {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 4px;
-    }
-
-    .product-card {
-        padding: 4px;
-        border-radius: 12px;
-    }
-
-    .product-image {
-        height: 100px;
-        border-radius: 10px;
-    }
-
-    .product-title {
-        font-size: 0.72rem;
-        height: 1.9rem;
-    }
-
-    .product-price {
-        font-size: 0.75rem;
-    }
-
-    .current-price-small {
-        font-size: 0.75rem;
-    }
-
-    .old-price-small {
-        font-size: 0.65rem;
-    }
-
-    .price-row {
-        gap: 4px;
-    }
-
-    .qty-control {
-        min-width: 36px;
-        height: 36px;
-        border-radius: 10px;
-    }
-
-    .add-btn-large {
-        font-size: 1.2rem;
-    }
-
-    .qty-inner-btn {
-        font-size: 1rem;
-        min-width: 26px;
-    }
-
-    .qty-num {
-        font-size: 0.8rem;
-        min-width: 18px;
-    }
-
-    .category-card {
-        padding: 6px 10px;
-        gap: 4px;
-    }
-
-    .category-icon {
-        font-size: 1rem;
-    }
-
-    .category-name {
-        font-size: 0.7rem;
-    }
-
-    #categories-grid {
-        padding: 0 0.25rem 4px 0.25rem;
+        padding: 0.45rem 0.7rem;
         gap: 6px;
     }
 
+    .search-input {
+        font-size: 0.78rem;
+    }
+
+    /* 3-column grid on extra small phones */
+    .products {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+    }
+
+    .product-card {
+        padding: 3px;
+        border-radius: 10px;
+    }
+
+    .product-image {
+        height: 80px;
+        border-radius: 8px;
+    }
+
+    .product-title {
+        font-size: 0.65rem;
+        height: 1.7rem;
+    }
+
+    .product-price {
+        font-size: 0.68rem;
+    }
+
+    .current-price-small {
+        font-size: 0.68rem;
+    }
+
+    .old-price-small {
+        font-size: 0.58rem;
+    }
+
+    .price-row {
+        gap: 2px;
+    }
+
+    .product-footer {
+        gap: 2px;
+    }
+
+    .qty-control {
+        min-width: 30px;
+        height: 30px;
+        border-radius: 8px;
+    }
+
+    .add-btn-large {
+        font-size: 1rem;
+    }
+
+    .qty-inner-btn {
+        font-size: 0.9rem;
+        min-width: 22px;
+    }
+
+    .qty-num {
+        font-size: 0.75rem;
+        min-width: 16px;
+    }
+
+    .category-card {
+        padding: 5px 8px;
+        gap: 3px;
+    }
+
+    .category-icon {
+        font-size: 0.9rem;
+    }
+
+    .category-name {
+        font-size: 0.65rem;
+    }
+
+    #categories-grid {
+        padding: 0 0.2rem 3px 0.2rem;
+        gap: 5px;
+    }
+
+    /* Modals full screen on extra small */
     .modal {
-        padding: 0.25rem;
+        padding: 0;
+        align-items: flex-end;
     }
 
     .modal-content {
-        padding: 1.2rem;
-        border-radius: 18px;
+        padding: 1rem;
+        border-radius: 16px 16px 0 0;
+        width: 100vw;
+        max-width: 100vw;
+    }
+
+    .product-detail-content {
+        max-height: 95vh;
+        width: 100vw;
+        max-width: 100vw;
     }
 
     .detail-image-container {
-        height: 180px;
+        height: 170px;
     }
 
     .detail-body {
@@ -2287,81 +2341,175 @@ select {
     }
 
     .product-rating-badge {
-        font-size: 0.65rem;
-    }
-
-    .product-rating-badge .rating-star {
-        font-size: 0.68rem;
-    }
-
-    .delivery-badge {
-        padding: 2px 6px;
-        font-size: 0.55rem;
-        top: 6px;
-        right: 6px;
-    }
-
-    .locations {
-        padding: 15px 8px 70px 8px;
-    }
-}
-
-/* Ultra Small Phones - 320px and below (iPhone SE 1st gen, etc.) */
-@media (max-width: 320px) {
-    main {
-        padding: 0.2rem 0.2rem 3.5rem 0.2rem;
-    }
-
-    header {
-        min-height: 70px;
-        padding: 0.2rem;
-    }
-
-    .home-img {
-        width: 32px;
-        height: 32px;
-    }
-
-    .avatar {
-        width: 24px;
-        height: 24px;
         font-size: 0.6rem;
     }
 
-    .banner-item {
-        height: 85px;
-        padding: 0.4rem;
+    .product-rating-badge .rating-star {
+        font-size: 0.62rem;
     }
 
-    .banner-content h2 {
+    .delivery-badge {
+        padding: 2px 5px;
+        font-size: 0.5rem;
+        top: 5px;
+        right: 5px;
+    }
+
+    .locations {
+        padding: 12px 6px 60px 6px;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .location-card {
+        padding: 10px;
+    }
+
+    .location-card h4 {
+        font-size: 0.78rem;
+    }
+
+    .location-card p {
+        font-size: 0.68rem;
+    }
+
+    .cart-footer {
+        padding: 0.8rem 0.8rem calc(3rem + env(safe-area-inset-bottom, 10px)) 0.8rem;
+    }
+
+    .star-rating .star {
+        font-size: 1.4rem;
+    }
+
+    .review-input {
+        padding: 8px 10px;
         font-size: 0.8rem;
     }
+}
 
-    .banner-content p {
+/* Ultra Small Phones - 320px and below (iPhone SE 1st gen, Galaxy J series, etc.) */
+@media (max-width: 320px) {
+    main {
+        padding: 0.15rem 0.15rem 3rem 0.15rem;
+    }
+
+    header {
+        min-height: 50px;
+        padding: 0.15rem;
+    }
+
+    .avatar {
+        width: 22px;
+        height: 22px;
         font-size: 0.55rem;
     }
 
-    .product-image {
-        height: 85px;
+    .menu-toggle svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .banner-item {
+        height: 80px;
+        padding: 0.35rem;
+    }
+
+    .banner-content h2 {
+        font-size: 0.75rem;
+    }
+
+    .banner-content p {
+        font-size: 0.5rem;
+    }
+
+    /* Still 3 columns but smaller cards */
+    .products {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+    }
+
+    .product-card {
+        padding: 2px;
         border-radius: 8px;
     }
 
+    .product-image {
+        height: 70px;
+        border-radius: 6px;
+    }
+
     .product-title {
-        font-size: 0.68rem;
-        height: 1.7rem;
+        font-size: 0.6rem;
+        height: 1.5rem;
     }
 
     .product-price {
-        font-size: 0.7rem;
+        font-size: 0.62rem;
+    }
+
+    .current-price-small {
+        font-size: 0.62rem;
     }
 
     .qty-control {
-        min-width: 32px;
-        height: 32px;
+        min-width: 26px;
+        height: 26px;
+        border-radius: 6px;
+    }
+
+    .add-btn-large {
+        font-size: 0.9rem;
+    }
+
+    .qty-inner-btn {
+        font-size: 0.8rem;
+        min-width: 20px;
+    }
+
+    .qty-num {
+        font-size: 0.7rem;
+        min-width: 14px;
     }
 
     .detail-image-container {
-        height: 160px;
+        height: 150px;
+    }
+
+    .modal-content {
+        padding: 0.8rem;
+    }
+
+    .search-wrapper {
+        padding: 0.4rem 0.6rem;
+    }
+
+    .search-input {
+        font-size: 0.75rem;
+    }
+
+    .category-card {
+        padding: 4px 6px;
+        gap: 2px;
+    }
+
+    .category-name {
+        font-size: 0.6rem;
+    }
+
+    .category-icon {
+        font-size: 0.8rem;
+    }
+
+    .locations {
+        padding: 10px 4px 50px 4px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .location-card h4 {
+        font-size: 0.72rem;
+    }
+
+    .location-card p {
+        font-size: 0.62rem;
     }
 }
 
