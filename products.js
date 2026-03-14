@@ -5305,12 +5305,25 @@ const generatedProducts = [
   }
 ];
 const generatedCategories = [
-  "Fresh & Fast",
-  "Go'sht mahsulotlari",
-  "Go'sht va Baliq",
+  "Choy",
+  "Dukkaklilar",
+  "Gazaklar",
+  "Guruch",
   "Ichimliklar",
-  "Katta chegirmalar",
-  "Oziq-ovqat",
-  "Tayyor yegulik",
-  "Yog'"
+  "Konserva",
+  "Makaron",
+  "Murabbo",
+  "Non Mahsulotlari",
+  "Pechenye",
+  "Qahva",
+  "Quritilgan Mevalar",
+  "Shirinlik",
+  "Shirinliklar",
+  "Soslar",
+  "Sous",
+  "Tomat",
+  "Tuzlamalar",
+  "Un Mahsulotlari",
+  "Yog'",
+  "Ziravorlar"
 ];
