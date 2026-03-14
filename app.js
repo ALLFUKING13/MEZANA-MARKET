@@ -1633,11 +1633,24 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }, 4000);
 
-    // Use generated products from products.js as default
-    const defaultProductsData = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
-
-    // Always use default products data
-    products = defaultProductsData;
+    // Use generated products from products.js (file) as default
+    const serverProducts = (typeof generatedProducts !== 'undefined') ? generatedProducts : [];
+    const localProductsRaw = localStorage.getItem('mezana_products_local');
+    
+    if (localProductsRaw) {
+        const localProducts = JSON.parse(localProductsRaw);
+        // Important: If the file has significantly more products, it might mean 
+        // the server was updated/restored. Take the larger set for safety.
+        if (serverProducts.length > localProducts.length) {
+            products = serverProducts;
+        } else {
+            products = localProducts;
+        }
+    } else {
+        products = serverProducts;
+    }
+    
+    // Save state
     localStorage.setItem('mezana_products_local', JSON.stringify(products));
 
     // Auto-generate categories from product data and localStorage
