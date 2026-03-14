@@ -1081,23 +1081,25 @@ window.showCategoryForm = () => {
 
     parentCats.forEach(parent => {
         const subCats = categoryTree[parent] || [];
+        const safeParent = parent.replace(/'/g, "\\'");
         html += `
             <div style="margin-bottom: 12px;">
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: linear-gradient(135deg, var(--primary, #2ecc71), var(--primary-dark, #27ae60)); color: white; border-radius: 10px 10px ${subCats.length ? '0 0' : '10px 10px'}; font-weight: 700; font-size: 0.9rem;">
                     <span>📁 ${parent}</span>
                     <div style="display: flex; gap: 5px;">
-                        <button onclick="window.editParentCategoryName('${parent}')" style="padding: 4px 8px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">✎</button>
-                        <button onclick="window.deleteParentCategory('${parent}')" style="padding: 4px 8px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">×</button>
+                        <button onclick="window.editParentCategoryName('${safeParent}')" style="padding: 4px 8px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">✎</button>
+                        <button onclick="window.deleteParentCategory('${safeParent}')" style="padding: 4px 8px; background: rgba(255,255,255,0.3); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem;">×</button>
                     </div>
                 </div>
         `;
         subCats.forEach(sub => {
+            const safeSub = sub.replace(/'/g, "\\'");
             html += `
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 8px 28px; background: var(--surface-color, #f5f5f5); border-bottom: 1px solid var(--border-color, #eee); font-size: 0.85rem;">
                     <span>└ ${sub}</span>
                     <div style="display: flex; gap: 5px;">
-                        <button onclick="window.editSubCategoryName('${parent}', '${sub}')" style="padding: 3px 8px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">✎</button>
-                        <button onclick="window.deleteSubCategory('${parent}', '${sub}')" style="padding: 3px 8px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">×</button>
+                        <button onclick="window.editSubCategoryName('${safeParent}', '${safeSub}')" style="padding: 3px 8px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">✎</button>
+                        <button onclick="window.deleteSubCategory('${safeParent}', '${safeSub}')" style="padding: 3px 8px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.7rem;">×</button>
                     </div>
                 </div>
             `;
