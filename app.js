@@ -293,6 +293,20 @@ let adminTimer;
 let crmOrders = JSON.parse(localStorage.getItem('mezana_crm_orders')) || [];
 let crmCustomers = JSON.parse(localStorage.getItem('mezana_crm_customers')) || [];
 
+// Initialize CRM data from server if available (mirroring product sync logic)
+const serverOrders = (typeof generatedOrders !== 'undefined') ? generatedOrders : [];
+const serverCustomers = (typeof generatedCustomers !== 'undefined') ? generatedCustomers : [];
+
+// If server version has more data or local is empty, take from server to prevent loss
+if (serverOrders.length > crmOrders.length) {
+    crmOrders = serverOrders;
+    localStorage.setItem('mezana_crm_orders', JSON.stringify(crmOrders));
+}
+if (serverCustomers.length > crmCustomers.length) {
+    crmCustomers = serverCustomers;
+    localStorage.setItem('mezana_crm_customers', JSON.stringify(crmCustomers));
+}
+
 function saveCRMData() {
     localStorage.setItem('mezana_crm_orders', JSON.stringify(crmOrders));
     localStorage.setItem('mezana_crm_customers', JSON.stringify(crmCustomers));
@@ -1311,7 +1325,12 @@ window.syncToServer = async () => {
 
     try {
         const categoriesData = categories.filter(c => c !== 'Hammasi');
-        const fileContent = `const generatedProducts = ${JSON.stringify(products, null, 2)};\nconst generatedCategories = ${JSON.stringify(categoriesData, null, 2)};`;
+        const fileContent = `
+const generatedProducts = ${JSON.stringify(products, null, 2)};
+const generatedCategories = ${JSON.stringify(categoriesData, null, 2)};
+const generatedOrders = ${JSON.stringify(crmOrders, null, 2)};
+const generatedCustomers = ${JSON.stringify(crmCustomers, null, 2)};
+`;
         const response = await fetch('/api/update-products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

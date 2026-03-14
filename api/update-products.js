@@ -37,19 +37,11 @@ export default async function handler(req, res) {
         // Base64 encode the content correctly supporting utf-8
         const encodedContent = Buffer.from(content, 'utf-8').toString('base64');
 
-        const updateRes = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
-                message: 'Update products via Admin Panel',
+                message: 'Update Database (Products + CRM) via Admin Panel',
                 content: encodedContent,
                 sha: sha
             })
-        });
 
         if (!updateRes.ok) {
             const errorText = await updateRes.text();

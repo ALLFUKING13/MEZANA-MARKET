@@ -57,21 +57,19 @@ body {
 
 #app {
     width: 100%;
-    max-width: 1200px;
+    max-width: 480px; /* Alway Mobile constraint */
     margin: 0 auto;
     overflow-x: hidden;
     position: relative;
     padding-bottom: 70px; /* Space for Bottom Navigation */
+    background: var(--bg-color);
+    box-shadow: 0 0 40px rgba(0,0,0,0.1);
+    min-height: 100vh;
 }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-color);
-    background-image:
-        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-        url('jpgs/background.jpg');
-    background-size: cover, cover;
-    background-attachment: fixed, fixed;
+    background-color: #f1f5f9; /* Modern light background for PC space */
     color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
@@ -908,24 +906,16 @@ main {
     box-sizing: border-box;
 }
 
-/* Larger phones / small tablets */
-@media (min-width: 481px) {
-    .products {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    }
-
-    main {
-        padding: 1rem 1rem 5rem 1rem;
-    }
-}
-
-/* Unused legacy styles removed: .hero, .category-pill */
-
-/* Products Grid */
+/* Standard mobile grid (and app container grid) */
+/* Standard mobile grid */
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: clamp(8px, 2vw, 14px);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+main {
+    padding: 0.75rem 0.75rem 5rem 0.75rem;
 }
 
 .product-image {
@@ -2238,8 +2228,8 @@ select {
 
     /* 3-column grid on extra small phones */
     .products {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 3px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
     }
 
     .product-card {
@@ -2425,8 +2415,8 @@ select {
 
     /* Still 3 columns but smaller cards */
     .products {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
     }
 
     .product-card {
