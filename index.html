@@ -32,13 +32,7 @@
             </div>
             <div class="header-main">
                 <div class="user-info">
-                    <div class="menu-toggle" id="menu-toggle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="3" y1="12" x2="21" y2="12"></line>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <line x1="3" y1="18" x2="21" y2="18"></line>
-                        </svg>
-                    </div>
+
                     <div class="home-button" id="home-button">
                         <img src="jpgs/M.jpg" alt="Бош sahifa" class="home-img">
                     </div>
@@ -58,12 +52,7 @@
                 <div class="halal-logo">
                     <img src="jpgs/HALAL.jpg" alt="Halal" class="halal-img">
                 </div>
-                <div class="header-right">
-                    <div class="cart-anchor" id="cart-toggle">
-                        <span style="font-size: 1.5rem;">🛒</span>
-                        <span class="cart-badge" id="cart-count">0</span>
-                    </div>
-                </div>
+
             </div>
         </header>
 
@@ -176,11 +165,36 @@
                     <button class="secondary-btn" onclick="exportData()" style="flex: 1; padding: 10px 16px;">Eksport
                         (JSON)</button>
                     <button class="primary-btn" onclick="syncToServer()"
-                        style="flex: 1; padding: 10px 16px; background-color: #f39c12; color: #fff;">Sernverga
+                        style="flex: 1; padding: 10px 16px; background-color: #f39c12; color: #fff;">Serverga
                         Saqlash</button>
                 </div>
-                <div id="product-list-admin" class="admin-item-list">
-                    <!-- Admin product list here -->
+                
+                <!-- Admin Tabs Menu -->
+                <div style="display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid var(--border-color); padding-bottom: 5px;">
+                    <div id="tab-products" class="admin-tab active" onclick="switchAdminTab('products')" style="flex: 1; text-align: center; font-weight: bold; cursor: pointer; padding: 8px; color: var(--primary);">Mahsulotlar</div>
+                    <div id="tab-orders" class="admin-tab" onclick="switchAdminTab('orders')" style="flex: 1; text-align: center; font-weight: bold; cursor: pointer; padding: 8px; color: var(--text-muted);">Buyurtmalar (CRM)</div>
+                    <div id="tab-customers" class="admin-tab" onclick="switchAdminTab('customers')" style="flex: 1; text-align: center; font-weight: bold; cursor: pointer; padding: 8px; color: var(--text-muted);">Mijozlar</div>
+                </div>
+
+                <!-- Products View -->
+                <div id="admin-view-products">
+                    <div id="product-list-admin" class="admin-item-list">
+                        <!-- Admin product list here -->
+                    </div>
+                </div>
+
+                <!-- Orders CRM View -->
+                <div id="admin-view-orders" style="display: none;">
+                    <div id="orders-list-admin" class="admin-item-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- CRM Orders injected here by JS -->
+                    </div>
+                </div>
+
+                <!-- Customers CRM View -->
+                <div id="admin-view-customers" style="display: none;">
+                    <div id="customers-list-admin" class="admin-item-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- CRM Customers injected here by JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -389,6 +403,22 @@
         </div>
 
         <div class="toast" id="toast"></div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item" onclick="handleBottomNav(this, 'profile')">
+                <span class="icon">☰</span>
+                <span class="label" id="label-nav-menu">Menyu</span>
+            </a>
+            <a href="#" class="nav-item active" onclick="handleBottomNav(this, 'home')">
+                <span class="icon">🏠</span>
+                <span class="label" id="label-nav-home">Asosiy</span>
+            </a>
+            <a href="#" class="nav-item" onclick="handleBottomNav(this, 'cart')">
+                <span class="icon">🛒</span>
+                <span class="label" id="label-nav-cart">Savat</span>
+            </a>
+        </nav>
     </div>
     <script src="products.js"></script>
     <script src="app.js"></script>

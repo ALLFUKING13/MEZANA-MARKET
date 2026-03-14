@@ -65,7 +65,13 @@ const i18n = {
         profileTitle: "Mijoz Profili",
         btnClose: "Yopish",
         labelTheme: "Mavzu",
-        labelLangSelect: "Tilni tanlang"
+        labelLangSelect: "Tilni tanlang",
+        navMenu: "Menyu",
+        navHome: "Asosiy",
+        navCart: "Savat",
+        btnBackCat: "Orqaga",
+        btnAllCat: "Barchasi",
+        discountBadge: "🔥 Aksiya"
     },
     ru: {
         greeting: "Привет,",
@@ -127,7 +133,13 @@ const i18n = {
         profileTitle: "Профиль клиента",
         btnClose: "Закрыть",
         labelTheme: "Тема",
-        labelLangSelect: "Выберите язык"
+        labelLangSelect: "Выберите язык",
+        navMenu: "Меню",
+        navHome: "Главная",
+        navCart: "Корзина",
+        btnBackCat: "Назад",
+        btnAllCat: "Все",
+        discountBadge: "🔥 Акция"
     },
     kr: {
         greeting: "안녕하세요,",
@@ -189,7 +201,13 @@ const i18n = {
         profileTitle: "고객 프로필",
         btnClose: "닫기",
         labelTheme: "테마",
-        labelLangSelect: "언어 선택"
+        labelLangSelect: "언어 선택",
+        navMenu: "메뉴",
+        navHome: "홈",
+        navCart: "장바구니",
+        btnBackCat: "뒤로",
+        btnAllCat: "전부",
+        discountBadge: "🔥 할인"
     },
     en: {
         greeting: "Hello,",
@@ -249,7 +267,13 @@ const i18n = {
         quickOrder: "⚡ 1-Click Order",
         addCart: "Add to Cart",
         profileTitle: "Client Profile",
-        btnClose: "Close"
+        btnClose: "Close",
+        navMenu: "Menu",
+        navHome: "Home",
+        navCart: "Cart",
+        btnBackCat: "Back",
+        btnAllCat: "All",
+        discountBadge: "🔥 Sale"
     }
 };
 
@@ -264,6 +288,15 @@ let products = [];
 let categories = [];
 let editingId = null;
 let adminTimer;
+
+// CRM Data
+let crmOrders = JSON.parse(localStorage.getItem('mezana_crm_orders')) || [];
+let crmCustomers = JSON.parse(localStorage.getItem('mezana_crm_customers')) || [];
+
+function saveCRMData() {
+    localStorage.setItem('mezana_crm_orders', JSON.stringify(crmOrders));
+    localStorage.setItem('mezana_crm_customers', JSON.stringify(crmCustomers));
+}
 
 // Default category tree — loaded from localStorage if available
 const defaultCategoryTree = {
@@ -342,6 +375,25 @@ function initElements() {
     elements.homeButton = document.getElementById('home-button');
     drawerOverlay = document.getElementById('drawer-overlay');
 }
+
+window.toggleAdmin = () => {
+    if (elements.adminPanel) {
+        const isOpen = elements.adminPanel.classList.toggle('open');
+        if (isOpen) {
+            document.body.classList.add('no-scroll');
+            renderAdminProducts(); // Assuming this function exists and is relevant
+            switchAdminTab('products'); // Default tab
+        } else {
+            // Only release scroll if no other modals are open
+            if (!elements.productFormModal?.classList.contains('open') &&
+                !elements.productDetailModal?.classList.contains('open') &&
+                !elements.profileModal?.classList.contains('open') &&
+                (!elements.settingsModal || elements.settingsModal.style.display === 'none')) {
+                document.body.classList.remove('no-scroll');
+            }
+        }
+    }
+};
 
 window.toggleSettingsModal = (show) => {
     if (!elements.settingsModal) return;
@@ -429,6 +481,11 @@ function updateStaticTranslations() {
     safeSet('label-lang-select', t.labelLangSelect);
     safeSet('btn-settings-close', t.btnClose);
     safeSet('btn-profile-close', t.btnClose);
+
+    // Bottom Navigation
+    safeSet('label-nav-menu', t.navMenu);
+    safeSet('label-nav-home', t.navHome);
+    safeSet('label-nav-cart', t.navCart);
 }
 
 // 5. Render Functions
@@ -493,11 +550,11 @@ function renderCategories() {
         let html = `
             <div class="category-card" onclick="backToParents()">
                 <div class="category-icon">🔙</div>
-                <div class="category-name">Orqaga</div>
+                <div class="category-name">${i18n[currentLang].btnBackCat}</div>
             </div>
             <div class="category-card ${activeCategory === 'Hammasi' ? 'active' : ''}" onclick="filterParentCategory('${activeParentCategory}')">
                 <div class="category-icon">📁</div>
-                <div class="category-name">Barchasi</div>
+                <div class="category-name">${i18n[currentLang].btnAllCat}</div>
             </div>
         `;
 
@@ -538,7 +595,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
             if (activeParentCategory) {
                 currentFiltered = products.filter(p => getParentCategory(p.category) === activeParentCategory);
             } else {
-                currentFiltered = shuffleArray(products);
+                currentFiltered = products; // Removed shuffleArray to keep list stable
             }
         } else {
             currentFiltered = products.filter(p => p.category === filter);
@@ -607,7 +664,7 @@ function renderProducts(filter = 'Hammasi', searchQuery = '', append = false) {
                 <div class="product-footer">
                     <div class="product-price">
                         ${product.oldPrice ? `
-                            <div class="discount-badge-small">🔥 Aksiya</div>
+                            <div class="discount-badge-small">${i18n[currentLang].discountBadge}</div>
                             <div class="price-row">
                                 <span class="old-price-small">${product.oldPrice.toLocaleString()}</span>
                                 <span class="current-price-small">${product.price.toLocaleString()} ${i18n[currentLang].currency}</span>
@@ -1604,20 +1661,24 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 500);
 
     // Drawer open/close with overlay
-    function openDrawer(drawer) {
+    // Drawer open/close with overlay
+    window.openDrawer = (drawer) => {
+        if (!drawer) return;
         drawer.classList.add('open');
         document.body.classList.add('no-scroll');
-        if (drawerOverlay) drawerOverlay.classList.add('active');
-    }
-    function closeDrawer(drawer) {
+        const overlay = document.getElementById('drawer-overlay');
+        if (overlay) overlay.classList.add('active');
+    };
+    
+    window.closeDrawer = (drawer) => {
+        if (!drawer) return;
         drawer.classList.remove('open');
         document.body.classList.remove('no-scroll');
-        if (drawerOverlay) drawerOverlay.classList.remove('active');
-    }
+        const overlay = document.getElementById('drawer-overlay');
+        if (overlay) overlay.classList.remove('active');
+    };
 
-    if (elements.cartToggle) elements.cartToggle.onclick = () => openDrawer(elements.cartDrawer);
     if (elements.closeCart) elements.closeCart.onclick = () => { closeDrawer(elements.cartDrawer); resetDrawer(); };
-    if (elements.menuToggle) elements.menuToggle.onclick = () => openDrawer(elements.sidebarDrawer);
     if (elements.closeSidebar) elements.closeSidebar.onclick = () => closeDrawer(elements.sidebarDrawer);
     if (elements.homeButton) elements.homeButton.onclick = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1704,6 +1765,36 @@ async function handleConfirmOrder() {
         });
         const result = await response.json();
         if (result.success) {
+            // Save to Local CRM
+            const newOrder = {
+                id: 'ORD-' + Date.now(),
+                date: new Date().toLocaleString('uz-UZ'),
+                customerName: name,
+                customerPhone: phone,
+                address: address,
+                total: orderData.total,
+                status: 'Yangi',
+                items: orderData.items
+            };
+            crmOrders.push(newOrder);
+            
+            // Update Customers List
+            const existingCustomer = crmCustomers.find(c => c.phone === phone);
+            if (existingCustomer) {
+                existingCustomer.ltv += orderData.total;
+                existingCustomer.lastOrder = newOrder.date;
+                existingCustomer.ordersCount = (existingCustomer.ordersCount || 1) + 1;
+            } else {
+                crmCustomers.push({
+                    name: name,
+                    phone: phone,
+                    ltv: orderData.total,
+                    lastOrder: newOrder.date,
+                    ordersCount: 1
+                });
+            }
+            saveCRMData();
+
             const successMsg = { uz: 'Buyurtma qabul qilindi!', ru: 'Заказ принят!', kr: '주문이 접수되었습니다!', en: 'Order accepted!' };
             showToast(successMsg[currentLang] || successMsg.en);
             cart = [];
@@ -1791,3 +1882,126 @@ document.addEventListener('DOMContentLoaded', () => {
     initWeather();
     setInterval(initWeather, 30 * 60 * 1000); // 30 mins
 });
+
+// 10. Bottom Navigation Logic
+window.handleBottomNav = (element, target) => {
+    const navItems = document.querySelectorAll('.bottom-nav .nav-item');
+    navItems.forEach(item => item.classList.remove('active'));
+    element.classList.add('active');
+
+    if (target === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        renderProducts('Hammasi');
+    } else if (target === 'categories') {
+        window.scrollTo({ top: document.getElementById('categories-grid').offsetTop - 120, behavior: 'smooth' });
+    } else if (target === 'cart') {
+        openDrawer(elements.cartDrawer);
+    } else if (target === 'profile') {
+        openDrawer(elements.sidebarDrawer);
+    }
+};
+
+// 11. Admin CRM Logic
+window.switchAdminTab = (tabMap) => {
+    // Hide all tabs
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active', 'text-primary'));
+    document.getElementById('admin-view-products').style.display = 'none';
+    document.getElementById('admin-view-orders').style.display = 'none';
+    document.getElementById('admin-view-customers').style.display = 'none';
+
+    // Activate selected
+    const activeTabObj = document.getElementById(`tab-${tabMap}`);
+    if (activeTabObj) {
+        activeTabObj.classList.add('active');
+        activeTabObj.style.color = 'var(--primary)';
+    }
+
+    const viewTarget = document.getElementById(`admin-view-${tabMap}`);
+    if (viewTarget) viewTarget.style.display = 'block';
+
+    if (tabMap === 'orders') renderAdminOrders();
+    if (tabMap === 'customers') renderAdminCustomers();
+};
+
+function renderAdminOrders() {
+    const list = document.getElementById('orders-list-admin');
+    if (!list) return;
+
+    if (crmOrders.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:2rem; color:var(--text-muted);">Hozircha buyurtmalar yo'q</div>`;
+        return;
+    }
+
+    let html = '';
+    // Show newest orders first
+    [...crmOrders].reverse().forEach(order => {
+        let statusColor = '#f39c12'; // Yangi - Orange
+        if (order.status === 'Qabul qilingan') statusColor = '#3498db'; // Blue
+        if (order.status === 'Yetkazilmoqda') statusColor = '#9b59b6'; // Purple
+        if (order.status === 'Bajarildi') statusColor = '#2ecc71'; // Green
+        if (order.status === 'Bekor qilingan') statusColor = '#e74c3c'; // Red
+
+        html += `
+            <div style="background:var(--card-bg); border-radius:12px; padding:15px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:bold; color:var(--text-color);">${order.id}</span>
+                    <span style="font-size:0.75rem; color:white; background:${statusColor}; padding:3px 8px; border-radius:8px; font-weight:bold;">${order.status}</span>
+                </div>
+                <div style="font-size:0.85rem; color:var(--text-muted);">${order.date}</div>
+                <div style="font-size:0.9rem; font-weight:bold;">👤 ${escapeHtml(order.customerName)} | 📞 ${escapeHtml(order.customerPhone)}</div>
+                <div style="font-size:0.85rem; color:var(--text-color);">📍 ${escapeHtml(order.address)}</div>
+                <div style="font-weight:bold; color:var(--primary); margin-top:5px;">💵 ${order.total.toLocaleString()} Won (${order.items.length} ta mahsulot)</div>
+                
+                <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                    <button onclick="updateOrderStatus('${order.id}', 'Qabul qilingan')" style="padding:6px 10px; border-radius:6px; background:#3498db; color:white; border:none; font-size:0.75rem; cursor:pointer;">Qabul qilish</button>
+                    <button onclick="updateOrderStatus('${order.id}', 'Yetkazilmoqda')" style="padding:6px 10px; border-radius:6px; background:#9b59b6; color:white; border:none; font-size:0.75rem; cursor:pointer;">Yetkazish</button>
+                    <button onclick="updateOrderStatus('${order.id}', 'Bajarildi')" style="padding:6px 10px; border-radius:6px; background:#2ecc71; color:white; border:none; font-size:0.75rem; cursor:pointer;">Bajarildi</button>
+                    <button onclick="updateOrderStatus('${order.id}', 'Bekor qilingan')" style="padding:6px 10px; border-radius:6px; background:#e74c3c; color:white; border:none; font-size:0.75rem; cursor:pointer;">Bekor qilish</button>
+                </div>
+            </div>
+        `;
+    });
+    list.innerHTML = html;
+}
+
+window.updateOrderStatus = (orderId, newStatus) => {
+    const order = crmOrders.find(o => o.id === orderId);
+    if (!order) return;
+    order.status = newStatus;
+    saveCRMData();
+    renderAdminOrders();
+    showToast(`Buyurtma holati "${newStatus}" ga o'zgardi!`);
+};
+
+function renderAdminCustomers() {
+    const list = document.getElementById('customers-list-admin');
+    if (!list) return;
+
+    if (crmCustomers.length === 0) {
+        list.innerHTML = `<div style="text-align:center; padding:2rem; color:var(--text-muted);">Hozircha mijozlar bazasi bo'sh</div>`;
+        return;
+    }
+
+    let html = '';
+    // Sort by Total Lifetime Value (Highest purchaser first)
+    const sortedCustomers = [...crmCustomers].sort((a,b) => b.ltv - a.ltv);
+    
+    sortedCustomers.forEach(cust => {
+        html += `
+            <div style="background:var(--card-bg); border-radius:12px; padding:15px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:5px;">
+                <div style="font-weight:bold; font-size:1.1rem; color:var(--text-color);">👤 ${escapeHtml(cust.name)}</div>
+                <div style="font-size:0.9rem; color:var(--text-muted);">📞 ${escapeHtml(cust.phone)}</div>
+                <div style="display:flex; justify-content:space-between; margin-top:8px; align-items:center;">
+                    <div style="font-size:0.8rem; background:var(--surface-color); padding:4px 8px; border-radius:6px;">
+                        🛒 ${cust.ordersCount} ta buyurtma
+                    </div>
+                    <div style="font-weight:bold; color:var(--primary);">
+                        💵 LTV: ${cust.ltv.toLocaleString()} Won
+                    </div>
+                </div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Oxirgi faollik: ${cust.lastOrder}</div>
+            </div>
+        `;
+    });
+    list.innerHTML = html;
+}
