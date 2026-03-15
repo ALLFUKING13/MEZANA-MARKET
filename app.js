@@ -994,7 +994,7 @@ window.hideProductForm = () => {
 
 window.saveProduct = () => {
     const nameUz = document.getElementById('admin-name-uz').value;
-    const price = document.getElementById('admin-price').value;
+    const priceVal = document.getElementById('admin-price').value;
     let category = document.getElementById('admin-category').value;
 
     if (!category) {
@@ -1002,24 +1002,44 @@ window.saveProduct = () => {
         return;
     }
 
-    const newProduct = {
-        id: editingId || Date.now(),
-        image: document.getElementById('admin-image-base64').value || '',
-        name: {
-            uz: nameUz,
-            ru: document.getElementById('admin-name-ru').value || nameUz,
-            kr: document.getElementById('admin-name-kr').value || nameUz,
-            en: document.getElementById('admin-name-en').value || nameUz
-        },
-        price: parseInt(price),
-        category: category
-    };
+    const price = parseInt(priceVal);
+    if (isNaN(price) || price <= 0) {
+        alert("Narxni to'g'ri kiriting!");
+        return;
+    }
 
+    // Preserve existing product data (like oldPrice, oneDayDelivery, etc.)
+    let updatedProduct;
     if (editingId) {
+        const existingProduct = products.find(p => p.id === editingId);
+        updatedProduct = {
+            ...existingProduct,
+            image: document.getElementById('admin-image-base64').value || existingProduct.image || '',
+            name: {
+                uz: nameUz,
+                ru: document.getElementById('admin-name-ru').value || nameUz,
+                kr: document.getElementById('admin-name-kr').value || nameUz,
+                en: document.getElementById('admin-name-en').value || nameUz
+            },
+            price: price,
+            category: category
+        };
         const idx = products.findIndex(p => p.id === editingId);
-        products[idx] = newProduct;
+        products[idx] = updatedProduct;
     } else {
-        products.push(newProduct);
+        updatedProduct = {
+            id: Date.now(),
+            image: document.getElementById('admin-image-base64').value || '',
+            name: {
+                uz: nameUz,
+                ru: document.getElementById('admin-name-ru').value || nameUz,
+                kr: document.getElementById('admin-name-kr').value || nameUz,
+                en: document.getElementById('admin-name-en').value || nameUz
+            },
+            price: price,
+            category: category
+        };
+        products.push(updatedProduct);
     }
 
     localStorage.setItem('mezana_products_local', JSON.stringify(products));
