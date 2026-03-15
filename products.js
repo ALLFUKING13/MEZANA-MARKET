@@ -188,7 +188,7 @@ const generatedProducts = [
       "kr": "Pasta Rino",
       "en": "Pasta Rino"
     },
-    "price": 1,
+    "price": 2,
     "category": "Makaron"
   },
   {
@@ -5326,4 +5326,38 @@ const generatedCategories = [
   "Un Mahsulotlari",
   "Yog'",
   "Ziravorlar"
+];
+const generatedOrders = [
+  {
+    "id": "ORD-1773505529979",
+    "date": "15/03/2026, 01:25:29",
+    "customerName": "qwe",
+    "customerPhone": "01000000000",
+    "address": "qwe",
+    "total": 7500,
+    "status": "Yangi",
+    "items": [
+      {
+        "name": "Виноград",
+        "price": 5000,
+        "qty": 1,
+        "image": "jpgs/1.jpg"
+      },
+      {
+        "name": "Баклажан",
+        "price": 2500,
+        "qty": 1,
+        "image": "jpgs/baqlajon.jpg"
+      }
+    ]
+  }
+];
+const generatedCustomers = [
+  {
+    "name": "qwe",
+    "phone": "01000000000",
+    "ltv": 7500,
+    "lastOrder": "15/03/2026, 01:25:29",
+    "ordersCount": 1
+  }
 ];
