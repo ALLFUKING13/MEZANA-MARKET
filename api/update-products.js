@@ -27,30 +27,40 @@ export default async function handler(req, res) {
             }
         });
 
-        let sha;
-        if (getRes.ok) {
-            const data = await getRes.json();
-            sha = data.sha;
+        if (!getRes.ok) {
+            const errorText = await getRes.text();
+            throw new Error(`GitHub API (Get SHA) Error: ${getRes.status} ${errorText}`);
         }
+
+        const data = await getRes.json();
+        const sha = data.sha;
 
         // 2. Update the file
         // Base64 encode the content correctly supporting utf-8
         const encodedContent = Buffer.from(content, 'utf-8').toString('base64');
 
+        const updateRes = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
-                message: 'Update Database (Products + CRM) via Admin Panel',
+                message: 'Update products via Admin Panel',
                 content: encodedContent,
                 sha: sha
             })
+        });
 
         if (!updateRes.ok) {
             const errorText = await updateRes.text();
-            throw new Error(`GitHub API Error: ${updateRes.status} ${errorText}`);
+            throw new Error(`GitHub API (Update) Error: ${updateRes.status} ${errorText}`);
         }
 
         res.status(200).json({ success: true });
     } catch (error) {
         console.error('Update Error:', error);
-        res.status(500).json({ error: 'Internal server error', details: error.message });
+        res.status(500).json({ error: error.message || 'Internal server error' });
     }
 }

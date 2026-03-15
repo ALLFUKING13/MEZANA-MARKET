@@ -1325,12 +1325,7 @@ window.syncToServer = async () => {
 
     try {
         const categoriesData = categories.filter(c => c !== 'Hammasi');
-        const fileContent = `
-const generatedProducts = ${JSON.stringify(products, null, 2)};
-const generatedCategories = ${JSON.stringify(categoriesData, null, 2)};
-const generatedOrders = ${JSON.stringify(crmOrders, null, 2)};
-const generatedCustomers = ${JSON.stringify(crmCustomers, null, 2)};
-`;
+        const fileContent = `const generatedProducts = ${JSON.stringify(products, null, 2)};\nconst generatedCategories = ${JSON.stringify(categoriesData, null, 2)};\nconst generatedOrders = ${JSON.stringify(crmOrders, null, 2)};\nconst generatedCustomers = ${JSON.stringify(crmCustomers, null, 2)};`;
         const response = await fetch('/api/update-products', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
