@@ -212,7 +212,7 @@ const generatedProducts = [
       "kr": "Toza 95 녹차",
       "en": "Toza 95 Green Tea"
     },
-    "price": 1,
+    "price": 4,
     "category": "Choy"
   },
   {
