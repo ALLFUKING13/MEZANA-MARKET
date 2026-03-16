@@ -345,7 +345,7 @@ function getAvgRating(productId) {
 }
 
 // Pagination — show products in batches for performance
-const PRODUCTS_PER_PAGE = 9999; // Show all products at once
+const PRODUCTS_PER_PAGE = 20; // Enabled pagination
 let currentPage = 1;
 let currentFiltered = [];
 
@@ -831,14 +831,15 @@ window.toggleAdmin = () => {
         document.body.classList.remove('no-scroll');
         if (drawerOverlay) drawerOverlay.classList.remove('active');
     } else {
-        const code = prompt(currentLang === 'uz' ? "Admin kodini kiriting:" : "Enter admin code:");
-        if (code === '7777') {
+        let savedCode = localStorage.getItem('mezana_admin_code');
+        const code = prompt(currentLang === 'uz' ? "Admin paroliningizni kiriting:" : "Enter admin password:", savedCode || "");
+        
+        if (code !== null) {
+            localStorage.setItem('mezana_admin_code', code);
             elements.adminPanel.classList.add('open');
             document.body.classList.add('no-scroll');
             if (drawerOverlay) drawerOverlay.classList.add('active');
             renderAdminProducts();
-        } else if (code !== null) {
-            showToast(currentLang === 'uz' ? "Kod noto'g'ri!" : "Wrong code!");
         }
     }
 };
@@ -1346,9 +1347,13 @@ window.syncToServer = async () => {
     try {
         const categoriesData = categories.filter(c => c !== 'Hammasi');
         const fileContent = `const generatedProducts = ${JSON.stringify(products, null, 2)};\nconst generatedCategories = ${JSON.stringify(categoriesData, null, 2)};\nconst generatedOrders = ${JSON.stringify(crmOrders, null, 2)};\nconst generatedCustomers = ${JSON.stringify(crmCustomers, null, 2)};`;
+        const adminCode = localStorage.getItem('mezana_admin_code');
         const response = await fetch('/api/update-products', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${adminCode}`
+            },
             body: JSON.stringify({ content: fileContent })
         });
 
@@ -1673,12 +1678,11 @@ window.addEventListener('DOMContentLoaded', () => {
     
     if (localProductsRaw) {
         const localProducts = JSON.parse(localProductsRaw);
-        // Important: If the file has significantly more products, it might mean 
-        // the server was updated/restored. Take the larger set for safety.
-        if (serverProducts.length > localProducts.length) {
-            products = serverProducts;
-        } else {
+        // If local has data, use it. Otherwise use server.
+        if (localProducts.length > 0) {
             products = localProducts;
+        } else {
+            products = serverProducts;
         }
     } else {
         products = serverProducts;
@@ -1989,7 +1993,7 @@ function renderAdminOrders() {
         if (order.status === 'Bekor qilingan') statusColor = '#e74c3c'; // Red
 
         html += `
-            <div style="background:var(--card-bg); border-radius:12px; padding:15px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:8px;">
+            <div class="admin-order-card" style="background:var(--card-bg); border-radius:12px; padding:15px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:8px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:bold; color:var(--text-color);">${order.id}</span>
                     <span style="font-size:0.75rem; color:white; background:${statusColor}; padding:3px 8px; border-radius:8px; font-weight:bold;">${order.status}</span>
@@ -1999,7 +2003,7 @@ function renderAdminOrders() {
                 <div style="font-size:0.85rem; color:var(--text-color);">📍 ${escapeHtml(order.address)}</div>
                 <div style="font-weight:bold; color:var(--primary); margin-top:5px;">💵 ${order.total.toLocaleString()} Won (${order.items.length} ta mahsulot)</div>
                 
-                <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                <div class="admin-order-actions" style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
                     <button onclick="updateOrderStatus('${order.id}', 'Qabul qilingan')" style="padding:6px 10px; border-radius:6px; background:#3498db; color:white; border:none; font-size:0.75rem; cursor:pointer;">Qabul qilish</button>
                     <button onclick="updateOrderStatus('${order.id}', 'Yetkazilmoqda')" style="padding:6px 10px; border-radius:6px; background:#9b59b6; color:white; border:none; font-size:0.75rem; cursor:pointer;">Yetkazish</button>
                     <button onclick="updateOrderStatus('${order.id}', 'Bajarildi')" style="padding:6px 10px; border-radius:6px; background:#2ecc71; color:white; border:none; font-size:0.75rem; cursor:pointer;">Bajarildi</button>
@@ -2035,7 +2039,7 @@ function renderAdminCustomers() {
     
     sortedCustomers.forEach(cust => {
         html += `
-            <div style="background:var(--card-bg); border-radius:12px; padding:15px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:5px;">
+            <div class="admin-customer-card" style="background:var(--card-bg); border-radius:12px; padding:15px; border:1px solid var(--border-color); display:flex; flex-direction:column; gap:5px;">
                 <div style="font-weight:bold; font-size:1.1rem; color:var(--text-color);">👤 ${escapeHtml(cust.name)}</div>
                 <div style="font-size:0.9rem; color:var(--text-muted);">📞 ${escapeHtml(cust.phone)}</div>
                 <div style="display:flex; justify-content:space-between; margin-top:8px; align-items:center;">

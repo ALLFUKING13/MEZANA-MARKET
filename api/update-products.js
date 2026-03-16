@@ -5,11 +5,21 @@ export default async function handler(req, res) {
 
     const { content } = req.body;
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
     const REPO = process.env.GITHUB_REPO || 'ALLFUKING13/MEZANA-MARKET';
     const FILE_PATH = 'products.js';
+    const authHeader = req.headers.authorization;
 
     if (!GITHUB_TOKEN) {
         return res.status(500).json({ error: 'GitHub token (GITHUB_TOKEN) muhit o\'zgaruvchisiga o\'rnatilmagan.' });
+    }
+
+    if (!ADMIN_TOKEN) {
+        return res.status(500).json({ error: 'Admin token (ADMIN_TOKEN) muhit o\'zgaruvchisiga o\'rnatilmagan.' });
+    }
+
+    if (authHeader !== `Bearer ${ADMIN_TOKEN}`) {
+        return res.status(401).json({ error: 'Ruxsat berilmadi: Noto\'g\'ri parol.' });
     }
 
     if (!content) {

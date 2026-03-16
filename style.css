@@ -1463,10 +1463,8 @@ main {
 
 /* lift admin panel a bit when open to reveal bottom content */
 .admin-drawer.open {
-    top: 10vh;
-    /* move up more */
-    height: 90vh;
-    /* increase height further */
+    top: 5vh;
+    height: 95vh;
 }
 
 .admin-content {
@@ -1980,6 +1978,50 @@ select {
 
     .banner-content p {
         font-size: 0.7rem;
+    }
+
+    .admin-close-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.8rem;
+    }
+
+    .admin-top-actions {
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .admin-top-actions button {
+        padding: 8px 4px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .admin-tabs-bar {
+        gap: 4px !important;
+        padding-bottom: 2px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .admin-tab {
+        font-size: 0.75rem !important;
+        padding: 6px 2px !important;
+    }
+
+    .admin-order-card {
+        padding: 10px !important;
+    }
+
+    .admin-order-actions {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 6px !important;
+    }
+
+    .admin-order-actions button {
+        padding: 10px 4px !important;
+        font-size: 0.72rem !important;
+        width: 100% !important;
+        margin: 0 !important;
     }
 
     .search-container {
