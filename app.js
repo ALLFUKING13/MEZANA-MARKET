@@ -835,11 +835,29 @@ window.toggleAdmin = () => {
         const code = prompt(currentLang === 'uz' ? "Admin paroliningizni kiriting:" : "Enter admin password:", savedCode || "");
         
         if (code !== null) {
-            localStorage.setItem('mezana_admin_code', code);
-            elements.adminPanel.classList.add('open');
-            document.body.classList.add('no-scroll');
-            if (drawerOverlay) drawerOverlay.classList.add('active');
-            renderAdminProducts();
+            // Show loading state or at least block UI
+            const loadingToast = showToast(currentLang === 'uz' ? "Tekshirilmoqda..." : "Verifying...", 0);
+            
+            fetch('/api/verify-admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('mezana_admin_code', code);
+                    elements.adminPanel.classList.add('open');
+                    document.body.classList.add('no-scroll');
+                    if (drawerOverlay) drawerOverlay.classList.add('active');
+                    renderAdminProducts();
+                } else {
+                    showToast(currentLang === 'uz' ? "Parol noto'g'ri!" : "Wrong password!");
+                }
+            })
+            .catch(err => {
+                showToast("Xatolik: " + err.message);
+            });
         }
     }
 };
