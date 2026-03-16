@@ -231,7 +231,7 @@
                 </div>
                 <div class="input-group">
                     <label>Narx (Won)</label>
-                    <input type="number" id="admin-price" min="0" step="1" placeholder="0">
+                    <input type="text" id="admin-price" inputmode="numeric" pattern="[0-9]*" placeholder="0">
                 </div>
                 <div class="input-group">
                     <label>Bosh kategoriya</label>
@@ -399,6 +399,20 @@
                     </div>
                 </div>
                 <button class="primary-btn" onclick="toggleProfileModal(false)">Yopish</button>
+            </div>
+        </div>
+
+        <div id="admin-login-modal" class="modal glass" style="display: none;">
+            <div class="modal-content glass" style="text-align: center;">
+                <h3 id="login-title">Admin Login</h3>
+                <div class="input-group" style="margin-top: 20px;">
+                    <label id="login-label">Parolni kiriting</label>
+                    <input type="password" id="admin-login-input" placeholder="****" autocomplete="off">
+                </div>
+                <div class="modal-actions" style="margin-top: 20px;">
+                    <button class="secondary-btn" id="btn-login-cancel">Bekor qilish</button>
+                    <button class="primary-btn" id="btn-login-submit">Kirish</button>
+                </div>
             </div>
         </div>
 

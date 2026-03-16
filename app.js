@@ -71,7 +71,11 @@ const i18n = {
         navCart: "Savat",
         btnBackCat: "Orqaga",
         btnAllCat: "Barchasi",
-        discountBadge: "🔥 Aksiya"
+        discountBadge: "🔥 Aksiya",
+        loginTitle: "Admin Kirish",
+        loginLabel: "Maxfiy parolni kiriting",
+        btnLoginCancel: "Bekor qilish",
+        btnLoginSubmit: "Kirish"
     },
     ru: {
         greeting: "Привет,",
@@ -139,7 +143,11 @@ const i18n = {
         navCart: "Корзина",
         btnBackCat: "Назад",
         btnAllCat: "Все",
-        discountBadge: "🔥 Акция"
+        discountBadge: "🔥 Акция",
+        loginTitle: "Вход для админа",
+        loginLabel: "Введите секретный пароль",
+        btnLoginCancel: "Отмена",
+        btnLoginSubmit: "Войти"
     },
     kr: {
         greeting: "안녕하세요,",
@@ -207,7 +215,11 @@ const i18n = {
         navCart: "장바구니",
         btnBackCat: "뒤로",
         btnAllCat: "전부",
-        discountBadge: "🔥 할인"
+        discountBadge: "🔥 이벤트",
+        loginTitle: "관리자 로그인",
+        loginLabel: "비밀번호를 입력하세요",
+        btnLoginCancel: "취소",
+        btnLoginSubmit: "로그인"
     },
     en: {
         greeting: "Hello,",
@@ -273,7 +285,11 @@ const i18n = {
         navCart: "Cart",
         btnBackCat: "Back",
         btnAllCat: "All",
-        discountBadge: "🔥 Sale"
+        discountBadge: "🔥 Sale",
+        loginTitle: "Admin Login",
+        loginLabel: "Enter secret password",
+        btnLoginCancel: "Cancel",
+        btnLoginSubmit: "Login"
     }
 };
 
@@ -387,6 +403,11 @@ function initElements() {
     elements.settingsModal = document.getElementById('settings-modal');
     elements.darkModeCheckbox = document.getElementById('dark-mode-toggle');
     elements.homeButton = document.getElementById('home-button');
+    elements.adminLoginModal = document.getElementById('admin-login-modal');
+    elements.adminLoginInput = document.getElementById('admin-login-input');
+    elements.btnLoginCancel = document.getElementById('btn-login-cancel');
+    elements.btnLoginSubmit = document.getElementById('btn-login-submit');
+
     drawerOverlay = document.getElementById('drawer-overlay');
 }
 
@@ -500,6 +521,12 @@ function updateStaticTranslations() {
     safeSet('label-nav-menu', t.navMenu);
     safeSet('label-nav-home', t.navHome);
     safeSet('label-nav-cart', t.navCart);
+
+    // Admin Login Modal
+    safeSet('login-title', t.loginTitle);
+    safeSet('login-label', t.loginLabel);
+    safeSet('btn-login-cancel', t.btnLoginCancel);
+    safeSet('btn-login-submit', t.btnLoginSubmit);
 }
 
 // 5. Render Functions
@@ -831,36 +858,63 @@ window.toggleAdmin = () => {
         document.body.classList.remove('no-scroll');
         if (drawerOverlay) drawerOverlay.classList.remove('active');
     } else {
-        let savedCode = localStorage.getItem('mezana_admin_code');
-        const code = prompt(currentLang === 'uz' ? "Admin paroliningizni kiriting:" : "Enter admin password:", savedCode || "");
-        
-        if (code !== null) {
-            // Show loading state or at least block UI
-            const loadingToast = showToast(currentLang === 'uz' ? "Tekshirilmoqda..." : "Verifying...", 0);
-            
-            fetch('/api/verify-admin', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem('mezana_admin_code', code);
-                    elements.adminPanel.classList.add('open');
-                    document.body.classList.add('no-scroll');
-                    if (drawerOverlay) drawerOverlay.classList.add('active');
-                    renderAdminProducts();
-                } else {
-                    showToast(currentLang === 'uz' ? "Parol noto'g'ri!" : "Wrong password!");
-                }
-            })
-            .catch(err => {
-                showToast("Xatolik: " + err.message);
-            });
+        // Instead of prompt, show the custom modal
+        if (elements.adminLoginModal) {
+            elements.adminLoginInput.value = ""; // Always empty
+            elements.adminLoginModal.style.display = 'flex';
+            document.body.classList.add('no-scroll');
         }
     }
 };
+
+// Initialize Admin Login Events
+function initAdminLoginEvents() {
+    if (elements.btnLoginCancel) {
+        elements.btnLoginCancel.onclick = () => {
+            elements.adminLoginModal.style.display = 'none';
+            document.body.classList.remove('no-scroll');
+        };
+    }
+
+    if (elements.btnLoginSubmit) {
+        elements.btnLoginSubmit.onclick = () => submitAdminLogin();
+    }
+
+    if (elements.adminLoginInput) {
+        elements.adminLoginInput.onkeypress = (e) => {
+            if (e.key === 'Enter') submitAdminLogin();
+        };
+    }
+}
+
+function submitAdminLogin() {
+    const code = elements.adminLoginInput.value.trim();
+    if (!code) return;
+
+    const loadingToast = showToast(i18n[currentLang].loginLabel + "...", 0);
+    
+    fetch('/api/verify-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            localStorage.setItem('mezana_admin_code', code);
+            elements.adminLoginModal.style.display = 'none';
+            elements.adminPanel.classList.add('open');
+            document.body.classList.add('no-scroll');
+            if (drawerOverlay) drawerOverlay.classList.add('active');
+            renderAdminProducts();
+        } else {
+            showToast(currentLang === 'uz' ? "Parol noto'g'ri!" : "Wrong password!");
+        }
+    })
+    .catch(err => {
+        showToast("Xatolik: " + err.message);
+    });
+}
 
 function renderAdminProducts() {
     const list = document.getElementById('product-list-admin');
@@ -1721,6 +1775,7 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('mezana_categories', JSON.stringify(categories));
 
     updateStaticTranslations();
+    initAdminLoginEvents();
     updateCartUI();
     setLanguage(currentLang);
 
