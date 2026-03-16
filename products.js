@@ -1,53 +1,5 @@
 const generatedProducts = [
   {
-    "id": 143,
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-39.jpg",
-    "name": {
-      "uz": "Tanho Pasta Fusilli 500g",
-      "ru": "Танхо Паста Фузилли 500г",
-      "kr": "Tanho 푸실리 500g",
-      "en": "Tanho Fusilli 500g"
-    },
-    "price": 2000,
-    "category": "Makaron"
-  },
-  {
-    "id": 145,
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-41 (2).jpg",
-    "name": {
-      "uz": "Besler Elbows",
-      "ru": "Besler Рожки",
-      "kr": "Besler 엘보",
-      "en": "Besler Elbows"
-    },
-    "price": 1900,
-    "category": "Makaron"
-  },
-  {
-    "id": 146,
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-41.jpg",
-    "name": {
-      "uz": "Besler Fusilli 500g",
-      "ru": "Besler Фузилли 500g",
-      "kr": "Besler 푸실리 500g",
-      "en": "Besler Fusilli 500g"
-    },
-    "price": 1800,
-    "category": "Makaron"
-  },
-  {
-    "id": 147,
-    "image": "Mahsulotlar/photo_2026-03-04_06-05-42.jpg",
-    "name": {
-      "uz": "KB Halal Food Mosh",
-      "ru": "KB Halal Food Маш",
-      "kr": "KB Halal Food 녹두",
-      "en": "KB Halal Food Mung Beans"
-    },
-    "price": 5900,
-    "category": "Dukkakli mahsulotlar"
-  },
-  {
     "id": 148,
     "image": "Mahsulotlar/photo_2026-03-04_06-05-43.jpg",
     "name": {
