@@ -3974,13 +3974,13 @@ const generatedProducts = [
   {
     "id": 432,
     "name": {
-      "uz": "Mezana Special 25",
+      "uz": "Chartoq",
       "ru": "Mezana Special 25",
       "kr": "Mezana Special 25",
       "en": "Mezana Special 25"
     },
-    "price": 1,
-    "category": "Yangi",
+    "price": 2500,
+    "category": "Ichimliklar",
     "image": "Mahsulotlar/photo_2026-03-04_06-11-44.jpg"
   },
   {
