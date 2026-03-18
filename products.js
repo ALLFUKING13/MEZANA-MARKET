@@ -368,7 +368,7 @@ const generatedProducts = [
       "kr": "Pasta Rino 펜네",
       "en": "Pasta Rino Penne"
     },
-    "price": 1500,
+    "price": 1,
     "category": "Makaron"
   },
   {
