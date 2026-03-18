@@ -528,30 +528,6 @@ const generatedProducts = [
     "image": "Mahsulotlar/photo_2026-03-04_06-05-45.jpg"
   },
   {
-    "id": 151,
-    "image": "",
-    "name": {
-      "uz": "Konserva Govyadina",
-      "ru": "Консерва Говядина",
-      "kr": "통조림 쇠고기",
-      "en": "Canned Beef"
-    },
-    "price": 1,
-    "category": "Konserva"
-  },
-  {
-    "id": 152,
-    "image": "",
-    "name": {
-      "uz": "Konserva Baranina",
-      "ru": "Консерва Баранина",
-      "kr": "통조림 양고기",
-      "en": "Canned Lamb"
-    },
-    "price": 1,
-    "category": "Konserva"
-  },
-  {
     "id": 153,
     "name": {
       "uz": "Safo Adjika",
