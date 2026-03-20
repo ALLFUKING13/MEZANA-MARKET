@@ -1065,7 +1065,18 @@ window.hideProductForm = () => {
     if (!elements.adminPanel.classList.contains('open')) document.body.classList.remove('no-scroll');
 };
 
-window.saveProduct = () => {
+window.safeLocalStorageSetItem = (key, value) => {
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {
+        if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+            console.warn("Local storage limit reached.");
+            showToast("Xotira to'ldi! O'zgarishlar vaqtincha saqlandi, Serverga Saqlashni bosing.", 4000);
+        }
+    }
+};
+
+window.saveProduct = async () => {
     const nameUz = document.getElementById('admin-name-uz').value;
     const priceVal = document.getElementById('admin-price').value;
     let category = document.getElementById('admin-category').value;
@@ -1081,13 +1092,55 @@ window.saveProduct = () => {
         return;
     }
 
+    let finalImage = document.getElementById('admin-image-base64').value;
+    
+    // Find the save button within the modal specifically to show loading state
+    const modalActions = document.querySelector('#product-form-modal .modal-actions');
+    let btnSave = null;
+    if (modalActions) {
+        const btns = modalActions.querySelectorAll('button');
+        if (btns.length > 1) {
+            btnSave = btns[1]; 
+        }
+    }
+
+    if (finalImage.startsWith('data:image')) {
+        const adminCode = localStorage.getItem('mezana_admin_code');
+        if (btnSave) {
+            btnSave.disabled = true;
+            btnSave.textContent = 'Yuklanmoqda...';
+        }
+        try {
+            const base64Data = finalImage.split(',')[1];
+            const fileName = `product-${Date.now()}.jpg`;
+            const res = await fetch('/api/upload-image', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminCode}` },
+                body: JSON.stringify({ content: base64Data, fileName })
+            });
+            const data = await res.json();
+            if (data.success) {
+                finalImage = data.path;
+            } else {
+                alert("Rasm yuklashda xatolik yuz berdi: " + data.error);
+                if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Saqlash'; }
+                return;
+            }
+        } catch (e) {
+            alert("Internet yoki server xatosi: " + e.message);
+            if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Saqlash'; }
+            return;
+        }
+        if (btnSave) { btnSave.disabled = false; btnSave.textContent = 'Saqlash'; }
+    }
+
     // Preserve existing product data (like oldPrice, oneDayDelivery, etc.)
     let updatedProduct;
     if (editingId) {
         const existingProduct = products.find(p => p.id === editingId);
         updatedProduct = {
             ...existingProduct,
-            image: document.getElementById('admin-image-base64').value || existingProduct.image || '',
+            image: finalImage,
             name: {
                 uz: nameUz,
                 ru: document.getElementById('admin-name-ru').value || nameUz,
@@ -1102,7 +1155,7 @@ window.saveProduct = () => {
     } else {
         updatedProduct = {
             id: Date.now(),
-            image: document.getElementById('admin-image-base64').value || '',
+            image: finalImage,
             name: {
                 uz: nameUz,
                 ru: document.getElementById('admin-name-ru').value || nameUz,
@@ -1115,7 +1168,7 @@ window.saveProduct = () => {
         products.push(updatedProduct);
     }
 
-    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    safeLocalStorageSetItem('mezana_products_local', JSON.stringify(products));
     renderProducts(activeCategory);
     renderAdminProducts();
     renderCategories();
@@ -1127,7 +1180,7 @@ window.editProduct = (id) => showProductForm(id);
 window.deleteProduct = (id) => {
     if (confirm("O'chirilsinmi?")) {
         products = products.filter(p => p.id !== id);
-        localStorage.setItem('mezana_products_local', JSON.stringify(products));
+        safeLocalStorageSetItem('mezana_products_local', JSON.stringify(products));
         renderProducts(activeCategory);
         renderAdminProducts();
     }
@@ -1149,7 +1202,7 @@ window.setDiscount = (id) => {
         product.oldPrice = product.oldPrice || product.price;
         product.price = Math.round(product.oldPrice * (1 - discount / 100));
     }
-    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    safeLocalStorageSetItem('mezana_products_local', JSON.stringify(products));
     renderProducts(activeCategory);
     renderAdminProducts();
     showToast("Chegirma qo'ldi!");
@@ -1351,7 +1404,7 @@ window.editSubCategoryName = (parent, oldName) => {
     if (idx !== -1) categoryTree[parent][idx] = trimmed;
     // Update products
     products.forEach(p => { if (p.category === oldName) p.category = trimmed; });
-    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    safeLocalStorageSetItem('mezana_products_local', JSON.stringify(products));
     rebuildCategoriesFromTree();
     const closeBtn = document.querySelector('[data-close-cat]');
     if (closeBtn) closeBtn.click();
@@ -1761,7 +1814,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     
     // Save state
-    localStorage.setItem('mezana_products_local', JSON.stringify(products));
+    safeLocalStorageSetItem('mezana_products_local', JSON.stringify(products));
 
     // Auto-generate categories from product data and localStorage
     const serverCategories = (typeof generatedCategories !== 'undefined') ? generatedCategories : null;
