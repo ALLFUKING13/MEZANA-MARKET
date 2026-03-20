@@ -2959,7 +2959,7 @@ const generatedProducts = [
       "kr": "KB Halal Food 아몬드 400g",
       "en": "KB Halal Food Almonds 400g"
     },
-    "price": 1,
+    "price": 2,
     "category": "Gazaklar",
     "image": "Mahsulotlar/photo_2026-03-04_06-10-13.jpg"
   },
