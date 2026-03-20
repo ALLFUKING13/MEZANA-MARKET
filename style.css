@@ -231,6 +231,7 @@ header {
     height: 24px;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 /* Profile Modal Styles */
@@ -736,8 +737,6 @@ input:checked+.slider:before {
     font-weight: 800;
     color: var(--primary);
     font-size: 1.1rem;
-    padding-left: 100%;
-    animation: marquee 10s linear infinite;
 }
 
 @keyframes marquee {
